@@ -1,5 +1,5 @@
 ﻿# Checks for the Password File then loads Exchange o365 Powershell off credentials
-
+# Other stuff here
 # Variables that can be changed
 $path = "C:\Scripts\0365Passwd.txt"
 $myusername = "ward_kbennett@epiqsystems3.onmicrosoft.com"
