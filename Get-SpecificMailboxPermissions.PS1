@@ -1,0 +1,1 @@
+Get-MailboxPermission -Identity * -ResultSize Unlimited | where {$_.User -like "amer\*" -and $_.AccessRights -like "*FullAccess*" -and $_.IsInherited -eq $False} | Select Identity, User | Export-Csv Permissions.txt -notype
