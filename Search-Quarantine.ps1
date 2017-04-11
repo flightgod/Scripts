@@ -39,3 +39,5 @@ $_.Senderaddress -like “*@epiqsystems.com” -or `
 $_.Senderaddress -like "*@epiqsystems.co.uk" -or `
 $_.Senderaddress -like "*@epiqsystems.com.hk"`
 }
+
+Remove-PSSession $Session

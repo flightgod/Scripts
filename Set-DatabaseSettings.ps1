@@ -41,3 +41,6 @@ Set-MailboxDatabase $Database -DeletedItemRetention 29.00:00:00
 Set-MailboxDatabase $Database -OfflineAddressBook '\Offline Address Book'
 Set-MailboxDatabase $Database -RetainDeletedItemsUntilBackup $True
 Set-MailboxDatabase $Database -ProhibitSendQuota unlimited -ProhibitSendReceiveQuota unlimited -IssueWarningQuota unlimited
+
+
+Remove-PSSession $Session
