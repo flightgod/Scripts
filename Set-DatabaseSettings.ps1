@@ -23,7 +23,8 @@
 
 .FUNCTIONALITY
    Script to set database settings after newely created
-#>		
+#>
+
 # Connects to Exchange
 $UserCredential = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/ -Authentication Kerberos -Credential $UserCredential
