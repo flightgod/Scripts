@@ -1,8 +1,9 @@
 ﻿# Checks for the Password File then loads Exchange o365 Powershell off credentials
 # Other stuff here
 # Variables that can be changed
-$path = "C:\Scripts\0365Passwd.txt"
-$myusername = "ward_kbennett@epiqsystems3.onmicrosoft.com"
+$myusername = read-host -prompt 'Enter o365 UserName'
+$path = "C:\Scripts\"+$myusername+"_o365Passwd.txt"
+
 
 # Does the file exist?, If not ask for Password and encrypt it
 if(![System.IO.File]::Exists($path)){
@@ -25,8 +26,3 @@ $O365Session = New-PSSession `
     -Credential $mycreds
 Import-PSSession $O365Session
 # Done
-
-
-Get-Mailbox -ResultSize Unlimited | Where {$_.ForwardingAddress -ne $null -or $_.ForwardingSMTPAddress -ne $null}| FT DisplayName, ForwardingAddress, ForwardingSMTPAddress -AutoSize
-
-$List = Get-Mailbox -ResultSize Unlimited | Get-MailboxStatistics | Where {$_.TotalItemSize -like "*GB*"}|Sort DisplayName | Select DisplayName, TotalItemSize

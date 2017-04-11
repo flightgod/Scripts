@@ -17,6 +17,8 @@
                         : Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
                         
     Future Features     : Error Checking 
+                        : make it look better
+                        : some For loops
 
 
 .FUNCTIONALITY
