@@ -2,7 +2,7 @@
 # Other stuff here
 # Variables that can be changed
 $myusername = read-host -prompt 'Enter o365 UserName'
-$path = "C:\Scripts\"+$myusername+"_o365Passwd.txt"
+$path = "C:\%USERPROFILE%\Documents\"+$myusername+"_o365Passwd.txt"
 
 
 # Does the file exist?, If not ask for Password and encrypt it
