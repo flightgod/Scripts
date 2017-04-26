@@ -1,4 +1,32 @@
-﻿function Show-Menu
+﻿<#  
+.SYNOPSIS
+   Add or remove from Distro List
+
+.DESCRIPTION  
+    This script Can add or remove a user from a distribution List
+
+.NOTES  
+    Current Version     : 1.0
+    
+    History				: 1.0 - Posted 4/26/2017 - First iteration - kbennett
+      
+                            
+    
+    Rights Required		: Exchange Permissions
+                        : Exchange is in OnPrem environment
+                        : Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
+                        
+    Future Features     : Error Checking 
+                        : make it look better
+                        : some For loops
+
+
+.FUNCTIONALITY
+    This script Can add or remove a user from a distribution List
+#>
+
+
+function Show-Menu
 {
      param (
            [string]$Title = 'Add/Remove User from DL'

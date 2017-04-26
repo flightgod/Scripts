@@ -60,9 +60,9 @@ Move-ActiveMailboxDatabase Database24 -ActivateOnServer $Server -SkipClientExper
 Move-ActiveMailboxDatabase Database25 -ActivateOnServer $Server -SkipClientExperienceChecks -confirm:$false
 Move-ActiveMailboxDatabase Database26 -ActivateOnServer $Server -SkipClientExperienceChecks -confirm:$false
 Move-ActiveMailboxDatabase Database27 -ActivateOnServer $Server -SkipClientExperienceChecks -confirm:$false
-Move-ActiveMailboxDatabase Database28 -ActivateOnServer $Server -SkipClientExperienceChecks -confirm:$false
+#Move-ActiveMailboxDatabase Database28 -ActivateOnServer $Server -SkipClientExperienceChecks -confirm:$false
 Move-ActiveMailboxDatabase Database29 -ActivateOnServer $Server -SkipClientExperienceChecks -confirm:$false
-#Move-ActiveMailboxDatabase Database30 -ActivateOnServer $Server -SkipClientExperienceChecks -confirm:$false
+Move-ActiveMailboxDatabase Database30 -ActivateOnServer $Server -SkipClientExperienceChecks -confirm:$false
 Move-ActiveMailboxDatabase Database31 -ActivateOnServer $Server -SkipClientExperienceChecks -confirm:$false
 Move-ActiveMailboxDatabase Database32 -ActivateOnServer $Server -SkipClientExperienceChecks -confirm:$false
 Move-ActiveMailboxDatabase Database33 -ActivateOnServer $Server -SkipClientExperienceChecks -confirm:$false
