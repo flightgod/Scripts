@@ -25,6 +25,9 @@
     This script Can add or remove a user from a distribution List
 #>
 
+$UserCredential = Get-Credential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/ -Authentication Kerberos -Credential $UserCredential
+Import-PSSession $Session
 
 function Show-Menu
 {
@@ -43,10 +46,10 @@ function AddUser
 {
     Write-Host "Enter Distribution Name:"
     $DLName = Read-Host (" ")
-    Write-Host "Enter Users Email address:"
+    Write-Host "Enter Users SamAccountName:"
     $user = Read-Host (" ")
     Add-DistributionGroupMember -Identity $DLName -Member $User 
-    Write-Host "User " + $User + " added to Distribution List " + $DLName
+    Write-Host "User "$User" added to Distribution List "$DLName
     Start-Sleep -s 5
 }
 
@@ -57,7 +60,7 @@ function Removeuser
     Write-Host "Enter Users Email address:"
     $user = Read-Host (" ")
     Remove-DistributionGroupMember -Identity $DLName -Member $User
-    Write-Host "User " + $User + " Removed From Distribution List " + $DLName
+    Write-Host "User "$User" Removed From Distribution List "$DLName
     Start-Sleep -s 5
 }
 
