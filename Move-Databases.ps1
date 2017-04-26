@@ -3,7 +3,7 @@
    	Move Databases between Servers
 
 .DESCRIPTION  
-    This script moves the databases between servers.
+    This script moves the databases between servers.It can be ran from anywhere not just the Exchange servers
 
 .NOTES  
     Current Version     : 1.0
@@ -25,7 +25,7 @@
     This script moves the databases between servers.
 #>
 
-# Connects to Exchange
+# Connects to Exchange - so you can run remotely
 $UserCredential = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/ -Authentication Kerberos -Credential $UserCredential
 Import-PSSession $Session

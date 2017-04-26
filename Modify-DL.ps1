@@ -3,7 +3,8 @@
    Add or remove from Distro List
 
 .DESCRIPTION  
-    This script Can add or remove a user from a distribution List
+    This script Can add or remove a user from a distribution List. It can be ran from anywhere not just the 
+    Exchange servers
 
 .NOTES  
     Current Version     : 1.0
@@ -25,10 +26,12 @@
     This script Can add or remove a user from a distribution List
 #>
 
+# Connects to Exchange - so you can run remotely
 $UserCredential = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/ -Authentication Kerberos -Credential $UserCredential
 Import-PSSession $Session
 
+# Runs Menu
 function Show-Menu
 {
      param (
@@ -42,6 +45,7 @@ function Show-Menu
      Write-Host "Q: Press 'Q' to quit."
 }
 
+# Adds User to a Distribution List
 function AddUser
 {
     Write-Host "Enter Distribution Name:"
@@ -53,6 +57,7 @@ function AddUser
     Start-Sleep -s 5
 }
 
+# Removes User from a Distribution List
 function Removeuser
 {
     Write-Host "Enter Distribution Name:"
@@ -64,6 +69,7 @@ function Removeuser
     Start-Sleep -s 5
 }
 
+# Runs menu and waits for Option
 do
 {
      Show-Menu
