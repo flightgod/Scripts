@@ -9,9 +9,7 @@
 .NOTES  
     Current Version     : 1.0
     
-    History				: 1.0 - Posted 4/26/2017 - First iteration - kbennett
-      
-                            
+    History				: 1.0 - Posted 4/26/2017 - First iteration - kbennett                      
     
     Rights Required		: Exchange Permissions
                         : Exchange is in OnPrem environment
@@ -19,8 +17,6 @@
                         
     Future Features     : Error Checking 
                         : make it look better
-                        : some For loops
-
 
 .FUNCTIONALITY
     This script Can add or remove a user from a distribution List
@@ -89,3 +85,5 @@ do
      pause
 }
 until ($input -eq 'q')
+
+Exit-PSSession $Session
