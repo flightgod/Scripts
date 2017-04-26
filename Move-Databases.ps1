@@ -6,9 +6,10 @@
     This script moves the databases between servers.It can be ran from anywhere not just the Exchange servers
 
 .NOTES  
-    Current Version     : 1.0
+    Current Version     : 1.1
     
-    History				: 1.0 - Posted 4/10/2017 - First iteration - kbennett           
+    History				: 1.0 - Posted 4/10/2017 - First iteration - kbennett 
+                        : 1.1 - 4/26/2017 - Removed Manual Database listing and adding loop - kbennett          
     
     Rights Required		: Mailbox Permissions
                         : Mailbox is in OnPrem environment
