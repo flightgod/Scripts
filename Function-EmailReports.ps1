@@ -1,8 +1,31 @@
-﻿# Function to send Emails
+﻿<#  
+.SYNOPSIS
+   Function to be called to Run and Send Reports
+
+.DESCRIPTION  
+    Function to be called to Run and Send Reports
+
+.NOTES  
+    Current Version     : 1.0
+    
+    History				: 1.0 - Posted 4/26/2017 - First iteration - kbennett                      
+    
+    Rights Required		: Relay Permissions
+                        : AD Search Permissions
+                        : Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
+                        
+    Future Features     : Error Checking 
+                        : make it look better
+
+.FUNCTIONALITY
+    Function to be called to Run and Send Reports
+#>
+
+# Function to send Emails
 Function SendReport ($Subject, $path, $Info)
 {
 $MailServer = "relay.amer.epiqcorp.com" #New Relay in LV "10.35.16.15"
-$mailServer2 = "MailRelay.amer.epiqcorp.com"
+$mailServer2 = "MailRelay.amer.epiqcorp.com" # Current Live Relay
 $style = "<style>
 		BODY{font-family: Arial; font-size: 8pt;}
 		H1{font-size: 22px; font-family: 'Segoe UI Light','Segoe UI','Lucida Grande',Verdana,Arial,Helvetica,sans-serif;}
@@ -18,7 +41,15 @@ $style = "<style>
     </style>"
 $report = (get-content $path | out-String)
 $body = $info += $style += $report
-Send-MailMessage -From powershellfoo@epiqsystems.com -Subject $Subject -To kbennett@epiqsystems.com -smtpserver $MailServer2 -Body $body -BodyAsHtml -Attachments $path -ErrorAction STOP
+Send-MailMessage `
+-From powershellfoo@epiqsystems.com `
+-Subject $Subject `
+-To kbennett@epiqsystems.com `
+-smtpserver $MailServer2 `
+-Body $body `
+-BodyAsHtml `
+-Attachments $path `
+-ErrorAction STOP
 }
 
 #Function to Run Search on AD Account Status

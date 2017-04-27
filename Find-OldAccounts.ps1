@@ -1,33 +1,26 @@
-﻿<# Testing the Search and Report
+﻿<#  
+.SYNOPSIS
+   Search and Report Old Accounts
 
+.DESCRIPTION  
+    This script will search AD for Old Accounts depending on criteria set and report that back in a nice HTML Report via Email
 
-$Domains = "P054ADSAMDC01.amer.epiqcorp.com"
-$Days = "195"
-
-Search-ADAccount -Server $Domains -accountinactive -usersonly -timespan $Days | `
-    Where {$_.LastLogonDate -Ne $null -and $_.SamAccountName -inotlike "svc_*" -and $_.DistinguishedName -like "*disabled*"} | `
-    Sort LastLogonDate |`
-    Select Name,LastLogonDate,AccountExpirationDate,SamAccountName,Enabled,DistinguishedName |`
-    ConvertTo-HTML |`
-    Out-File C:\Scripts\OldAccounts.htm
-
-$info = "excludes no logon date and accounts with svc_ "
-$report = (get-content c:\Scripts\OldAccounts.htm | out-String)
-$body = $info += $report
-
-Send-MailMessage `
-    -From powershellfoo@epiqsystems.com `
-    -Subject "Accounts Older than 180 Days" `
-    -To kbennett@epiqsystems.com `
-    -smtpserver Relay.amer.epiqcorp.com `
-    -Body $body  -BodyAsHtml
-
+.NOTES  
+    Current Version     : 1.0
     
+    History				: 1.0 - Posted 1/12/2017 - First iteration - kbennett                      
+    
+    Rights Required		: Access to the Kevins_Funtions Powershell Script
+                        : AD Search Permissions
+                        : Permissions to send via the SMTP Relay
+                        : Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
+                        
+    Future Features     : Error Checking 
+                        : make it look better
+
+.FUNCTIONALITY
+    Functions, Reports and SMTP EMail
 #>
-
-
-
-# This is the live one from here down
 
 # Functions File
 ."c:\Scripts\Kevins_Functions.ps1"
@@ -37,7 +30,7 @@ $Domains = "amer.epiqcorp.com"
 $time = "90"
 $now = Get-Date
 
-#First Report - 180 Days
+#First Report - 90 Days
 $path = "c:\Scripts\LastLogon.htm"
 $Subject = "AMER - Accounts Older than 90 Days"
 $info = "<h1 align=""center"">Accounts Older than 90 Days</h1>
@@ -66,7 +59,7 @@ SendReport $Subject $path $info
 #Third Report - No Login
 $path = "c:\Scripts\LastLogon-NO Login Date.htm"
 $Subject = "AMER - Accounts Older than 90 Days with no LoginDate"
-$info = "<h1 align=""center""> Accounts Older than 9 Days with no LoginDate</h1>
+$info = "<h1 align=""center"">Accounts Older than 9 Days with no LoginDate</h1>
         <h3 align=""center"">Generated: $now</h3>
         <p>Excludes Accounts with svc_*</p>"
 $where = {$_.LastLogonDate -eq $null -and $_.SamAccountName -inotlike "svc_*" -and $_.DistinguishedName -like "*disabled*"}
