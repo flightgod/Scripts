@@ -24,3 +24,5 @@ Do
 } 
 
 While ($again -eq 'Yes' -or $again -eq 'Y' -or $again -eq 'y')
+
+Exit-PSSession $Session
