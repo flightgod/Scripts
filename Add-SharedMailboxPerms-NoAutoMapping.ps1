@@ -137,7 +137,17 @@ if ( (Get-mailbox $user | Measure-Object).count -eq 0 )
 
 function Load-MBs
 {
-$global:MBs = @() ; Write-host "Enter Mailboxes:" ;do { $line = (Read-Host " ") ; if ($line -ne '') {$global:MBs += $line}} until ($line -eq '')
+$global:MBs = @() 
+Write-host "Enter Mailboxes:" 
+do 
+{
+ $line = (Read-Host " ") 
+    if ($line -ne '') 
+    {
+        $global:MBs += $line
+    }
+ } 
+ until ($line -eq '')
 }
 
 Load-MBs
@@ -146,7 +156,17 @@ Validate-MailboxList $MBs
 $MBs = $newlist
 
 
-$list = @() ; Write-host "Enter Users to grant Full Access and Send As:" ;do { $line = (Read-Host " ") ; if ($line -ne '') {$list += $line}} until ($line -eq '')
+$list = @() 
+Write-host "Enter Users to grant Full Access and Send As:" 
+do 
+{
+    $line = (Read-Host " ")
+    if ($line -ne '') 
+        {
+            $list += $line
+         }
+} 
+until ($line -eq '')
 
 
 Validate-UserList $list

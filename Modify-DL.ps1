@@ -16,7 +16,7 @@
                         : Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
                         
     Future Features     : Error Checking 
-                        : make it look better
+                        : Run for more than 1 DL and User
 
 .FUNCTIONALITY
     This script Can add or remove a user from a distribution List
@@ -51,7 +51,22 @@ function AddUser
     Add-DistributionGroupMember -Identity $DLName -Member $User 
     Write-Host "User "$User" added to Distribution List "$DLName
     Start-Sleep -s 5
-}
+<#
+$DLlist = @() 
+Write-Host "Enter Distribution Name:"
+do 
+{
+    $DLline = (Read-Host " ")
+    if ($DLline -ne '') 
+        {
+            $DLlist += $DLline
+         }
+} 
+until ($DLline -eq '')
+
+next need to add DO UNTIL for UserList and UserLine
+add loop to add from DLList and UserList to add-distributionGroupMember
+}#>
 
 # Removes User from a Distribution List
 function Removeuser
