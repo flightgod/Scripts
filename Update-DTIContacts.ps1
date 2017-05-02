@@ -72,16 +72,16 @@ Function UpdateUser
     Set-ADObject -Identity $UpdateUser -Add @{"extensionAttribute3"=$UDF} -Server $DomainController -Credential $UserCredential
 }
 
-# ********** Test this Seperatly **************
 # Adds new Contact if it doesnt already exist
 Function AddUser 
 {
-    Write-Host $Name.DisplayName "Doesnt Exist !!! - Creating Contact" -foregroundcolor red
-    New-ADObject -name $name.DisplayName -type contact -Path $ContactOU -Server $DomainController -Credential $UserCredential -OtherAttributes @{'extensionAttribute3'=$UDF;'physicalDeliveryOfficeName'=$name.Office;'TelephoneNumber'=$name.BusinessPhone;'company'="DTI";'streetAddress'=$name.Address;'mobile'=$name.MobilePhone;'title'=$name.JobTitle;'department'=$name.Department}
+    $NewName = $Name.DisplayName
+    Write-Host $NewName "Doesnt Exist !!! - Creating Contact" -foregroundcolor Yellow
+    New-ADObject -name $NewName -type contact -Path $ContactOU -Server $DomainController -Credential $UserCredential -OtherAttributes @{'extensionAttribute3'=$UDF;'physicalDeliveryOfficeName'=$name.Office;'TelephoneNumber'=$name.BusinessPhone;'company'="DTI";'streetAddress'=$name.Address;'mobile'=$name.MobilePhone;'title'=$name.JobTitle;'department'=$name.Department}
     # also Mail-Enable
     Enable-MailContact -Identity $Name.DisplayName -ExternalEmailAddress $name.UserPrincipalName -DomainController $DomainController
     $NewContactsList = @()
-    $NewName = $import.DisplayName
+    
     $script:NewContactsList += $Newname
    }
 
