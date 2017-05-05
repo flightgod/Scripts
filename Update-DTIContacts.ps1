@@ -73,7 +73,7 @@ Function UpdateUser
         Write-Host $Name.DisplayName "exists - Updating User Defined Field with" $UDF
         Set-ADObject -Identity $name.DisplayName -Clear "extensionAttribute3" -Server $DomainController -Credential $UserCredential 2>> c:\temp\UpdateErrors.txt
         # Set extensionAttribute3
-        Set-ADObject -Identity $name.DisplayName -Add @{"extensionAttribute3"=$UDF} -Server $DomainController -Credential $UserCredential
+        Set-ADObject -Identity $name.DisplayName -Add @{"extensionAttribute3"=$UDF} -Server $DomainController -Credential $UserCredential 2>> c:\temp\AddErrors.txt
     }
     Else 
     { 

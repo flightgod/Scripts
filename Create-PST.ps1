@@ -58,8 +58,8 @@ Remove-PSSession $Session
 
 # Export Mailbox to PST
 Function Mailbox {
-New-MailboxExportRequest -ContentFilter {(Received -lt $Today) -and (Received -gt '04/01/2016')} -Mailbox $UsersName -FilePath $FileName
-$FileName = $First + $i + ".pst"
+New-MailboxExportRequest -ContentFilter {(Received -lt $Today) -and (Received -gt '09/30/2016')} -Mailbox $UsersName -FilePath $FileName
+<# $FileName = $First + $i + ".pst"
 New-MailboxExportRequest -ContentFilter {(Received -lt '04/1/2016') -and (Received -gt '04/01/2015')} -Mailbox $UsersName -FilePath $FileName
 $FileName = $First + $i + ".pst"
 New-MailboxExportRequest -ContentFilter {(Received -lt '04/1/2015') -and (Received -gt '04/01/2014')} -Mailbox $UsersName -FilePath $FileName
@@ -67,11 +67,13 @@ $FileName = $First + $i + ".pst"
 New-MailboxExportRequest -ContentFilter {(Received -lt '04/1/2014') -and (Received -gt '04/01/2013')} -Mailbox $UsersName -FilePath $FileName
 $FileName = $First + $i + ".pst"
 New-MailboxExportRequest -ContentFilter {(Received -lt '04/1/2013') -and (Received -gt '04/01/2012')} -Mailbox $UsersName -FilePath $FileName
+#>
 }
 
 Function ArchiveMBX {
 # Export Arcvhive Folder to PST
-New-MailboxExportRequest -ContentFilter {(Received -lt $Today) -and (Received -gt '04/01/2016')} -Mailbox $UsersName -FilePath $FileName -IsArchive
+New-MailboxExportRequest -ContentFilter {(Received -lt $Today) -and (Received -gt '09/30/2016')} -Mailbox $UsersName -FilePath $FileName -IsArchive
+<# 
 $FileName = $First + $i + ".pst"
 New-MailboxExportRequest -ContentFilter {(Received -lt '04/1/2016') -and (Received -gt '04/01/2015')} -Mailbox $UsersName -FilePath $FileName -IsArchive
 $FileName = $First + $i + ".pst"
@@ -80,5 +82,5 @@ $FileName = $First + $i + ".pst"
 New-MailboxExportRequest -ContentFilter {(Received -lt '04/1/2014') -and (Received -gt '04/01/2013')} -Mailbox $UsersName -FilePath $FileName -IsArchive
 $FileName = $First + $i + ".pst"
 New-MailboxExportRequest -ContentFilter {(Received -lt '04/1/2013') -and (Received -gt '04/01/2012')} -Mailbox $UsersName -FilePath $FileName -IsArchive
+#>
 }
-

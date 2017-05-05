@@ -15,6 +15,10 @@
                         	: Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
                         
     Future Features     	: Better Error Checking
+                            : Reports for users not in AD
+                            : Reports for users with IRISDS.com Email
+                            : Report for users with no email
+                            : Report for users with non company email
              
 .FUNCTIONALITY
     Update Distibution List, Check user exists
@@ -52,9 +56,19 @@ Function CheckUser
         {
         $script:CheckUser = Get-ADuser -Filter "EmailAddress -like '$UserInfo'" -Properties Name,EmailAddress -Server $DomainController
             If ($CheckUser -eq $Null)
-            { Write-host $Name.Worker " Doesn't Exist in AD - Skipping" -foregroundcolor Red 2>> c:\temp\UserDoesntExist.csv} 
+            { 
+                Write-host $Name.Worker "Doesn't Exist in AD - Skipping" -foregroundcolor Red
+                Add-Content c:\temp\Epiq-AllUserDoesntExist.txt $Name.Worker
+            } 
             Else 
-            { CheckDL ($UserCredential) }
+            { 
+                CheckDL ($UserCredential) 
+            }
+        }
+        Else
+        {
+            Write-host "Email address is" $UserInfo
+            Add-Content c:\temp\Epiq-AllBadUserEmailAddress.txt $UserInfo
         }
     }
 }
@@ -63,11 +77,14 @@ Function CheckUser
 Function CheckDL
 {
     $members = Get-ADGroupMember -Identity $GroupName -Recursive | Select -ExpandProperty Name
-    If ($members -contains $CheckUser.Name) {Write-Host $CheckUser.EmailAddress "exists in the group"} 
-    Else {
-    # AddUser ($UserCredential)
-    Write-Host $CheckUser.EmailAddress "Being Added to group" $GroupName -foregroundcolor Yellow
-    AddUser ($UserCredential)
+    If ($members -contains $CheckUser.Name)
+    {
+        Write-Host $CheckUser.EmailAddress "exists in the group"
+    } 
+    Else 
+    {
+        Write-Host $CheckUser.EmailAddress "Being Added to group" $GroupName -foregroundcolor Yellow
+        AddUser ($UserCredential)
     } 
 }
 
