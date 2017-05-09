@@ -65,16 +65,16 @@ Function CheckUser
 # Updates User if it already exists
 Function UpdateUser
 {
-    $UpdateUser = Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties DisplayName, extensionAttribute3 | ? {$_.Name -like $Name.DisplayName}
+    $UpdateUser = Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties DisplayName, extensionAttribute3, Mail | ? {$_.Mail -like $Name.UserPrincipalName}
     # Checking if Value extensionAttribute3 is already present and correct
     if ($UpdateUser.extensionAttribute3 -ne $UDF)
     { 
-        # clear extensionAttribute3
-        Write-Host $Name.DisplayName "exists - Updating User Defined Field with" $UDF
-        Set-ADObject -Identity $name.DisplayName -Clear "extensionAttribute3" -Server $DomainController -Credential $UserCredential 2>> c:\temp\UpdateErrors.txt
-        # Set extensionAttribute3
-        Set-ADObject -Identity $name.DisplayName -Add @{"extensionAttribute3"=$UDF} -Server $DomainController -Credential $UserCredential 2>> c:\temp\AddErrors.txt
-    }
+        # clear  and Adds extensionAttribute3
+        Write-Host $Name.DisplayName "exists - Updating User Defined Field with" $UDF -foregroundcolor Green
+        Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties Mail | ? {$_.Mail -like $Name.UserPrincipalName} | `
+        Set-ADObject -Clear "extensionAttribute3" | `
+        Set-ADObject -Add @{"extensionAttribute3"=$UDF}
+ }
     Else 
     { 
         Write-Host $Name.DisplayName "Exists - With correct extensionAttribute3 Value" $UDF
@@ -95,14 +95,14 @@ Function AddUser
     $NewName = $Name.DisplayName
     Write-Host $NewName "Doesnt Exist !!! - Creating Contact" -foregroundcolor Yellow
     # adds proper values to variables if they are present
-    If ($name.Office) {$Office = $name.Office}
-    If ($name.BusinessPhone) {$TelephoneNumber = $name.BusinessPhone}
+    If ($name.City) {$Office = $name.City}
+    #If ($name.BusinessPhone) {$TelephoneNumber = $name.BusinessPhone}
     If ($name.Address) {$streetAddress = $name.Address}
-    If ($name.MobilePhone) {$Mobile = $name.MobilePhone}
+    #If ($name.MobilePhone) {$Mobile = $name.MobilePhone}
     If ($name.JobTitle) {$Title = $name.JobTitle}
     If ($name.department) {$department = $name.department}
     # Adds new object
-    New-ADObject -name $NewName -type contact -Path $ContactOU -Server $DomainController -Credential $UserCredential -OtherAttributes @{'extensionAttribute3'=$UDF;'physicalDeliveryOfficeName'=$Office;'TelephoneNumber'=$TelephoneNumber;'company'="DTI";'streetAddress'=$streetAddress;'mobile'=$Mobile;'title'=$Title;'department'=$department} 2>> c:\temp\AddErrors.txt
+    New-ADObject -name $NewName -type contact -Path $ContactOU -Server $DomainController -Credential $UserCredential -OtherAttributes @{'extensionAttribute3'=$UDF;'physicalDeliveryOfficeName'=$Office;'company'="DTI";'streetAddress'=$streetAddress;'title'=$Title;'department'=$department} 2>> c:\temp\AddErrors.txt
     # also Mail-Enable
     Enable-MailContact -Identity $Name.DisplayName -ExternalEmailAddress $name.UserPrincipalName -DomainController $DomainController 2>> c:\temp\EnableErrors.txt
     # create me an array of users that were added
@@ -146,7 +146,7 @@ $test = Test-Path $file
 ImportFile ($file)
 ExchangeConnect ($UserCredential)
 CheckUser ($UserCredential)
-ListUsersToDelete
+#ListUsersToDelete
 
 
 

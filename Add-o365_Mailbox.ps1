@@ -8,7 +8,7 @@
 .AUTHOR
     Kevin Bennett - 6/01/2016
 .EXAMPLE
-    .\Add_o365_Mailbox.ps1
+    .\Add-o365_Mailbox.ps1
 .SYNTAX
     No special Syntax
 .ALIASES
@@ -22,6 +22,7 @@
 .NOTE
     10/01/2016 - Added the AD Azure Sync
     10/12/2016 - Adjusted for post IRIS Migration, Removed forward to IRISDS.COM & Permissions
+    05/09/2017 - Adding Licenses to Disable for new o365 Products
 #>
 
 # Variables
@@ -29,15 +30,19 @@ $ExchangeOnlineSku = New-MsolLicenseOptions `
     -AccountSkuId `
     epiqsystems3:ENTERPRISEPACK `
     -DisabledPlans `
-    RMS_S_ENTERPRISE,`
-    OFFICESUBSCRIPTION,`
-    MCOSTANDARD,`
-    SHAREPOINTWAC,`
-    SHAREPOINTENTERPRISE,`
-    YAMMER_ENTERPRISE,`
-    INTUNE_O365,`
-    SWAY,`
-    PROJECTWORKMANAGEMENT
+    Deskless, `
+    FLOW_O365_P2, `
+    POWERAPPS_O365_P2, `
+    TEAMS1, `
+    PROJECTWORKMANAGEMENT, `
+    SWAY, `
+    INTUNE_O365, `
+    YAMMER_ENTERPRISE, `
+    RMS_S_ENTERPRISE, `
+    OFFICESUBSCRIPTION, `
+    MCOSTANDARD, `
+    SHAREPOINTWAC, `
+    SHAREPOINTENTERPRISE
 
 # ******** I want to put this in a do while loop so more than one can be added *****
 $account = Read-Host -Prompt 'What is the users username (bsmith)?'
