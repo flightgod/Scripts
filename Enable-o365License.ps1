@@ -16,7 +16,6 @@
                         	: Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
                         
     Future Features     	: Better Error Checking
-                            : Check and update additional Info from Export
 
 .FUNCTIONALITY
     Add Contacts, Update User Defined Field, List old Users
@@ -68,10 +67,10 @@ do
 } 
 until ($line -eq '')
 
-ForEach ($user in $list){
-$UserInfo = Get-MsolUser -UserPrincipalName $User
-EnableLicense
-}
+    ForEach ($user in $list){
+        $UserInfo = Get-MsolUser -UserPrincipalName $User
+        EnableLicense
+    }
 
 
 }
@@ -79,42 +78,24 @@ EnableLicense
 Function EnableLicense {
     # Setting User Location to US
     If ($UserInfo.UsageLocation -eq "US"){
-        Write-Host "User License Already Set"
+        Write-Host $user "Location Already Set" -ForegroundColor Green
     }
     Else {
-        Write-Host "Adding Info"
+        Write-Host "Adding Location for:" $user
         Set-MsolUser -UserPrincipalName $user -UsageLocation US
     }
     If ($UserInfo.IsLicensed -eq $True){
-        Write-Host "User Already Licensed"
+        Write-Host $user "Already Licensed" -ForegroundColor Green
     }
+    # applying license
     Else {
-        Write-Host "Adding License"
-        Set-MsolUserLicense -UserPrincipalName $User-AddLicenses epiqsystems3:ENTERPRISEPACK -LicenseOptions $ExchangeOnlineSku
+        Write-Host "Adding License for:" $user
+        Set-MsolUserLicense -UserPrincipalName $Userinfo.UserPrincipalName -AddLicenses epiqsystems3:ENTERPRISEPACK -LicenseOptions $ExchangeOnlineSku
     }
-    UpdateSettings
+    
 }
 
-Function UpdateSettings {
-# Enable Archive
-$archiveOn = Get-RemoteMailbox $user
-If ($archiveOn.ArchiveStatus -eq "Active"){
-    Write-Host "Already has archive enabled"
-    }
-    Else {
-     write-host "Enabling Arcvhive"
-     Enable-RemoteMailbox $user -Archive -WhatIf
-    }
-# Turn off Clutter
-$clutterOn = Get-Clutter -Identity $UserInfo.UserPrincipalName 
-If ($clutterOn.isEnabled -eq $False){
-    Write-Host "Clutter is not enabled"
-    }
-    Else {
-        Write-Host "Clutter is on, turning off"
-        Set-Clutter -Identity $UserInfo.UserPrincipalName -enable $false 
-    }
-}
 
+# Script Body
 Connecto365
 GetUsers
