@@ -23,7 +23,7 @@
 
 # Connects to Exchange - so you can run remotely
 $UserCredential = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/ -Authentication Kerberos -Credential $UserCredential
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://P054EXCMBXS01.amer.epiqcorp.com/PowerShell/ -Authentication Kerberos -Credential $UserCredential
 Import-PSSession $Session
 
 # Move Databases to Primary/Seconday

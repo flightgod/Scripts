@@ -46,37 +46,30 @@ Function ExchangeConnect
 }
 
 # Checks that Contact Exists
-Function CheckUser
-{
-    foreach ($Name in $import)
-    {
+Function CheckUser{
+    foreach ($Name in $import){
         $CheckUser = Get-ADObject -LDAPFilter "objectClass=Contact" -SearchBase $ContactOU -Server $DomainController -Properties Name, Mail -Credential $UserCredential | ? {$_.Mail -like $Name.UserPrincipalName}
-            If ($CheckUser -eq $Null)
-            {
+            If ($CheckUser -eq $Null){
                 AddUser ($UserCredential)
             } 
-            Else 
-            {
+            Else {
                 UpdateUser ($UserCredential)
             }
     }
 }
 
 # Updates User if it already exists
-Function UpdateUser
-{
+Function UpdateUser{
     $UpdateUser = Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties DisplayName, extensionAttribute3, Mail | ? {$_.Mail -like $Name.UserPrincipalName}
     # Checking if Value extensionAttribute3 is already present and correct
-    if ($UpdateUser.extensionAttribute3 -ne $UDF)
-    { 
-        # clear  and Adds extensionAttribute3
+    if ($UpdateUser.extensionAttribute3 -ne $UDF){ 
+        # clear and Adds extensionAttribute3
         Write-Host $Name.DisplayName "exists - Updating User Defined Field with" $UDF -foregroundcolor Green
         Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties Mail | ? {$_.Mail -like $Name.UserPrincipalName} | `
-        Set-ADObject -Clear "extensionAttribute3" | `
-        Set-ADObject -Add @{"extensionAttribute3"=$UDF}
+        Set-ADObject -Clear "extensionAttribute3" -Credential $UserCredential | `
+        Set-ADObject -Add @{"extensionAttribute3"=$UDF} -Credential $UserCredential
  }
-    Else 
-    { 
+    Else{ 
         Write-Host $Name.DisplayName "Exists - With correct extensionAttribute3 Value" $UDF
     }
 }
