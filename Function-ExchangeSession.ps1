@@ -21,19 +21,28 @@
     This script can be called to connect to exchange remotely to run Commands
 #>
 
-Function ConnectExchangeSession()
+# Connects to Exchange
+Function ExchangeConnect 
 {
-# Connects to Exchange - so you can run remotely
-$UserCredential = Get-Credential
-$Session = New-PSSession `
--ConfigurationName Microsoft.Exchange `
--ConnectionUri http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/ `
--Authentication Kerberos `
--Credential $UserCredential
-Import-PSSession $Session
+    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+        Write-Host "Session already established to exchange" -ForegroundColor Green
+    }
+    Else {
+        Write-Host "Session not made to exchange, creating session now" -ForegroundColor Red
+        $UserCredential = Get-Credential
+        $Session = New-PSSession `
+        -ConfigurationName Microsoft.Exchange `
+        -ConnectionUri http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/ `
+        -Authentication Kerberos `
+        -Credential $UserCredential
+        Import-PSSession $Session
+    }
 }
 
 Function DisconnectExchangeSession()
 {
 Exit-PSSession $Session
 }
+
+
+

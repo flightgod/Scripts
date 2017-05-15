@@ -68,6 +68,7 @@ Function UpdateUser{
         Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties Mail | ? {$_.Mail -like $Name.UserPrincipalName} | `
         Set-ADObject -Clear "extensionAttribute3" -Credential $UserCredential | `
         Set-ADObject -Add @{"extensionAttribute3"=$UDF} -Credential $UserCredential
+        Add-Content c:\temp\DTI-ContactsAddedField.txt $UserInfo
  }
     Else{ 
         Write-Host $Name.DisplayName "Exists - With correct extensionAttribute3 Value" $UDF
