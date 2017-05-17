@@ -33,8 +33,8 @@ $ServerArray = @(`
 Function ExchangeConnect 
 {
     If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
-    Write-Host "Session already established to exchange" -ForegroundColor Green
-}
+        Write-Host "Session already established to exchange" -ForegroundColor Green
+    }
     Else {
         Write-Host "Session not made to exchange, creating session now" -ForegroundColor Red
         $UserCredential = Get-Credential

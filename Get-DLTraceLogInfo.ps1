@@ -23,33 +23,21 @@
 #>
 
 # Variables
-
 $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
 $Date = Get-Date
 $Today = $Date | Get-date -Format MM/dd/yyyy
 $Yesterday = $Date.AddDays(-1) | Get-Date -Format MM/dd/yyyy
 $LastMonth = $Date.AddMonths(-1) | Get-date -Format MM/dd/yyyy
 $LastYear = $Date.AddYears(-1) | Get-Date -Format MM/dd/yyyy
+$ServerArray = @("ET016-EQEXCHUB1","ET016-EQEXCHUB2","ET008-EQEXCHUB1","ET019-EQMBX01","ET016-EX10HUB1","P054EXCTRNS01","ET016-EX10HUB2","P054EXCTRNS02","P061EXCHUBS01","P061EXCHUBS02")
+
 $DLSearch = "ITTeams@epiqsystems.com"
 
-$ServerArray = @(`
-"ET016-EQEXCHUB1",`
-"ET016-EQEXCHUB2",`
-"ET008-EQEXCHUB1",`
-"ET019-EQMBX01",`
-"ET016-EX10HUB1",`
-"P054EXCTRNS01",`
-"ET016-EX10HUB2",`
-"P054EXCTRNS02",`
-"P061EXCHUBS01",`
-"P061EXCHUBS02")
-
-# Connects to Exchange
-Function ExchangeConnect 
-{
+Function ExchangeConnect # Connects to Exchange
+{ 
     If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
     Write-Host "Session already established to exchange" -ForegroundColor Green
-}
+    }
     Else {
         Write-Host "Session not made to exchange, creating session now" -ForegroundColor Red
         $UserCredential = Get-Credential
@@ -62,18 +50,23 @@ Function ExchangeConnect
     }
 }
 
-Function o365Connect{
-    $mycreds = Get-Credential
-    Import-Module MSOnline
-    Connect-MsolService -Credential $mycreds
-$O365Session = New-PSSession `
-    -ConfigurationName Microsoft.Exchange `
-    -ConnectionUri https://ps.outlook.com/PowerShell-LiveID?PSVersion=4.0 `
-    -Authentication Basic `
-    -AllowRedirection `
-    -Credential $mycreds
-Import-PSSession $O365Session
-
+Function o365Connect # Connects to O365
+{ 
+    If ($O365Session.ComputerName -like "ps.outlook.com"){
+    Write-Host "Session already established to exchange" -ForegroundColor Green
+    }
+    Else {
+        $mycreds = Get-Credential
+        Import-Module MSOnline
+        Connect-MsolService -Credential $mycreds
+        $O365Session = New-PSSession `
+        -ConfigurationName Microsoft.Exchange `
+        -ConnectionUri https://ps.outlook.com/PowerShell-LiveID?PSVersion=4.0 `
+        -Authentication Basic `
+        -AllowRedirection `
+        -Credential $mycreds
+        Import-PSSession $O365Session
+    }
 }
 
 Function OnPremTrace {
