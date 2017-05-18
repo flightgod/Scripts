@@ -52,7 +52,7 @@ Function CheckUser
     {
         $script:UserInfo = $Name."Email Address"
         # Only checks if Email address is epiqsystems.com
-        If ($UserInfo -Like "*epiqsystems.com")
+        If ($UserInfo -Like "*epiqsystems.com" -or $UserInfo -like "*irisds*")
         {
         $script:CheckUser = Get-ADuser -Filter "EmailAddress -like '$UserInfo'" -Properties Name,EmailAddress -Server $DomainController
             If ($CheckUser -eq $Null)
