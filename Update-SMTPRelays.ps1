@@ -38,7 +38,7 @@ Function ExchangeConnect
     Else {
         Write-Host "Session not made to exchange, creating session now" -ForegroundColor Red
         $UserCredential = Get-Credential
-        $Session = New-PSSession `
+        $Script:Session = New-PSSession `
         -ConfigurationName Microsoft.Exchange `
         -ConnectionUri $ExchangeServer `
         -Authentication Kerberos `

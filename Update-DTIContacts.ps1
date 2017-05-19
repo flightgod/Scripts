@@ -7,18 +7,21 @@
     Does exist it adds a User Defined Field with this month in it so we can see when it was last updated. It will also give a list of users
     that are no longer with DTI and flag for removal
 
+.INSTRUCTIONS
+    Run this after getting the list from Paul, no need to do anything special to the Export except ensure it is named $file variable
+
 .NOTES  
-    Current Version     	: 1.1
+    Current Version     	: 1.2
     
     History			        : 1.0 - Posted 5/1/2017 - First iteration - kbennett 
                             : 1.1 - Posted 5/2/2017 - Added better error checking - kbennett
+                            : 1.2 - Posted 5/19/2017 - Added the RemoveUser Functionality - kbennett
         
     Rights Required		    : Exchange Permissions to Add/Edit Contacts
 				            : AD Permissions to Add/Edit Objects
                         	: Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
                         
-    Future Features     	: Better Error Checking
-                            : Check and update additional Info from Export
+    Future Features     	: Check and update additional Info from Export
 
 .FUNCTIONALITY
     Add Contacts, Update User Defined Field, List old Users
@@ -31,6 +34,7 @@ $ContactOU = "OU=Contacts,OU=DTI,DC=amer,DC=EPIQCORP,DC=COM"
 $file = "C:\Temp\List.csv"
 $RemoveFile ="c:\Temp\RemoveList.csv"
 $DomainController = "P016ADSAMDC01.amer.EPIQCORP.COM"
+$NewPath = "OU=Delete,OU=Exchange-Team,DC=amer,DC=EPIQCORP,DC=COM"
 
 
 # Connects to Exchange
@@ -110,7 +114,7 @@ Function ListUsersToDelete {
     $RemoveList = Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties Name, Mail, extensionAttribute3 | `
         ? {$_.extensionAttribute3 -NotLike $UDF} | `
         Select Name, Mail
-    Write-Host "Number of users that were not updated this time:"$RemoveList.count
+    Write-Host "Number of users that were not updated this time:"$RemoveList.count -ForegroundColor Red
     $testPath = Test-Path $RemoveFile
     If ($testPath -eq $true) {
         Write-Warning "Ops, File is already there, I am removing $RemoveFile"
@@ -119,6 +123,13 @@ Function ListUsersToDelete {
     #$RemoveList > $RemoveFile
     Write-Host "List saved to" $RemoveFile
     Add-Content $RemoveFile $RemoveList
+
+    # Move users to Delete Folder
+    Write-Host "Moving users in that dont have $UDF in thier value to $NewPath" -ForegroundColor Magenta
+    Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties Name, Mail, extensionAttribute3 | `
+        ? {$_.extensionAttribute3 -NotLike $UDF} |`
+        Move-ADObject -Server $DomainController -TargetPath $NewPath -Credential $UserCredential
+    
 }
 
 # Checks that the file is there, then imports it
@@ -137,4 +148,4 @@ Function ImportFile {
 ImportFile ($file)
 ExchangeConnect ($UserCredential)
 CheckUser ($UserCredential)
-ListUsersToDelete
+# ListUsersToDelete
