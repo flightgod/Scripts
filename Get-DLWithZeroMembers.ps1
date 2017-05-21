@@ -27,12 +27,13 @@
 # Variables
 $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
 $Domain = "amer.epiqcorp.com"
-$NewPath = "OU=Delete,OU=Exchange-Team,DC=amer,DC=EPIQCORP,DC=COM"
+$NewPath = "OU=GroupsDelete,OU=Exchange-Team,DC=amer,DC=EPIQCORP,DC=COM"
 $File = "c:\Temp\ZeroDLtoDelete.txt"
 $Date = Get-Date
 $Today = $Date | Get-date -Format MM/dd/yyyy
 $LastMonth = $Date.AddMonths(-1) | Get-date -Format MM/dd/yyyy
 $BlankDL = @()
+$DomainController = "P016ADSAMDC01.amer.EPIQCORP.COM"
 
 # Connects to Exchange
 Function ExchangeConnect 
@@ -42,7 +43,7 @@ Function ExchangeConnect
     }
     Else {
         Write-Host "Session not made to exchange, creating session now" -ForegroundColor Red
-        $UserCredential = Get-Credential
+        $script:UserCredential = Get-Credential
         $Session = New-PSSession `
         -ConfigurationName Microsoft.Exchange `
         -ConnectionUri $ExchangeServer `
@@ -55,7 +56,7 @@ Function ExchangeConnect
 # Gets DL's with No Members
 Function GetDL {
     $dls = get-distributiongroup -resultsize unlimited
-    $BlankDL = $dls.name |? {!(get-distributiongroupmember $_)}
+    $script:BlankDL = $dls.name |? {!(get-distributiongroupmember $_)}
     Write-Host "Searched a total of "$dls.count " Distros for Zero Members and found " $BlankDL.count " With no members" -ForegroundColor Yellow
     $BlankDL > $File 
 }
@@ -63,7 +64,8 @@ Function GetDL {
 # Move those to an OU to be able to delete easily
 Function MoveDL {
     foreach ($IndividualDL in $BlankDL){
-         Move-ADObject $IndividualDL -Server $Domain -TargetPath $NewPath
+         Get-ADGroup $IndividualDL | `
+         Move-adobject -identity {$_.objectguid} -Server $DomainController -TargetPath $NewPath -Credential $UserCredential
     }
 }
 
@@ -83,4 +85,5 @@ Function CheckDateCreated {
 # Main Script Body
 ExchangeConnect
 GetDL
-# MoveDL
+CheckDateCreated($BlankDL)
+# MoveDL($BlankDL,$UserCredentials)
