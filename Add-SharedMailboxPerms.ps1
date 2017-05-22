@@ -155,10 +155,6 @@ $list = $newlist
 
 Foreach ($alias in $MBs)
 {
-#$alias = Read-host "enter mailbox alias"
-
-
-
 While ((Get-MailboxPermission $alias | Measure-Object).count -le 2){
 Write-host "Waiting for mailbox to be ready"
 sleep 30

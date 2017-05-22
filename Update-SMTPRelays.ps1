@@ -74,6 +74,6 @@ Function CopyIP {
 
 
 # Main Script Commands
-#ExchangeConnect
+ExchangeConnect
 GetCurrentIP
-CopyIP $ServerArray
+CopyIP

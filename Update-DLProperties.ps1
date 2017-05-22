@@ -43,22 +43,26 @@ Function ExchangeConnect
     }
 }
 
-
-Function GetList {
-    # Gets DL with Allow only internal
-    $Distro = @()
+# Gets DL with Allow only internal
+Function GetListLimited {
+    $Script:Distro = @()
     $Distro = Get-DistributionGroup -ResultSize Unlimited | Where {$_.RequireSenderAuthenticationEnabled -eq $true} | Select SamAccountName, AcceptMessagesOnlyFrom
     $Distro
 
+}
+
+# Sets DL with Allow Only Internal On to Off
+Function SetListLimitedOff {
     ForEach ($DL in $Distro){
           Set-DistributionGroup $Dl.SamAccountName -RequireSenderAuthenticationEnabled $False -Forceupgrade -bypassSecuritygroupManagerCheck
     }
+}
 
-
-    # Gets DL with only specific members can send to it
+# Gets DL with only specific members can send to it
+{Function GetListMembers {
      Get-DistributionGroup -ResultSize Unlimited | Where {$_.AcceptMessagesOnlyFromSendersOrMembers -ne $null}
-
 }
 
 # Main Script Commands
 ExchangeConnect
+GetListLimited

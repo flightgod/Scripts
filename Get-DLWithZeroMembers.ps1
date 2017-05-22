@@ -7,6 +7,9 @@
 
 .INSTRUCTIONS
     Put instructions for running all the task, Script, CR .. etc (or where to find them)
+    1. Run this script
+    2. Create CR for Deleting
+    3. After Approval, Delete
 
 .NOTES  
     Current Version     	: 1.0
@@ -18,7 +21,7 @@
                         	: Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
                         
     Future Features     	: Better Error Checking
-                            : Check and update additional Info from Export
+                            : Work on identifying and not moving "New" Groups - CheckDateCreated Function
 
 .FUNCTIONALITY
     Search DL, Change Group Info, Move AD Object
@@ -69,7 +72,7 @@ Function MoveDL {
     }
 }
 
-
+# Check weather it is a new group, maybe created recently
 Function CheckDateCreated {
     ForEach ($DL in $BlankDL){
         $OldDL = Get-DistributionGroup -Identity $DL -ResultSize Unlimited | ? {$_.WhenCreated -gt $LastMonth}
@@ -85,5 +88,5 @@ Function CheckDateCreated {
 # Main Script Body
 ExchangeConnect
 GetDL
-CheckDateCreated($BlankDL)
+# CheckDateCreated($BlankDL)
 # MoveDL($BlankDL,$UserCredentials)
