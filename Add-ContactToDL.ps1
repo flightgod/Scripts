@@ -24,6 +24,18 @@
 $ContactOU = "OU=Contacts,OU=DTI,DC=amer,DC=EPIQCORP,DC=COM"
 $DomainController = "P016ADSAMDC01.amer.EPIQCORP.COM"
 
+Function GetDL {
+    $script:DL = ReadHost "What DL do you want to add a contact to?"
+    if ($DL -eq ""){
+        Write-Host "You forgot to enter a DL Name" -ForegroundColor Red
+        GetDL
+    }
+    Else {
+        GetContact
+    }
+}
+
+
 
 Function GetContact {
     $Script:Name = Read-Host "What is the Contacts Email to add? "
@@ -50,4 +62,4 @@ Function AddContact {
         }
 }
 
-GetContact
+GetDL

@@ -58,7 +58,7 @@ Function TestServer{
 
 # Get Current List of IP
 Function GetCurrentIP{
-    $RecvConnNew = (Get-ReceiveConnector "ET016-EQEXCHUB1\Internal Relay - Hub1").RemoteIPRanges
+    $script:RecvConnNew = (Get-ReceiveConnector "ET016-EQEXCHUB1\Internal Relay - Hub1").RemoteIPRanges
 }
 
 
