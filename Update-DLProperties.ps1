@@ -45,24 +45,35 @@ Function ExchangeConnect
 
 # Gets DL with Allow only internal
 Function GetListLimited {
+    Write-Host "Checking for Groups that are set to only accept email from internal users"
     $Script:Distro = @()
     $Distro = Get-DistributionGroup -ResultSize Unlimited | Where {$_.RequireSenderAuthenticationEnabled -eq $true} | Select SamAccountName, AcceptMessagesOnlyFrom
-    $Distro
-
+    If ($Distro -eq $NULL){
+        Write-Host "No Groups Found"
+    } 
+    Else {
+        Write-host "Found:"
+        $Distro
+        #SetListLimitedOff
+    }
 }
 
 # Sets DL with Allow Only Internal On to Off
 Function SetListLimitedOff {
     ForEach ($DL in $Distro){
-          Set-DistributionGroup $Dl.SamAccountName -RequireSenderAuthenticationEnabled $False -Forceupgrade -bypassSecuritygroupManagerCheck
+        Write_host "Setting Value to False on the above DL's"
+        Set-DistributionGroup $Dl.SamAccountName -RequireSenderAuthenticationEnabled $False -Forceupgrade -bypassSecuritygroupManagerCheck
     }
 }
 
 # Gets DL with only specific members can send to it
-{Function GetListMembers {
-     Get-DistributionGroup -ResultSize Unlimited | Where {$_.AcceptMessagesOnlyFromSendersOrMembers -ne $null}
+Function GetListMembers {
+    write-host "Checking for Groups that only allow specific members to send to it"
+    $PermittedToSend = Get-DistributionGroup -ResultSize Unlimited | Where {$_.AcceptMessagesOnlyFromSendersOrMembers -ne $null}
+    $PermittedToSend.count
 }
 
 # Main Script Commands
 ExchangeConnect
 GetListLimited
+GetListMembers
