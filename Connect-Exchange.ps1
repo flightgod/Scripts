@@ -25,7 +25,7 @@
 
 
 # Connects to Exchange
-Function ExchangeConnect {
+Function Connect-Exchange {
 $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
     # If already connected skip - makes it cleaner to look at     
     If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com") {
@@ -43,16 +43,3 @@ $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
     }
 }
 
-Function o365connect {
-    $o365Credential = Get-Credential
-    Import-Module MSOnline
-    Connect-MsolService -Credential $o365Credential
-    $o365Session = New-PSSession `
-    -ConfigurationName Microsoft.Exchange `
-    -ConnectionUri https://ps.outlook.com/PowerShell-LiveID?PSVersion=4.0 `
-    -Authentication Basic `
-    -AllowRedirection `
-    -Credential $o365Credential
-    Import-PSSession $o365Session
-
-}

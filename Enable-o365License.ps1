@@ -21,7 +21,6 @@
     Add Contacts, Update User Defined Field, List old Users
 #>
 
-
 # Variables
 $ExchangeOnlineSku = New-MsolLicenseOptions `
     -AccountSkuId `
@@ -41,61 +40,39 @@ $ExchangeOnlineSku = New-MsolLicenseOptions `
     SHAREPOINTWAC, `
     SHAREPOINTENTERPRISE
 
-Function Connecto365 {
-# To Connect to o365
-#Import-Module MSOnline
-#$url = "https://ps.outlook.com/PowerShell-LiveID?PSVersion=5.1.14393.1066"
-#$ocred = Get-Credential
-#$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri $url -Credential $ocred -Authentication Basic -AllowRedirection
-#Import-PSSession $Session
+# Modules
+Import-Module .\Connect-o365.ps1
 
-
-Connect-MsolService
-
-}
-
-Function GetUsers {
-$list = @() 
-Write-host "Enter Users Email Address to Enable o365 Licenses:" 
-do 
-{
-    $line = (Read-Host " ")
-    if ($line -ne '') 
-        {
-            $list += $line
-         }
-} 
-until ($line -eq '')
-
-    ForEach ($user in $list){
-        $UserInfo = Get-MsolUser -UserPrincipalName $User
-        EnableLicense
-    }
-
-
-}
 
 Function EnableLicense {
     # Setting User Location to US
     If ($UserInfo.UsageLocation -eq "US"){
-        Write-Host $user "Location Already Set" -ForegroundColor Green
+        Write-Host $user.User "Location Already Set" -ForegroundColor Green
     }
     Else {
-        Write-Host "Adding Location for:" $user
-        Set-MsolUser -UserPrincipalName $user -UsageLocation US
+        Write-Host "Adding Location for:" $user.User
+        Set-MsolUser -UserPrincipalName $user.User -UsageLocation US
     }
     If ($UserInfo.IsLicensed -eq $True){
-        Write-Host $user "Already Licensed" -ForegroundColor Green
+        Write-Host $user.User "Already Licensed" -ForegroundColor Green
     }
     # applying license
     Else {
-        Write-Host "Adding License for:" $user
+        Write-Host "Adding License for:" $user.User
         Set-MsolUserLicense -UserPrincipalName $Userinfo.UserPrincipalName -AddLicenses epiqsystems3:ENTERPRISEPACK -LicenseOptions $ExchangeOnlineSku
     }
     
 }
 
+Function ImportUsers {
+    $File = "c:\temp\LicUsers.csv"
+    $script:import = Import-csv $file
+            ForEach ($user in $import){
+                $UserInfo = Get-MsolUser -UserPrincipalName $user.User
+                EnableLicense 
+            }
 
+}
 # Script Body
-Connecto365
-GetUsers
+Connect-o365
+ImportUsers
