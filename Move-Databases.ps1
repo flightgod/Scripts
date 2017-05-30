@@ -43,4 +43,3 @@ Do
 }
 until ($i -eq $count)
 
-Exit-PSSession $Session
