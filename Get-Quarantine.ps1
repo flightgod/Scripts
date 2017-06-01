@@ -48,3 +48,5 @@ Foreach ($domain in $List){
 # Disconnects Session 
 $s = Get-PSSession -ComputerName ps.outlook.com
 $s | Remove-PSSession
+
+pause
