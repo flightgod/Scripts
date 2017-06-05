@@ -38,7 +38,7 @@ $Servers = @(`
 
 Function GetCreds {
     If ($UserCredentials.UserName -eq $null){
-        $UserCredentials = Get-Credential
+        $script:UserCredentials = Get-Credential
     }
 }
 
