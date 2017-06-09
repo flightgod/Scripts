@@ -71,6 +71,7 @@ Function GetListMembers {
     write-host "Checking for Groups that only allow specific members to send to it"
     $PermittedToSend = Get-DistributionGroup -ResultSize Unlimited | Where {$_.AcceptMessagesOnlyFromSendersOrMembers -ne $null}
     $PermittedToSend.count
+    $PermittedToSend
 }
 
 # Main Script Commands
