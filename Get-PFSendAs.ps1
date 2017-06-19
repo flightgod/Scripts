@@ -44,23 +44,30 @@ Function ExchangeConnect
 
 
 Function PFSendAs {
-Get-ADObject `
-    -Server "amer.epiqcorp.com" `
-    -Filter "ObjectClass -eq 'publicFolder'" `
-    -SearchBase 'CN=Microsoft Exchange System Objects,DC=amer,DC=epiqcorp,DC=com' | `
-    ForEach {
-        Get-ADPermission $_.DistinguishedName |`
+
+$Script:AllObjectsUsers = Get-ADObject `
+    -Server "P016ADSAMDC02.amer.EPIQCORP.COM" `
+    -Filter {(ObjectClass -eq "user")}
+   $AllObjectsUsers.count
+
+    ForEach ($User in $AllObjectsUsers) {
+        $script:SendAsPermissions = Get-ADPermission $User.DistinguishedName |`
         Where { 
             $_.ExtendedRights -like '*Send-As*' `
             -and $_.User.ToString() -ne 'NT AUTHORITY\SELF' `
             -and $_.User.ToString() -ne 'AMER\ICADMIN' `
             -and $_.User.ToString() -ne 'AMER\svc_*' `
             -and $_.User.Tostring() -ne 'AMER\svc_unitymsgstoresvc' `
+            -and $_.user.ToString() -ne 'AMER\qmigrate' `
+            -and $_.user.ToString() -ne 'AMER\bspeich' `
             -and $_.user.ToString() -like 'amer\*'
-            } | 
-        Select Identity,User
-    } | Export-Csv .\sendAsPermissions.csv -NoTypeInformation
+        } | 
+        Select Identity,User | FT -AutoSize | Export-Csv .\User_sendAsPermission_newl.csv -NoTypeInformation
+        $SendAsPermissions
+        $AllObjectsUser.item
+    } 
+    
+    #$SendAsPermissions | Export-Csv .\User_sendAsPermission_newl.csv -NoTypeInformation -Append
 }
-
 ExchangeConnect
-PFSendAs
+PFSendAs                 

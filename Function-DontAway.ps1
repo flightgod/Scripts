@@ -1,4 +1,4 @@
-﻿<#
+﻿<#  
 .SYNOPSIS
     Keeps computer from going to sleep
 .DESCRIPTION

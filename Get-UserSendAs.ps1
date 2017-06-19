@@ -1,6 +1,6 @@
 ﻿<#  
 .SYNOPSIS
-   Get users with Public Folder SendAs permissions
+   Get users with SendAs permissions
 
 .DESCRIPTION  
    
@@ -21,9 +21,10 @@
 .FUNCTIONALITY
   
 #>
-
 # Variables
 $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+$file = "C:\kbtemp\alllist.csv"
+
 
 Function ExchangeConnect 
 {
@@ -42,24 +43,47 @@ Function ExchangeConnect
     }
 }
 
+# Checks that the file is there, then imports it
+Function ImportFile {
+    $test = Test-Path $file
+    If ($test -eq $true) {
+        $script:import = Import-csv $file
+    }
+    Else {
+        Write-Warning "Something went Wrong: Import File is missing at $file"
+        Break
+    }
+}
+
+Function GetUser {
+$Script:AllObjectsUsers = Get-ADObject `
+   -Server "P016ADSAMDC02.amer.EPIQCORP.COM" `
+    -LDAPFilter "(objectClass=user)"
+    $AllObjectsUsers.count | Export-csv .\AllUsers.csv
+}
+
 
 Function UserSendAs {
-Get-ADObject `
-    -Properties * `
-    -Filter {(ObjectClass -eq "user" -and CN -like 'b*')} |`
-    ForEach {
-        Get-ADPermission $_.DistinguishedName |`
+    $import.count
+    ForEach ($Name in $import) {
+               
+        Get-ADPermission $Name.DistinguishedName  | `
         Where { 
-            $_.ExtendedRights -like '*Send-As*' `
+            $_.ExtendedRights -like '*Send-As*'`
             -and $_.User.ToString() -ne 'NT AUTHORITY\SELF' `
             -and $_.User.ToString() -ne 'AMER\ICADMIN' `
             -and $_.User.ToString() -ne 'AMER\svc_*' `
             -and $_.User.Tostring() -ne 'AMER\svc_unitymsgstoresvc' `
+            -and $_.user.ToString() -ne 'AMER\qmigrate' `
+            -and $_.user.ToString() -ne 'AMER\bspeich' `
             -and $_.user.ToString() -like 'amer\*'
-            } | 
-        Select Identity,User
-    } | Export-Csv .\sendAsPermissions1.csv -NoTypeInformation -Append
+        } | Select Identity,User | Export-CSV .\UserWithSendAsPermissions.csv -Append
+        $Name.distinguishedName        
+    } 
+    
 }
-
 ExchangeConnect
-UserSendAs
+#GetUsers
+#ImportFile
+UserSendAs    
+
