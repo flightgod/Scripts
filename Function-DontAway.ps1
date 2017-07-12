@@ -1,4 +1,4 @@
-﻿<#  
+﻿<#
 .SYNOPSIS
     Keeps computer from going to sleep
 .DESCRIPTION
@@ -97,4 +97,6 @@ Add-Type -TypeDefinition $cSource -ReferencedAssemblies System.Windows.Forms,Sys
 [Clicker]::LeftClickAtPoint(600,600)
 }
 
-TypeSpace        
+TypeSpace   
+
+     

@@ -11,11 +11,12 @@
     Run this after getting the list from Paul, no need to do anything special to the Export except ensure it is named $file variable
 
 .NOTES  
-    Current Version     	: 1.2
+    Current Version     	: 1.3
     
     History			        : 1.0 - Posted 5/1/2017 - First iteration - kbennett 
                             : 1.1 - Posted 5/2/2017 - Added better error checking - kbennett
                             : 1.2 - Posted 5/19/2017 - Added the RemoveUser Functionality - kbennett
+                            : 1.3 - Posted 6/19/2017 - Added the Telephone Number lookup and updating - kbennett
         
     Rights Required		    : Exchange Permissions to Add/Edit Contacts
 				            : AD Permissions to Add/Edit Objects
@@ -29,7 +30,7 @@
 
 # Variables
 $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
-$UDF = "MAY"
+$UDF = "JULY"
 $ContactOU = "OU=Contacts,OU=DTI,DC=amer,DC=EPIQCORP,DC=COM"
 $file = "C:\Temp\List.csv"
 $RemoveFile ="c:\Temp\RemoveList.csv"
@@ -45,8 +46,8 @@ Function ExchangeConnect
     }
     Else {
         Write-Host "Session not made to exchange, creating session now" -ForegroundColor Red
-        $UserCredential = Get-Credential
-        $Session = New-PSSession `
+        $Script:UserCredential = Get-Credential
+        $Script:Session = New-PSSession `
         -ConfigurationName Microsoft.Exchange `
         -ConnectionUri $ExchangeServer `
         -Authentication Kerberos `
@@ -70,41 +71,87 @@ Function CheckUser {
 
 # Updates User if it already exists
 Function UpdateUser {
-    $UpdateUser = Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties DisplayName, extensionAttribute3, Mail | ? {$_.Mail -like $Name.UserPrincipalName}
+    $UpdateUser = Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties DisplayName, extensionAttribute3, Mail, telephoneNumber, Mobile | ? {$_.Mail -like $Name.UserPrincipalName}
     # Checking if Value extensionAttribute3 is already present and correct
     if ($UpdateUser.extensionAttribute3 -ne $UDF){ 
         # clear and Adds extensionAttribute3
-        Write-Host $Name.DisplayName "exists - Updating User Defined Field with" $UDF -foregroundcolor Green
+        Write-Host $Name.DisplayName "exists - Updating User Defined Field with" $UDF -foregroundcolor Yellow
         Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties Mail | ? {$_.Mail -like $Name.UserPrincipalName} | `
             Set-ADObject -replace @{extensionAttribute3=$UDF} -Credential $UserCredential
         Add-Content c:\temp\DTI-ContactsAddedField.txt $Name.DisplayName
     }
     Else{ 
-        Write-Host $Name.DisplayName "Exists - With correct extensionAttribute3 Value" $UDF
+        Write-Host $Name.DisplayName "Exists - With correct extensionAttribute3 Value" $UDF -foregroundcolor Green
     }
+    # Checking if Phone Number is blank in AD
+    If ($updateUser.telephoneNumber -eq $NULL){
+        Write-Host "Telephone number is blank, Updating for -" $Name.DisplayName -foregroundcolor Yellow
+        # Error Checking incase the Source file has blanks
+        # sets variables to something
+        $TelephoneNumber = "NoPhoneNumber"
+        # adds proper values to variables if they are present
+        If ($name.BusinessPhone) {$TelephoneNumber = $name.BusinessPhone}
+        Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties Mail | ? {$_.Mail -like $Name.UserPrincipalName} |`
+        set-ADObject -add @{telephoneNumber=$TelephoneNumber} -Credential $UserCredential
+    }
+    #Checking if Mobile Number is Blank in AD
+    If ($updateUser.mobile -eq $NULL){
+        Write-Host "Mobile number is blank, Updating for -" $Name.DisplayName -foregroundcolor Yellow
+        # Error Checking incase the Source file has blanks
+        # sets variables to something
+        $Mobile = "NoMobileNumber"
+        # adds proper values to variables if they are present
+        If ($name.MobilePhone) {$Mobile = $name.MobilePhone}
+        Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties Mail | ? {$_.Mail -like $Name.UserPrincipalName} |`
+        set-ADObject -add @{mobile=$Mobile} -Credential $UserCredential
+        }
 }
 
 # Adds new Contact if it doesnt already exist
 Function AddUser {
     # Error Checking incase the Source file has blanks
     # sets variables to something
-    $Title = "Title"
-    $Office = "Office"
-    $TelephoneNumber = "Phone"
-    $streetAddress = "Street"
-    $Mobile = "Mobile"
-    $department = "Dept"
+    $Title = "NoTitle"
+    $Office = "NoOffice"
+    $TelephoneNumber = "NOPhoneNumber"
+    $streetAddress = "NoStreet"
+    $Mobile = "NoMobileNumber"
+    $department = "NoDept"
+    $firstName = "First"
+    $lastName = "Last"
     $NewName = $Name.DisplayName
+    $string = $NewName
+    $firstName = $string.split(" ")[0]
+    $lastName = $string.split(" ")[1]
+    $NewDisplayName = "$lastname, $firstname"
+    
     Write-Host $NewName "Doesnt Exist !!! - Creating Contact" -foregroundcolor Yellow
     # adds proper values to variables if they are present
     If ($name.City) {$Office = $name.City}
-    #If ($name.BusinessPhone) {$TelephoneNumber = $name.BusinessPhone}
+    If ($name.BusinessPhone) {$TelephoneNumber = $name.BusinessPhone}
     If ($name.Address) {$streetAddress = $name.Address}
-    #If ($name.MobilePhone) {$Mobile = $name.MobilePhone}
+    If ($name.MobilePhone) {$Mobile = $name.MobilePhone}
     If ($name.JobTitle) {$Title = $name.JobTitle}
     If ($name.department) {$department = $name.department}
     # Adds new object
-    New-ADObject -name $NewName -type contact -Path $ContactOU -Server $DomainController -Credential $UserCredential -OtherAttributes @{'extensionAttribute3'=$UDF;'physicalDeliveryOfficeName'=$Office;'company'="DTI";'streetAddress'=$streetAddress;'title'=$Title;'department'=$department} 2>> c:\temp\AddErrors.txt
+    New-ADObject `
+        -name $NewName `
+        -displayName $NewDisplayName `
+        -type contact `
+        -Path $ContactOU `
+        -Server $DomainController `
+        -Credential $UserCredential `
+        -OtherAttributes @{
+            'extensionAttribute3'=$UDF;`
+            'physicalDeliveryOfficeName'=$Office;`
+            'company'="DTI";`
+            'streetAddress'=$streetAddress;`
+            'title'=$Title;`
+            'department'=$department;`
+            'givenName' = $firstname;`
+            'sn' = $lastName;`
+            'TelephoneNumber' = $TelephoneNumber;`
+            'Mobile' = $Mobile} 2>> c:\temp\AddErrors.txt
     # also Mail-Enable
     Enable-MailContact -Identity $Name.DisplayName -ExternalEmailAddress $name.UserPrincipalName -DomainController $DomainController 2>> c:\temp\EnableErrors.txt
    }
@@ -144,8 +191,79 @@ Function ImportFile {
     }
 }
 
+Function GetDisplayName {
+                $string = $Item.DisplayName
+                $firstName = $string.split(" ")[0]
+                $lastName = $string.split(" ")[1]
+                $NewDisplayName = "$lastname, $firstname"
+
+}
+
 # Start Script
 ImportFile ($file)
 ExchangeConnect ($UserCredential)
 CheckUser ($UserCredential)
 # ListUsersToDelete
+
+
+
+Function TestAdd {
+    $Title = "Title"
+    $Office = "Office"
+    $TelephoneNumber = "Phone"
+    $streetAddress = "Street"
+    $Mobile = "Mobile"
+    $department = "Dept"
+    $firstName = "First"
+    $lastName = "Last"
+    $NewName = "KBTest User"
+    $string = $NewName
+    $firstName = $string.split(" ")[0]
+    $lastName = $string.split(" ")[1]
+    $NewDisplayName = "$lastname, $firstname"
+    
+    Write-Host $NewName "Doesnt Exist !!! - Creating Contact" -foregroundcolor Yellow
+    # adds proper values to variables if they are present
+    If ($name.City) {$Office = $name.City}
+    If ($name.BusinessPhone) {$TelephoneNumber = $name.BusinessPhone}
+    If ($name.Address) {$streetAddress = $name.Address}
+    If ($name.MobilePhone) {$Mobile = $name.MobilePhone}
+    If ($name.JobTitle) {$Title = $name.JobTitle}
+    If ($name.department) {$department = $name.department}
+    # Adds new object
+    New-ADObject `
+        -name $NewName `
+        -displayName $NewDisplayName `
+        -type contact `
+        -Path $ContactOU `
+        -Server $DomainController `
+        -Credential $UserCredential `
+        -OtherAttributes @{
+            'extensionAttribute3'=$UDF;`
+            'physicalDeliveryOfficeName'=$Office;`
+            'company'="DTI";`
+            'streetAddress'=$streetAddress;`
+            'title'=$Title;`
+            'department'=$department;`
+            'givenName' = $firstname;`
+            'sn' = $lastName;`
+            'TelephoneNumber' = $TelephoneNumber;`
+            'MobileNumber' = $Mobile}
+}
+
+Function RemovePhoneText {
+$UpdateUser = Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties DisplayName, extensionAttribute3, Mail, telephoneNumber, Mobile
+    
+    # Checking if Phone Number is blank in AD
+    If ($updateUser.telephoneNumber -eq "NoPhoneNumber"){
+        Write-Host "Telephone number is blank, Updating for -" $Name.DisplayName -foregroundcolor Yellow
+        Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties Mail | ? {$_.Mail -like $Name.UserPrincipalName} |`
+        set-ADObject -Clear telephoneNumber -Credential $UserCredential
+    }
+    #Checking if Mobile Number is Blank in AD
+    If ($updateUser.mobile -eq "NoMobileNumber"){
+        Write-Host "Mobile number is blank, Updating for -" $Name.DisplayName -foregroundcolor Yellow
+        Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties Mail | ? {$_.Mail -like $Name.UserPrincipalName} |`
+        set-ADObject -Clear mobile -Credential $UserCredential
+        }
+    }
