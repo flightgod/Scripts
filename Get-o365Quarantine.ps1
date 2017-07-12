@@ -37,7 +37,8 @@ Get-QuarantineMessage | `
 ? {`
 $_.Senderaddress -like “*@epiqsystems.com” -or `
 $_.Senderaddress -like "*@epiqsystems.co.uk" -or `
-$_.Senderaddress -like "*@epiqsystems.com.hk"`
+$_.Senderaddress -like "*@epiqsystems.com.hk" -or `
+$_.Senderaddress -like "*@dtiglobal.com"
 }
 
 Remove-PSSession $Session

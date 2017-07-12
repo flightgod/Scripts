@@ -8,7 +8,7 @@ $ContactOU = "OU=Contacts,OU=DTI,DC=amer,DC=EPIQCORP,DC=COM"
 $NewList = @()
 
 If ($wardCreds.UserName -like "AMER\ward_*"){
-    Write-Host "Already have Creds"
+    Write-Host "Already have Creds" -foregroundColor Green
     } Else {
     $wardCreds = Get-Credential
 }
@@ -18,7 +18,7 @@ Function GetContactInfo {
 # Getting the contact info
     # $Script:Contact = Get-ADObject -SearchBase $ContactOU -Properties * -Filter {DisplayName -like "Bradley Lanius"} | Select DisplayName, givenName, sn, ObjectGUID
     # $Script:Contact = Get-ADObject -SearchBase $ContactOU -Properties * -Filter {DisplayName -like "S A R*"} | Select DisplayName, givenName, sn, ObjectGUID
-     $Script:Contact = Get-ADObject -SearchBase $ContactOU -Properties * -Filter * | Select DisplayName, givenName, sn, ObjectGUID
+     $Script:Contact = Get-ADObject -SearchBase $ContactOU -Properties * -Filter * | Select cn, DisplayName, givenName, sn, ObjectGUID, telephoneNumber, Mobile
 }
  
  Function FindNullNames {
@@ -45,6 +45,19 @@ Function GetContactInfo {
         }
     }
 }
+
+Function FindNullPhoneNumbers {
+$MissingList = 0
+    ForEach ($item in $Contact){
+        If ($Item.telephoneNumber -eq $NULL){
+            Write-Host "TelephoneNumber is Blank for " $Item.cn
+            $MissingNumbers += $item.cn
+        } 
+        
+    }
+ 
+}
     
 GetContactInfo
-FindNullNames ($wardCreds)
+# FindNullNames ($wardCreds)
+FindNullPhoneNumbers
