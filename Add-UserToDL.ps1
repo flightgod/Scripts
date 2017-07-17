@@ -22,7 +22,7 @@
 
 # Variables
 $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
-
+$DL = "NameOfDL"
 
 # Connects to Exchange
 Function ExchangeConnect 
@@ -173,6 +173,14 @@ Write-host "Enter Mailboxes:"
     until ($line -eq '')
 }
 
+# Function to Update DL with UserList
+function Add-users 
+{
+    Foreach ($user in $newList) {
+        Add-DistributionGroupMember -Identity $DL -Member $user
+    }
+}
+
 Load-MBs
 
 Validate-MailboxList $MBs
@@ -180,7 +188,7 @@ $MBs = $newlist
 
 
 $list = @()
-Write-host "Enter Users to grant Full Access and Send As:"
+Write-host "Enter Users to add to Distribution Group:"
     do { 
     $line = (Read-Host " ")
         if ($line -ne '') {
@@ -192,8 +200,6 @@ Write-host "Enter Users to grant Full Access and Send As:"
 
 Validate-UserList $list
 $list = $newlist
-
-# Function to Update DL with UserList
 
 
 
