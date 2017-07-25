@@ -267,3 +267,10 @@ $UpdateUser = Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainCont
         set-ADObject -Clear mobile -Credential $UserCredential
         }
     }
+
+Function toUpdateContactsNotListed {
+ #Users:
+    # Alex.Yee@dtiglobal-ks.com
+    # Brian.Lee@dtiglobal-ks.com
+    # Leslie.Gibson@dtiglobal-ks.com
+ }
