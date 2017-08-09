@@ -33,11 +33,11 @@
 Param (
 $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/",
 $UDF = "AUG",
-$UserOU = "OU=Users,OU=DTI,DC=amer,DC=EPIQCORP,DC=COM",
+$UserOU = "OU=DTI,DC=amer,DC=EPIQCORP,DC=COM",
 $ContactOU = "OU=Contacts,OU=DTI,DC=amer,DC=EPIQCORP,DC=COM",
 $file = "C:\Temp\List.csv",
 $RemoveFile ="c:\Temp\RemoveList.csv",
-$DomainController = "P016ADSAMDC01.amer.EPIQCORP.COM",
+$DomainController = "P054ADSAMDC01.amer.EPIQCORP.COM",
 $NewPath = "OU=Delete,OU=Exchange-Team,DC=amer,DC=EPIQCORP,DC=COM"
 )
 
@@ -236,21 +236,20 @@ Function UpdateContactsNotListed {
             -LDAPFilter "objectClass=Contact" `
             -SearchBase $ContactOU `
             -Server $DomainController `
-            -Properties Name, Mail,extensionAttribute3 `
+            -Properties Name, Mail,extensionAttribute4 `
             -Credential $UserCredential | `
             ? {$_.Mail -like $test}
     
-            if ($SkippedUser.extensionAttribute3 -ne $UDF){ 
+            if ($SkippedUser.extensionAttribute4 -ne $UDF){ 
                 # clear and Adds extensionAttribute3
-                Write-Host $test.Name "exists - Updating User Defined Field with" $UDF -foregroundcolor Yellow
+                Write-Host $SkippedUser.Name "exists - Updating User Defined Field with" $UDF -foregroundcolor Yellow
                 Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainController -SearchBase $ContactOU -Properties Mail | `
-                ? {$_.Mail -like $test.UserPrincipalName} | `
-                Set-ADObject -replace @{extensionAttribute3=$UDF} -Credential $UserCredential
+                ? {$_.Mail -eq $test} | `
+                Set-ADObject -replace @{extensionAttribute4=$UDF} -Credential $UserCredential -Server $DomainController
             } Else { 
-                Write-Host $test.DisplayName "Exists - With correct extensionAttribute3 Value" $UDF -foregroundcolor Green
+                Write-Host $SkippedUser.Name "Exists - With correct extensionAttribute3 Value" $UDF -foregroundcolor Green
             }
-    }
-        
+    }  
  }
  
 
@@ -258,5 +257,5 @@ Function UpdateContactsNotListed {
 ImportFile ($file)
 ExchangeConnect ($UserCredential)
 CheckUser ($UserCredential)
-# ListUsersToDelete
-# UpdateContactsNotListed
+UpdateContactsNotListed
+ListUsersToDelete
