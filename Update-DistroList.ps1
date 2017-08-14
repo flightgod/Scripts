@@ -24,14 +24,15 @@
 #>
 
 # Variables
-$ImportFile = "C:\Temp\FTEList.csv"
-$DomainController = "P016ADSAMDC01.amer.EPIQCORP.COM"
-$GroupName = "Epiq-All@Epiqsystems.com"
+param (
+$ImportFile = "C:\Temp\FTEList.csv",
+$DomainController = "P016ADSAMDC01.amer.EPIQCORP.COM",
+$GroupName = "Epiq-All@Epiqsystems.com",
 $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+)
 
 # Connects to Exchange
-Function ExchangeConnect 
-{
+Function ExchangeConnect {
     If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }

@@ -17,6 +17,7 @@
                         
     Future Features     : Able to search the whole domain - currently just does amer
                         : Error Checking
+                        : Fix more than 1 at a time
 
 .FUNCTIONALITY
     1. Add to the users AD Object -  extensionAttribute10 > nomsazuresync
@@ -81,10 +82,17 @@ Function ConnectToSync {
     Remove-PSSession $session
 }
 
+Function WaitForAwhile {
+    # Throwing this in to wait for a few minutes then continue on
+    # This should wait long enough for Sync to complete and clear everything up - I Hope
+    Start-Sleep -s 240
+}
+
 # Main Script Body
 ExchangeConnect
 AddAttribute
 CheckAttribute
 ConnectToSync
-# ClearAttribute
-# ConnectToSync
+WaitForAwhile
+ClearAttribute
+ConnectToSync
