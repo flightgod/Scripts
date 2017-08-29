@@ -23,17 +23,20 @@
     Update Distibution List, Check user exists
 #>
 
-# Variables
+# Script Variables
 param (
 $ImportFile = "C:\Temp\FTEList.csv",
 $DomainController = "P016ADSAMDC01.amer.EPIQCORP.COM",
 $GroupName = "Epiq-All@Epiqsystems.com",
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
 )
 
 # Connects to Exchange
 Function ExchangeConnect {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    # Function Variables
+    $ExchangeSession = "et016-eqexmbx01.amer.epiqcorp.com"
+    $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+
+    If ($Session.ComputerName -like $ExchangeSession){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {

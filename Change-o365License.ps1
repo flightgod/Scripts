@@ -34,6 +34,7 @@ param (
 # To Connect to o365
 Function Connecto365 {
     If ($Session.ComputerName -ne "outlook.office365.com"){
+        Write-Host "Enter your o365 username and password" -forgroundColor Green
         Import-Module MSOnline
         $ocred = Get-Credential
         $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri $URIString -Credential $ocred -Authentication Basic -AllowRedirection
@@ -60,8 +61,8 @@ Function CheckLicense {
      If ($user.Licenses.AccountSkuID -like $E3Lic){
         write-host "User $Name has $E3Lic" -ForegroundColor Red
         # Add & Remove lic
-        AddLicense
-        # RemoveLicense
+        # AddLicense
+        RemoveLicense
         } Else {
             # dont need to do anything
             write-host "$E3Lic not assigned to user $Name" -ForegroundColor Green
@@ -91,8 +92,10 @@ Function GetIndividualUser {
    $Name = $user.UserPrincipalName
    If ($user.Licenses.AccountSkuID -like $E3Lic){
         write-host "User $Name has $E3Lic" -ForegroundColor Red
-        UpdateLicense
-        # remove and add new lic
+        # remove and add new lic       
+        # AddLicense
+        RemoveLicense
+
         } Else {
             write-host "$E3Lic not assigned to user $Name" -ForegroundColor Green
             # dont need to do anything
