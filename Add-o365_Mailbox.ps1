@@ -56,9 +56,9 @@ Function GetUsersList {
 
 # Gets a single user to create an o365 Mailbox
 Function GetIndivUser {
-    $account = Read-Host -Prompt 'What is the users username (bsmith)?'
-    $upn = $account+"@epiqsystems.com"
-    $email = $account+"@epiqsystems3.mail.onmicrosoft.com"
+    $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
+    $Script:upn = $account+"@epiqsystems.com"
+    $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
     checkUser
 }
 
@@ -71,14 +71,14 @@ Function checkUser {
 
 # create an AD Account if not found
 Function CreateADAccount {
-
+# $DomainController
 }
 
 # Enables the remote Mailbox
 Function CreateRemoteMailbox {
     "Mailbox will be created as :", $upn
     # Enables the o365 Mailbox and Turns on Archive for the user
-    Enable-RemoteMailbox $account -RemoteRoutingAddress $email
+    Enable-RemoteMailbox $account -RemoteRoutingAddress $email -DomainController $DomainController
     # Enable-RemoteMailbox $upn -Archive
 }
 
@@ -91,7 +91,7 @@ Function AssignLic {
 # runs the Sync
 Function ADSync {
     # Kicks off the AD Azure Sync on the Sync server
-    $session = New-PSSession -ComputerName "P054ADZAGTA01"
+    $session = New-PSSession -ComputerName "P054ADZAGTA01" -Credential $UserCredential
     Invoke-Command -Session $session -ScriptBlock {Import-Module "C:\Program Files\Microsoft Azure AD Sync\Bin\ADSync\ADSync.psd1"}
     Invoke-Command -Session $session -ScriptBlock {Start-ADSyncSyncCycle -PolicyType Delta}
     Remove-PSSession $session
@@ -103,6 +103,7 @@ Function ADSync {
 
 # Sets all the defaults
 Function setDefaults {
+    
     # Setting User Location to US
     Set-MsolUser -UserPrincipalName $upn -UsageLocation US
 
@@ -116,4 +117,9 @@ Function setDefaults {
 #Script Main body
 ExchangeConnect
 GetIndivUser
+# CreateADAccount
+CreateRemoteMailbox
 ADSync
+Connect-MsolService
+AssignLic
+setDefaults
