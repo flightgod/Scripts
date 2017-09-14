@@ -27,7 +27,7 @@
 param (
 $ImportFile = "C:\Temp\FTEList.csv",
 $DomainController = "P016ADSAMDC01.amer.EPIQCORP.COM",
-$GroupName = "Epiq-All@Epiqsystems.com",
+$GroupName = "Epiq-All@Epiqsystems.com"
 )
 
 # Connects to Exchange
@@ -104,10 +104,10 @@ Function CheckUser {
 Function CheckDL {
     $members = Get-DistributionGroupMember -Identity $GroupName -ResultSize Unlimited | Select -ExpandProperty Name
     If ($members -contains $CheckUser.Name) {
-        Write-Host $CheckUser.EmailAddress "exists in the group"
+        Write-Host $CheckUser.EmailAddress "exists in the group" -ForegroundColor Green
     } 
     Else {
-        Write-Host $CheckUser.EmailAddress "Being Added to group" $GroupName -foregroundcolor Yellow
+        Write-Host $CheckUser.EmailAddress "Being Added to group" $GroupName -foregroundcolor Orange
         Add-Content c:\temp\Epiq-AllUserAdded.txt $CheckUser.EmailAddress
         AddUser
     } 

@@ -28,7 +28,7 @@
 # Variables
 $ExchangeOnlineSku = "epiqsystems3:EXCHANGEENTERPRISE"
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
-$file = "c:\temp\ADUsers.csv"
+$file = "c:\temp\SharedMBX.csv"
 
 
 
