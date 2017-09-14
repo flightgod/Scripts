@@ -26,70 +26,100 @@
 #>
 
 # Variables
-$ExchangeOnlineSku = New-MsolLicenseOptions `
-    -AccountSkuId `
-    epiqsystems3:ENTERPRISEPACK `
-    -DisabledPlans `
-    Deskless, `
-    FLOW_O365_P2, `
-    POWERAPPS_O365_P2, `
-    TEAMS1, `
-    PROJECTWORKMANAGEMENT, `
-    SWAY, `
-    INTUNE_O365, `
-    YAMMER_ENTERPRISE, `
-    RMS_S_ENTERPRISE, `
-    OFFICESUBSCRIPTION, `
-    MCOSTANDARD, `
-    SHAREPOINTWAC, `
-    SHAREPOINTENTERPRISE
+$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+$ExchangeOnlineSku = "epiqsystems3:EXCHANGEENTERPRISE"
+$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+$DomainController_AP = "ET016-EQAPDC03.APAC.EPIQCORP.COM"
+$DomainController_UK = "ET016-EQEUDC01.EURO.EPIQCORP.COM"
 
-# ******** I want to put this in a do while loop so more than one can be added *****
-$account = Read-Host -Prompt 'What is the users username (bsmith)?'
-$upn = $account+"@epiqsystems.com"
-$email = $account+"@epiqsystems3.mail.onmicrosoft.com"
+# connect to Exchange
+Function ExchangeConnect {
+    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+        Write-Host "Session already established to exchange" -ForegroundColor Green
+    }
+    Else {
+        Write-Host "Session not made to exchange, creating session now" -ForegroundColor Red
+        $Script:UserCredential = Get-Credential
+        $Script:Session = New-PSSession `
+        -ConfigurationName Microsoft.Exchange `
+        -ConnectionUri $ExchangeServer `
+        -Authentication Kerberos `
+        -Credential $UserCredential
+        Import-PSSession $Session
+    }
+}
 
+# This should run to get a list of users
+Function GetUsersList {
 
-"Mailbox will be created as :", $upn
+}
 
-Start-Sleep -s 5
+# Gets a single user to create an o365 Mailbox
+Function GetIndivUser {
+    $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
+    $Script:upn = $account+"@epiqsystems.com"
+    $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
+    checkUser
+}
 
-# Enables the o365 Mailbox and Turns on Archive for the user
-Enable-RemoteMailbox $account -RemoteRoutingAddress $email
-Enable-RemoteMailbox $upn -Archive
+# Error checking to see if user exists
+Function checkUser {
+    Get-ADUser -Identity $account -Server $DomainController
+    # If error doesnt Exit go to CreateADAccount
 
+}
 
-# Kicks off the AD Azure Sync on the Sync server
-$session = New-PSSession -ComputerName "P054ADZAGTA01"
-Invoke-Command -Session $session -ScriptBlock {Import-Module "C:\Program Files\Microsoft Azure AD Sync\Bin\ADSync\ADSync.psd1"}
-Invoke-Command -Session $session -ScriptBlock {Start-ADSyncSyncCycle -PolicyType Delta}
-Remove-PSSession $session
+# create an AD Account if not found
+Function CreateADAccount {
+# $DomainController
+}
 
+# Enables the remote Mailbox
+Function CreateRemoteMailbox {
+    "Mailbox will be created as :", $upn
+    # Enables the o365 Mailbox and Turns on Archive for the user
+    Enable-RemoteMailbox $account -RemoteRoutingAddress $email -DomainController $DomainController
+    # Enable-RemoteMailbox $upn -Archive
+}
 
-# To Connect to o365
-Import-Module MSOnline
-$ocred = Get-Credential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $ocred -Authentication Basic -AllowRedirection
-Import-PSSession $Session
+# Assigns the License
+Function AssignLic {
+    # Setting Licensees
+    Set-MsolUserLicense -UserPrincipalName $upn -AddLicenses $ExchangeOnlineSku
+}
 
-"Please wait while the Azure Sync is completed ......... Estimate 15 Seconds"
+# runs the Sync
+Function ADSync {
+    # Kicks off the AD Azure Sync on the Sync server
+    $session = New-PSSession -ComputerName "P054ADZAGTA01" -Credential $UserCredential
+    Invoke-Command -Session $session -ScriptBlock {Import-Module "C:\Program Files\Microsoft Azure AD Sync\Bin\ADSync\ADSync.psd1"}
+    Invoke-Command -Session $session -ScriptBlock {Start-ADSyncSyncCycle -PolicyType Delta}
+    Remove-PSSession $session
+    
+    "Please wait while the Azure Sync is completed ......... Estimate 15 Seconds"
 
-Start-Sleep -s 15
+    Start-Sleep -s 15
+}
 
-# Setting User Location to US
-Set-MsolUser -UserPrincipalName $upn -UsageLocation US
+# Sets all the defaults
+Function setDefaults {
+    
+    # Setting User Location to US
+    Set-MsolUser -UserPrincipalName $upn -UsageLocation US
 
-# Setting Licensees
-Set-MsolUserLicense -UserPrincipalName $upn -AddLicenses epiqsystems3:ENTERPRISEPACK -LicenseOptions $ExchangeOnlineSku
- 
-# Sets IssueWarningQuota to 45GB and set RetainDeletedItemsFor 30 days
-Set-Mailbox $account -IssueWarningQuota 45GB -RetainDeletedItemsFor 30.00:00:00
+    # Sets IssueWarningQuota to 45GB and set RetainDeletedItemsFor 30 days
+    Set-Mailbox $account -IssueWarningQuota 45GB -RetainDeletedItemsFor 30.00:00:00
 
-# Turn off Clutter
-Get-Mailbox –identity $upn | Set-Clutter -enable $false
+    # Turn off Clutter
+    Get-Mailbox –identity $upn | Set-Clutter -enable $false
+}
 
-# Displays the info for sanity sake
-Get-Mailbox $upn | Select DisplayName, WindowsEmailAddress
-" User " + $account + " Remote Mailbox created in o365 as " + $upn + "Archive Turned on"
-
-# I might need to add a proxy address for irisds.com email address
+#Script Main body
+ExchangeConnect
+GetIndivUser
+# CreateADAccount
+CreateRemoteMailbox
+ADSync
+Connect-MsolService
+AssignLic
+setDefaults

@@ -17,6 +17,7 @@
                         
     Future Features     : Able to search the whole domain - currently just does amer
                         : Error Checking
+                        : Fix more than 1 at a time
 
 .FUNCTIONALITY
     1. Add to the users AD Object -  extensionAttribute10 > nomsazuresync
@@ -50,24 +51,24 @@ Function ExchangeConnect {
     }
 }
 
+# should add to check that it is not populated already - error checking
 Function AddAttribute {
-    # should add to check that it is not populated already - error checking
     Get-AdUser $user -Server $DomainController | Set-ADObject -add @{extensionAttribute10=$value} -Credential $UserCredential
 }
 
+# Checks that the attribute is there
 Function CheckAttribute {
-    # Checks that the attribute is there
     $Guser = Get-AdUser $user 
     Get-ADObject -Identity $Guser.ObjectGUID -Server $DomainController -Properties extensionAttribute10
 }
 
+# Clears out the Attribute
 Function ClearAttribute {
-    # Clears out the Attribute
     Get-AdUser $user -Server $DomainController | Set-ADObject -Clear extensionAttribute10 -Credential $UserCredential
 }
 
+# connect to azure sync and sync
 Function ConnectToSync {
-    # connect to azure sync and sync
     $AADComputer ="P054ADZAGTA01"
     $session = New-PSSession -ComputerName $AADComputer -Credential $UserCredential
     Invoke-Command -Session $session -ScriptBlock {$Test = Get-ADSyncConnectorRunStatus}
@@ -81,10 +82,18 @@ Function ConnectToSync {
     Remove-PSSession $session
 }
 
+# Throwing this in to wait for a few minutes then continue on
+Function WaitForAwhile {
+    # This should wait long enough for Sync to complete and clear everything up - I Hope
+    Write-Host "Please wait while we let everything sync up and settle down (4 minutes)......."
+    Start-Sleep -s 240
+}
+
 # Main Script Body
 ExchangeConnect
 AddAttribute
 CheckAttribute
 ConnectToSync
-# ClearAttribute
-# ConnectToSync
+WaitForAwhile
+ClearAttribute
+ConnectToSync

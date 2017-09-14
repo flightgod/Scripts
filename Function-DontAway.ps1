@@ -1,4 +1,4 @@
-﻿<#                                                                                
+﻿<#   
 .SYNOPSIS
     Keeps computer from going to sleep
 .DESCRIPTION
@@ -17,7 +17,7 @@ Function MoveCurser {
 }
 
 Function TypeSpace {
-    param($minutes = 120)
+    param($minutes = 180)
 
     $myshell = New-Object -com "Wscript.Shell"
 
