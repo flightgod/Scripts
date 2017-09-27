@@ -107,7 +107,7 @@ Function CheckDL {
         Write-Host $CheckUser.EmailAddress "exists in the group" -ForegroundColor Green
     } 
     Else {
-        Write-Host $CheckUser.EmailAddress "Being Added to group" $GroupName -foregroundcolor Orange
+        Write-Host $CheckUser.EmailAddress "Being Added to group" $GroupName -foregroundcolor Blue
         Add-Content c:\temp\Epiq-AllUserAdded.txt $CheckUser.EmailAddress
         AddUser
     } 

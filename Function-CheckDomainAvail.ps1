@@ -28,7 +28,7 @@ $key = '2wYW3fbpgK_6JfsTr1ndNaYFXXm9pax8G'
 $secret = '6JjdQFYN9U4XFbHE6YYYc8'
 $headers = @{}
 $headers["Authorization"] = 'sso-key ' + $key + ':' + $secret
-$file = "C:\temp\DomainNames.csv"
+$file = "C:\temp\o365Domains.csv"
 
 Function ImportList {
     $import = Import-csv $file
