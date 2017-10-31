@@ -24,7 +24,7 @@
 #>
 
 #Variables
-$username = "vbonadonna@epiqsystems.com"
+$username = "rsweeney@epiqsystems.com"
 $dc = "P054ADSAMDC01.amer.EPIQCORP.COM"
 $target = "sipfed.online.lync.com"
 $url = "https://admin1a.online.lync.com/HostedMigration/hostedmigrationservice.svc"
@@ -60,3 +60,6 @@ Function GetUser {
     Get-CSUser $username
 
 }
+
+ConnectSkype
+Migrate
