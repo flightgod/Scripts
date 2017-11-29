@@ -11,12 +11,14 @@
     History			        : 1.0 - Posted 9/27/2017 - First iteration - kbennett 
 
         
-    Rights Required		    : Permissions to Add/Edit Objects in Exchange
+    Rights Required		    : Permissions to Add/Edit Objects in Skype o365
                         	: Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
+                            : MUST USE epiqsystem3.onmicrosoft.com account for Auth
                         
     Future Features     	: Better Error Checking
                             : Variables
                             : Check for existing
+                            : Assign License
 
              
 .FUNCTIONALITY
@@ -38,6 +40,7 @@ Function ConnectSkype {
     Import-PSSession $CSSession -AllowClobber
 }
 
+# This is the Migrate Function to move the user from OnPrem to o365
 Function Migrate {
     Move-CsUser `
         -Identity $username `
@@ -49,6 +52,7 @@ Function Migrate {
 
 }
 
+# This is the Enable function. If user is not on prem this will create them in o365
 Function Enable {
     Enable-CsUser `
         -Identity $Username `
@@ -56,6 +60,7 @@ Function Enable {
         -HostingProviderProxyFqdn $target
 }
 
+# Gets a users info from the Lync/Skype Database
 Function GetUser {
     Get-CSUser $username
 

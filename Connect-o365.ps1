@@ -29,10 +29,17 @@ Function Connect-o365 {
     Connect-MsolService -Credential $o365Credential
     $o365Session = New-PSSession `
     -ConfigurationName Microsoft.Exchange `
-    -ConnectionUri https://ps.outlook.com/PowerShell-LiveID?PSVersion=4.0 `
+    -ConnectionUri https://outlook.office365.com/powershell-liveid/ `
     -Authentication Basic `
     -AllowRedirection `
     -Credential $o365Credential
     Import-PSSession $o365Session
 
+}
+
+Function Session-Disconnect {
+    # Disconnects Session 
+    $s = Get-PSSession
+    $s
+    Remove-PSSession -Session $s
 }

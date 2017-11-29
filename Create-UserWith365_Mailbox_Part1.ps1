@@ -23,6 +23,7 @@
     10/12/2016 - Adjusted for post IRIS Migration, Removed forward to IRISDS.COM & Permissions
     05/09/2017 - Adding Licenses to Disable for new o365 Products
     08/30/2017 - Working to fully integrate for DTI import - kbennett
+    11/21/2017 - working to implement for Workday
 
 .TODO
     see if I can find the errors for adding mailboxes
@@ -99,13 +100,13 @@ Function checkUser {
                     Write-Host "User $user doesnt exist in $domain" -ForegroundColor Green
                 }
         }
-    If ($continue -eq ""){
-        CreateADAccount
-    } Else {
-        Write-Host "Account $user not created because there appears to be a conflict" -ForegroundColor Red
-        Add-Content c:\temp\DTI_AddIssues.txt $user
-        $continue = ""
-    }
+        If ($continue -eq ""){
+            CreateADAccount
+        } Else {
+            Write-Host "Account $user not created because there appears to be a conflict" -ForegroundColor Red
+            Add-Content c:\temp\User_AddIssues.txt $user
+            $continue = ""
+        }
     }
 }
 
@@ -144,7 +145,7 @@ Function CreateRemoteMailbox {
     # Enables the o365 Mailbox and Turns on Archive for the user
     Enable-RemoteMailbox $name.Username -RemoteRoutingAddress $email -DomainController $DomainController
     # Enable-RemoteMailbox $upn -Archive
-    hideGAL
+    # hideGAL
 }
 
 # Hide from AddressBook
@@ -170,8 +171,8 @@ Function ADSync {
 #Script Main body
  ExchangeConnect
 #GetIndivUser
- #importUsers
- ADSync
+ importUsers
+#ADSync
 
 
  Function check {

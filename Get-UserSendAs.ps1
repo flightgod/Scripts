@@ -23,7 +23,7 @@
 #>
 # Variables
 $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
-$file = "C:\kbtemp\alllist.csv"
+$file = "C:\temp\alllist.csv"
 
 
 Function ExchangeConnect 
