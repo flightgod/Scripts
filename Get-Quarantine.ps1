@@ -26,13 +26,15 @@
 #>
 
 # Variables
-$List = "*@epiqsystems.co.uk",`
+$List = `
+    "*@epiqsystems.co.uk",`
     "*@epiqsystems.com",`
     "*@epiqsystems.com.hk",`
     "*@dtiglobal.com",`
     "*@dtiglobal-ks.com",`
     "*@irisds.com",`
-    "*@hilsoft.com"
+    "*@hilsoft.com",`
+    "*@epiqglobal.com"
 
 # Loads the o365 Connection Function
 . .\Connect-o365.ps1
@@ -46,7 +48,6 @@ Foreach ($domain in $List){
 }
 
 # Disconnects Session 
-$s = Get-PSSession -ComputerName ps.outlook.com
-$s | Remove-PSSession
+Session-Disconnect
 
 pause

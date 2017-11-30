@@ -1,25 +1,32 @@
-﻿<#
-1 check user exits
-2 get Stats
-3 if create date and password date are same then then reset password
-4 Generate password
-5 Reset password
-6 record password
-7 email user with new password and instructions to reset
+﻿<#  
+.SYNOPSIS
+   	Sends Password for users migrating to new Epiq account
 
+.DESCRIPTION  
+    Checks if user account is active, Resets password if not, Sends Password for users migrating to new Epiq account
+
+.INSTRUCTIONS
+    Run full script 
+
+.NOTES  
+    Current Version     	: 1.0
+    
+    History			        : 1.0 - Posted 10/1/2017 - First iteration - kbennett 
+                            : 1.1 - Posted 11/29/2017 - Updated for -ks user - kbennett
+        
+    Rights Required	        : AD Permissions to Add/Edit Objects
+                        	: Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
+                        
+    Future Features     	:
+
+.FUNCTIONALITY
 
 #>
 
 
 # Variables
 Param (
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/",
-$UDF = "AUG",
-$UserOU = "OU=Standard,OU=Employees,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM",
-$file = "C:\Temp\UsernameList.csv",
-$RemoveFile ="c:\Temp\RemoveList.csv",
-$DomainController = "P054ADSAMDC01.amer.EPIQCORP.COM",
-$NewPath = "OU=Delete,OU=Exchange-Team,DC=amer,DC=EPIQCORP,DC=COM"
+$file = "C:\Temp\UsernameList_ks1.csv"
 )
 
 
@@ -47,10 +54,11 @@ Function CheckUser {
             Else {
                 Write-Host $name.EpiqUsername "is there, Checking Password Set Date" -ForegroundColor Green
                 $script:NewEmail = $Name.EpiqEmail
-                CheckLoginStat
+                #CheckLoginStat
                 GeneratePassword
-                ResetPassword
-                #SendEmail
+                #ResetPassword
+                SendEmail
+                $CheckUser = $Null
             }
     }
 }
@@ -65,10 +73,6 @@ $CheckingPass = Get-Aduser $name.EpiqUsername -Properties * | select Name, Passw
         }
 }
 
-Function AddtoCSV {
-    Add-Content c:\temp\DTI-ContactsAddedField.txt $Name.DisplayName
-}
-
 
 Function GeneratePassword{
     Add-Type -AssemblyName System.Web
@@ -80,7 +84,8 @@ Function GeneratePassword{
 Function ResetPassword {
     $newpwd = ConvertTo-SecureString -String $genpwd -AsPlainText –Force
     Set-ADAccountPassword $Name.EpiqUsername -NewPassword $newpwd –Reset
-    Add-Content c:\temp\DTI-PasswordResetStats.txt $Name.DisplayName " " $genpwd
+    $Log = $Name.DisplayName + $genpwd
+    Add-Content c:\temp\DTI-PasswordResetStats.txt $Log
 }
 
 Function BodyText {
@@ -90,11 +95,15 @@ Above you see see your new Epiq Password. As previously communicated in preparat
 
 From a DTI location or via VPN please visit the following site to change your password:
 
-https://password.epiqsystems.com/my.policy
+https://password.epiqsystems.com
 
 Your new password should follow the current Legacy Epiq Password policy and contain at least 15 characters to include at least 1 uppercase, 1 Number and or special character
 
 Please complete this as soon as possible to ensure your account is setup correctly. If you have any issues accessing this site or changing your password please contact the Service Desk at ServiceDesk@epiqsystems.com / 913-621-9800
+
+You will soon receive instructions on connecting to the New Web Access or OWA URL. This URL will be used starting Monday 12/4/17 for all email.
+
+Thank you 
 "
 }
 
@@ -104,9 +113,10 @@ Function SendEmail{
 Send-MailMessage `
     -From "o365 Questions <o365Questions@epiqsystems.com>" `
     -To $name.UserPrincipalName `
+    -BCC "o365 Answers <o365Answers@epiqsystems.com>" `
     -Subject "New Epiq Password for DTI Migration" `
     -Body $messageBody `
-    -SmtpServer "172.17.190.251"
+    -SmtpServer "P054EXGSVCS03"
 
 }
 

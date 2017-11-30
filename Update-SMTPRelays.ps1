@@ -21,18 +21,18 @@
 #>
 
 # Variables
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+$ExchangeServer = "http://ET016-EX10HUB1.amer.epiqcorp.com/PowerShell/"
 $ServerArray = @(`
                 "P054EXCTRNS01\Relay - Hub1",`
                 "P054EXCTRNS02\Relay - Hub2",`
-                "ET016-EX10HUB1\Relay - Hub1",`
                 "ET016-EX10HUB2\Relay - Hub2",`
+                "ET016-EQEXCHUB1\Internal Relay - Hub1",`
                 "ET016-EQEXCHUB2\Internal Relay - Hub2")
 
 # Connects to Exchange
 Function ExchangeConnect 
 {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "ET016-EX10HUB1.amer.epiqcorp.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -58,7 +58,8 @@ Function TestServer{
 
 # Get Current List of IP
 Function GetCurrentIP{
-    $script:RecvConnNew = (Get-ReceiveConnector "ET016-EQEXCHUB1\Internal Relay - Hub1").RemoteIPRanges
+    $script:RecvConnNew = (Get-ReceiveConnector "ET016-EX10HUB1\Relay - Hub1").RemoteIPRanges | sort RemoteIPRanges
+
 }
 
 
