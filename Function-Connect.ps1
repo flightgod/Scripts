@@ -24,21 +24,29 @@
 #>
 
 # Connect to o365 exchange
+### Need to make this an autoLogin ##
 Function Connect-o365 {
-    $o365Credential = Get-Credential
-    Import-Module MSOnline
-    Connect-MsolService -Credential $o365Credential
-    $o365Session = New-PSSession `
-    -ConfigurationName Microsoft.Exchange `
-    -ConnectionUri https://outlook.office365.com/powershell-liveid/ `
-    -Authentication Basic `
-    -AllowRedirection `
-    -Credential $o365Credential
-    Import-PSSession $o365Session
-
+    $O365URI = "https://outlook.office365.com/powershell-liveid/"
+    If ($Session.ComputerName -like "outlook.office365.com") {
+        Write-Host "Session already established to exchange" -ForegroundColor Green
+    }
+    Else {
+        Write-Host "Session not made to exchange, creating session now" -ForegroundColor Red
+        $script:o365Credential = Get-Credential
+        Import-Module MSOnline
+        Connect-MsolService -Credential $o365Credential
+        $o365Session = New-PSSession `
+        -ConfigurationName Microsoft.Exchange `
+        -ConnectionUri $O365URI `
+        -Authentication Basic `
+        -AllowRedirection `
+        -Credential $o365Credential
+        Import-PSSession $o365Session
+    }
 }
 
 # Connects to Exchange
+## Add check to this so if you are already ward it uses that account ##
 Function Connect-Exchange {
     $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
     # If already connected skip - makes it cleaner to look at     
@@ -47,7 +55,7 @@ Function Connect-Exchange {
     }
     Else {
         Write-Host "Session not made to exchange, creating session now" -ForegroundColor Red
-        $UserCredential = Get-Credential
+        $script:UserCredential = Get-Credential
         $Session = New-PSSession `
         -ConfigurationName Microsoft.Exchange `
         -ConnectionUri $ExchangeServer `
@@ -59,7 +67,7 @@ Function Connect-Exchange {
 
 # Connect to Skype
 Function Connect-SkypeOnline {
-     Write-Host "Session not made to Skype Online, creating session now" -ForegroundColor Red
+    Write-Host "Session not made to Skype Online, creating session now" -ForegroundColor Red
     $tenant = "epiqsystems3.onmicrosoft.com"
     Import-Module LyncOnlineConnector
     $script:SkypeOnlinecreds = get-credential
@@ -69,9 +77,24 @@ Function Connect-SkypeOnline {
     Import-PSSession $CSSession -AllowClobber
 }
 
+# Disconnects Session 
 Function Session-Disconnect {
-    # Disconnects Session 
     $s = Get-PSSession
     $s
     Remove-PSSession -Session $s
+}
+
+
+
+# checks if I already put in my username and password
+Function DidIAlreadyLogIn {
+    If ($UserCredential.UserName -inotlike "ward_kbennett*"){
+        $Script:UserCredential = Get-Credential
+    }
+}
+
+# Check to see if I am already Ward
+# Use with If so then dont need to provide Creds for Normal Exchagne or AD stuff
+Function WhoAmI {
+    
 }
