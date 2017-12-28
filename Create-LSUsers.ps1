@@ -29,8 +29,8 @@
 
 # Variables
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
-$file = "c:\temp\MSList.csv" # First File of all users
-$file2 = "c:\temp\MSUsersCreated.csv" # Second file for all that were Created
+$file = "c:\temp\LSList.csv" # First File of all users
+$file2 = "c:\temp\LSUsersCreated.csv" # Second file for all that were Created
 $password = "Welcome1234Epiq!"
 $OU = "OU=MS,OU=Employees,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
 $DomainList = "epiqcorp.com","amer.epiqcorp.com","apac.epiqcorp.com","euro.epiqcorp.com"
@@ -113,7 +113,7 @@ Function CreateRemoteMailbox {
     Enable-RemoteMailbox $username -RemoteRoutingAddress $email -DomainController $DomainController
     ### Here I put a log to add the user created and Info so I can use it below to enable License
     $Log = $upn + "," + $username + "@dtiglobal.com"
-    Add-Content c:\temp\MSUsersCreated.csv $Log
+    Add-Content c:\temp\LSUsersCreated.csv $Log
 }
 
 
@@ -166,6 +166,7 @@ Function setDefaults {
     
 }
 
+########################################################################################################
 
 #Script Main body
  Connect-Exchange # calls from the .function-connect.ps1
@@ -180,3 +181,52 @@ Function setDefaults {
  importUserso365 #Imports second file of added users
  AssignLic #Assigns licenses and then Defaults for each user
  Session-Disconnect # Cleans up our PSSessions from Function-connect
+
+ ########################################################################################################
+
+ Function GeneratePassword{
+    Add-Type -AssemblyName System.Web
+    $PasswordLength = 15
+    $NonAlphCh = 2
+    $script:genpwd = [System.Web.Security.Membership]::GeneratePassword($PasswordLength,$NonAlphCh)
+}
+
+Function ResetPassword {
+    $newpwd = ConvertTo-SecureString -String $genpwd -AsPlainText –Force
+    Set-ADAccountPassword $Name.EpiqUsername -NewPassword $newpwd –Reset
+    $Log = $Name.DisplayName + $genpwd
+    Add-Content c:\temp\DTI-PasswordResetStats.txt $Log
+}
+
+
+Function BodyText {
+    $Script:Body = "
+
+Above you see see your new Epiq Password. As previously communicated in preparation for the Migration of your DTIGlobal Email from InterMedia to Office 365 you will be using a new account name. 
+
+From a DTI location or via VPN please visit the following site to change your password:
+
+https://password.epiqsystems.com
+
+Your new password should follow the current Legacy Epiq Password policy and contain at least 15 characters to include at least 1 uppercase, 1 Number and or special character
+
+Please complete this as soon as possible to ensure your account is setup correctly. If you have any issues accessing this site or changing your password please contact the Service Desk at ServiceDesk@epiqsystems.com / 913-621-9800
+
+You will soon receive instructions on connecting to the New Web Access or OWA URL. This URL will be used starting Monday 12/4/17 for all email.
+
+Thank you 
+"
+}
+
+Function SendEmail{
+    $script:to = $Name.UserPrincipalName
+    $script:messageBody = $genpwd + $Body + "`r`n"
+Send-MailMessage `
+    -From "o365 Questions <o365Questions@epiqsystems.com>" `
+    -To $name.UserPrincipalName `
+    -BCC "o365 Answers <o365Answers@epiqsystems.com>" `
+    -Subject "New Epiq Password for DTI Migration" `
+    -Body $messageBody `
+    -SmtpServer "P054EXGSVCS03"
+
+}

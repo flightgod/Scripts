@@ -36,31 +36,33 @@
     - That is all -
 #>
 
-# Variables
+# Date Variables
+ $todayDate = get-date -Format yyyyMMdd
+ $todayYear = get-Date -Format yyyy
+ $todayMonth = get-Date -Format MM
+ $todayDay = get-Date -Format dd
+ $todayFileDate = $todayYear + "-" + $todayMonth + "-" + $todayDay
+# Location Variables
+ $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+ $Path = "\\ks-isnl-prod.sn2.amer.epiqcorp.com\eca\prod\mft\Internal-Use-Only\web-users-home\svc_WorkdayGOA"
+ $TempPath = "c:\Temp"
+ $file = "\INT0016_TEST_AD_Employee_" + $todayFileDate + ".csv"
+ $FullPath = $TempPath + $file
+# Arrays I Created
+ $DomainList = "epiqcorp.com","amer.epiqcorp.com","apac.epiqcorp.com","euro.epiqcorp.com"
+ $ADProperties = "EmployeeID","SamAccountName","Name","Givenname","SurName","Descriptions","telephoneNumber","MobileNumber","Title","StreetAddress","City","State","PostalCode","Country","Manager","Department","Company","Mail"
 
-$todayDate = get-date -Format yyyyMMdd
-$todayYear = get-Date -Format yyyy
-$todayMonth = get-Date -Format MM
-$todayDay = get-Date -Format dd
-$todayFileDate = $todayYear + "-" + $todayMonth + "-" + $todayDay + "_14"
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
-$Path = "\\ks-isnl-prod.sn2.amer.epiqcorp.com\eca\prod\mft\Internal-Use-Only\web-users-home\svc_WorkdayGOA"
-$TempPath = "c:\Temp"
-$file = "\INT0016_TEST_AD_Employee_" + $todayFileDate + ".csv"
-$DomainList = "epiqcorp.com","amer.epiqcorp.com","apac.epiqcorp.com","euro.epiqcorp.com"
-$ADProperties = "EmployeeID","SamAccountName","Name","Givenname","SurName","Descriptions","telephoneNumber","MobileNumber","Title","StreetAddress","City","State","PostalCode","Country","Manager","Department","Company","Mail"
-$FullPath = $TempPath + $file
 
 # Calling other files and Function
-.".\Function-Connect.ps1" # Calls my connect function with all the current connection strings in it
-# .".\Function-CreateADUser.ps1"
-# .".\Function-CreateMailbox.ps1"
+ .".\Function-Connect.ps1"                   # Calls my connect function with all the current connection strings in it
+ .".\Function-CreateADUser.ps1"              # Calls Function with the Add User AD 
+ .".\Function-CreateMailbox.ps1"             # Calls Function to create Remote Mailbox
+ .".\Function-ADSync.ps1"                    # Calls funtion to sync AD to o365
 # .".\Function-EnableLync.ps1"
 # .".\Function-EnableSkype.ps1"
 
 
-
-# Import List
+# Import List of users from Workday
 Function importUsers {
     $test = Test-Path $FullPath
     If ($test -eq $true) {
@@ -72,71 +74,40 @@ Function importUsers {
     }
 }
 
-
 # Error checking to see if user exists
 Function checkUser {
- $Script:Continue = ""
-     foreach ($Script:name in $import){
-        $script:username = $name.'Workday Account Username'
-        forEach ($domain in $DomainList){
-            If (Get-ADUser -Server $domain -Filter {samAccountName -eq $username}) {
-                write-Host "User $username Exist in $domain" -ForegroundColor Red
-                $Continue = "NO"
-                } Else {
-                    Write-Host "User $username doesn't exist in $domain" -ForegroundColor Green
-                }
-        }
-        If ($continue -eq ""){
-            write-host "Account Doesnt Exist - Here we should probably break out and Create that account then send info to workday" -ForegroundColor Red
-            #CreateADAccount
-        } Else {
-            # Need to run the Update Function here to update thier Info
-            UpdateInfo
-            Write-host "Account Exists already, Sending Email Address to Workday" -ForegroundColor Green
-            UpdateWorkday
-        }
+    $Script:Continue = ""
+    foreach ($Script:name in $import){
+       $script:username = $name.'Workday Account Username'
+       forEach ($domain in $DomainList){
+           If (Get-ADUser -Server $domain -Filter {samAccountName -eq $username}) {
+               write-Host "User $username Exist in $domain" -ForegroundColor Red
+               $Continue = "NO"
+           } Else {
+                Write-Host "User $username doesn't exist in $domain" -ForegroundColor Green
+           }
+       }
+           If ($continue -eq ""){
+               write-host "Account Doesnt Exist - Here we should probably break out and Create that account then send info to workday" -ForegroundColor Red
+               #CreateADAccount
+               #CreateMailbox
+           } Else {
+               # Need to run the Update Function here to update thier Info
+               #UpdateInfo
+           }
+       #UpdateWorkday
     }
 }
 
 # for successful verification of user existing to update workday on thier true Email Address
 Function UpdateWorkday {
+    Write-host "Account Exists already, Sending Email Address to Workday" -ForegroundColor Green
     $Userinfo = Get-ADUser sbowerman -Properties * -Server $DomainController | Select $ADProperties
     $FileName = "c:\temp\AD_to_Workday_export_" + $todayDate + ".csv"
     $userInfo | Export-Csv -path $FileName -NoTypeInformation -Append
 }
 
-# need to update
-# create an AD Account if not found
-Function CreateADAccount {
-    # this should be to create an account. might need to move off to another Script
-    $Script:upn = $username +"@epiqsystems.com" #Creates UPN
-    $Script:DisplayName = $name.'Last Name' +"," + $name.'First Name' #Creates Display Name
-<#  
-    New-ADUser -SamAccountName $username `
-        -Name $name.name `
-        -DisplayName $name.name `
-        -UserPrincipalName $upn `
-        -AccountPassword (ConvertTo-SecureString $password -AsPlainText -Force) `
-        -Surname $name.'Last Name' `
-        -GivenName $name.'First Name' `
-        -Title $name.'Job Title' `
-        -Department $name.Department `
-        -Office $name.'Location City' `
-        -City $name.'Location City' `
-        -State $Name.'Location State' `
-        -EmployeeID $Name.'Worker ID'
-#>
-    #Need to add dtiglobal.com to Attribute13 
-    Get-ADUser $username | `
-        Set-ADObject `
-        -add @{extensionAttribute13="dtiglobal.com"} -Credential $UserCredential
-    # Here it should create a mailbox
-    # CreateRemoteMailbox # We create a new mailbox for them
-
-    # here i should enable skype if it is required
-}
-
-
+# Updates User info in AD
 Function UpdateInfo {
     $NewEmployeeID = $name.'Worker ID'
     $NewDescription = $name.'Worker Type'
@@ -167,43 +138,40 @@ Function UpdateInfo {
         -Manager $NewManager `
         -Department $NewDepartment `
         -Company $NewCompany
-        
-    # commented out for testing. Remove 
-    #Set-ADUser -Identity $username -Replace @{EmployeeID = $NewEmployeeID;Description = $NewDescription }
 }
 
+# Renames file
+Function RenameFile {
+    $Script:RenameFile = $TempPath + "\processed_" + $todayFileDate + ".csv"
+    Rename-Item $FullPath $RenameFile
+}
+
+# Deletes file when Finished
 Function DeleteFile {
     # This is where we will delete the file after reading and updating
-
-
+    Remove-Item $RenameFile -Recurse
 }
 
+# Script Main body
+ # Connect-Exchange              # Calls from the .function-connect.ps1
+ # importUsers $file             # Imports first file
+ # checkUser                     # Checks to see if user account already exists
+ # RenameFile                    # Renames File
+ # DeleteFile                    # Deletes File
 
 
 
-#Script Main body
- # Connect-Exchange # calls from the .function-connect.ps1
- # importUsers $file #Imports first file
- # checkUser #checks to see if user account already exists
- # DeleteFile
 
- #Session-Disconnect # Cleans up our PSSessions from Function-connect
+
+
+
 
 
 
  Function TestingGetUser {
  
- $Userinfo = Get-ADUser sbowerman -Properties * -Server $DomainController | Select $ADProperties
- $FileName = "c:\temp\AD_to_Workday_export_" + $todayDate + ".csv"
- $userInfo | Export-Csv -path $FileName -NoTypeInformation -Append
-
- }
-
-
- Function TryCatch {
-
-    try {$a = Get-Mailbox asdf}
-    Catch { } # if fail it exitsnothing it doesnt go through 
-
+    $Userinfo = Get-ADUser sbowerman -Properties * -Server $DomainController | Select $ADProperties
+    $FileName = "c:\temp\AD_to_Workday_export_" + $todayDate + ".csv"
+    $userInfo | Export-Csv -path $FileName -NoTypeInformation -Append
 
  }
