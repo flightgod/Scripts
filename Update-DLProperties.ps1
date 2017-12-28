@@ -67,17 +67,17 @@ GetListMembers
 
 #Create function that hides all the Eagle All Groups and Epip-all (2) and DTIEpiqAllEmployees
 #Create Function that sets these above to Auth users only
-#Create function that checks they are consistent on senderss and Updates if not
 
-Function testing {
+Function UpdateDlLimitedUser {
 $groups = Get-DistributionGroup DTIEpiqAllEmployees| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+$kcgroups = $groups + "KCOfficeAnnouncement"
 Get-DistributionGroup Epiq-All-Contractors| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
 Get-DistributionGroup Epiq-All| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
 Get-DistributionGroup EagleAllGroup_DTIGlobal| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
 
 
-Set-DistributionGroup Epiq-All-Contractors -AcceptMessagesOnlyFromSendersOrMembers $Groups
-Set-DistributionGroup Epiq-All -AcceptMessagesOnlyFromSendersOrMembers $Groups
+Set-DistributionGroup Epiq-All-Contractors -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
+Set-DistributionGroup Epiq-All -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
 Set-DistributionGroup EagleAllGroup_DTIGlobal -AcceptMessagesOnlyFromSendersOrMembers $Groups
 }
 

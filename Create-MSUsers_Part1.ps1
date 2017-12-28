@@ -36,7 +36,6 @@ $OU = "OU=MS,OU=Employees,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
 $DomainList = "epiqcorp.com","amer.epiqcorp.com","apac.epiqcorp.com","euro.epiqcorp.com"
 $ExchangeOnlineSkuE2 = "epiqsystems3:EXCHANGEENTERPRISE" # E2 License - outlook/owa
 $ExchangeOnlineSkuE1 = "epiqsystems3:EXCHANGESTANDARD" # E1 License - OWA Only
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
 
 
 # Calls my connect function with all the current connection strings in it

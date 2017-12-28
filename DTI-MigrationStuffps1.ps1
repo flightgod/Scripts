@@ -1,9 +1,6 @@
 ﻿$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
 
-
-
-
 Function ExchangeConnect {
     If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
@@ -30,7 +27,7 @@ Function ADSync {
     
     "Please wait while the Azure Sync is completed ......... Estimate 15 Seconds"
 
-    Start-Sleep -s 60
+    Start-Sleep -s 16
 }
 
 ExchangeConnect
@@ -75,7 +72,7 @@ ImportFile
 
 #----------------------------------------------
 Function SetLimits {
-    Set-Mailbox brandon.hollinder@epiqsystems.com -ProhibitSendQuota 95GB -ProhibitSendReceiveQuota 95GB -IssueWarningQuota 90GB 
+    Set-Mailbox June.Coyle@epiqsystems.com -ProhibitSendQuota 95GB -ProhibitSendReceiveQuota 95GB -IssueWarningQuota 90GB 
 }
 
 # ----------------------------

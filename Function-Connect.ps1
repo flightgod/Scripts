@@ -24,6 +24,7 @@
 #>
 
 # Connect to o365 exchange
+### Need to make this an autoLogin ##
 Function Connect-o365 {
     $O365URI = "https://outlook.office365.com/powershell-liveid/"
     If ($Session.ComputerName -like "outlook.office365.com") {
@@ -45,6 +46,7 @@ Function Connect-o365 {
 }
 
 # Connects to Exchange
+## Add check to this so if you are already ward it uses that account ##
 Function Connect-Exchange {
     $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
     # If already connected skip - makes it cleaner to look at     
@@ -75,8 +77,8 @@ Function Connect-SkypeOnline {
     Import-PSSession $CSSession -AllowClobber
 }
 
+# Disconnects Session 
 Function Session-Disconnect {
-    # Disconnects Session 
     $s = Get-PSSession
     $s
     Remove-PSSession -Session $s
@@ -84,7 +86,15 @@ Function Session-Disconnect {
 
 
 
-# Testing - checks if I already put in my username and password
-If ($o365Credential.UserName -inotlike "ward_kbennett*"){
-    $Script:o365Credential = Get-Credential
+# checks if I already put in my username and password
+Function DidIAlreadyLogIn {
+    If ($UserCredential.UserName -inotlike "ward_kbennett*"){
+        $Script:UserCredential = Get-Credential
+    }
+}
+
+# Check to see if I am already Ward
+# Use with If so then dont need to provide Creds for Normal Exchagne or AD stuff
+Function WhoAmI {
+    
 }
