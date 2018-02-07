@@ -1,4 +1,4 @@
-﻿$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+﻿$ExchangeServer = "http://et016-ex10hub1.amer.epiqcorp.com/PowerShell/"
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
 
 Function ExchangeConnect {
