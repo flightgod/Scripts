@@ -70,14 +70,14 @@ GetListMembers
 
 Function UpdateDlLimitedUser {
 $groups = Get-DistributionGroup DTIEpiqAllEmployees| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-$kcgroups = $groups + "KCOfficeAnnouncement"
+$kcgroups = $groups + "HRAnnouncement"
 Get-DistributionGroup Epiq-All-Contractors| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
 Get-DistributionGroup Epiq-All| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-Get-DistributionGroup EagleAllGroup_DTIGlobal| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+Get-DistributionGroup EagleAllGroup| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
 
 
 Set-DistributionGroup Epiq-All-Contractors -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
 Set-DistributionGroup Epiq-All -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
-Set-DistributionGroup EagleAllGroup_DTIGlobal -AcceptMessagesOnlyFromSendersOrMembers $Groups
+Set-DistributionGroup EagleAllGroup -AcceptMessagesOnlyFromSendersOrMembers $Groups
 }
 
