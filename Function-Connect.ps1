@@ -98,3 +98,20 @@ Function DidIAlreadyLogIn {
 Function WhoAmI {
     
 }
+
+Function Connect-Lync {
+    $LyncServer = "https://lyncws.epiqsystems.com/OcsPowershell"
+    If ($Session.ComputerName -like "lyncws.epiqsystems.com") {
+        Write-Host "Session already established to Lync" -ForegroundColor Green
+    }
+    Else {
+        Write-Host "Session not made to Lync, creating session now" -ForegroundColor Red
+        $script:LyncCredential = Get-Credential
+        $LyncSession = New-PSSession `
+        -ConnectionUri $LyncServer `
+        -Credential $LyncCredentials 
+        Import-PSSession -Session $LyncSession -AllowClobber
+    }
+
+}
+
