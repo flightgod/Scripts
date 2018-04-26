@@ -18,9 +18,11 @@ Function ExchangeConnect {
 }
 
 # runs the Sync
-Function ADSync {
+Function Epiq-ADSync {
     # Kicks off the AD Azure Sync on the Sync server
+    Get-Date
     $session = New-PSSession -ComputerName "P054ADZAGTA01" -Credential $UserCredential
+    # Invoke-Command -Session $session -ScriptBlock {Get-ADSyncScheduler -SyncCycleProgress}
     Invoke-Command -Session $session -ScriptBlock {Import-Module "C:\Program Files\Microsoft Azure AD Sync\Bin\ADSync\ADSync.psd1"}
     Invoke-Command -Session $session -ScriptBlock {Start-ADSyncSyncCycle -PolicyType Delta}
     Remove-PSSession $session
@@ -30,56 +32,22 @@ Function ADSync {
     Start-Sleep -s 16
 }
 
-ExchangeConnect
-
+# Runs the Add User Function
 Function Add-User {
 $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
 $Script:upn = $account+"@epiqsystems.com"
 $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
 
 Enable-RemoteMailbox $account -RemoteRoutingAddress $email -DomainController $DomainController
+
 }
 
-ADSync
-
-
-# ------------------------------------------------
-
-$file = "C:\Temp\DistributionList - DTI.csv"
-
-# Checks that the file is there, then imports it
-Function ImportFile {
-    $test = Test-Path $file
-    If ($test -eq $true) {
-        $script:import = Import-csv $file
-    }
-    Else {
-        Write-Warning "Something went Wrong: DTI Import File is missing at $file"
-        Break
-    }
-}
-
-ImportFile
-
- foreach ($Name in $import){
-    Set-DistributionGroup `
-        -Identity $name.SamAccountName `
-        -EmailAddresses $Name.EmailAddress `
-        -EmailAddressPolicyEnabled $false
-}
-
-
-
-#----------------------------------------------
+# Runs the Set Limits on the New Mailbox Created Above
 Function SetLimits {
-    Set-Mailbox June.Coyle@epiqsystems.com -ProhibitSendQuota 95GB -ProhibitSendReceiveQuota 95GB -IssueWarningQuota 90GB 
-}
-
-# ----------------------------
-# Function UnhideGAL 
-Function UnHideGal {
-    Get-DistributionGroup -OrganizationalUnit "OU=Corp IT,DC=Amer,DC=EpiqCorp,DC=Com" -ResultSize Unlimited | Set-DistributionGroup -HiddenFromAddressListsEnabled $false
-
+    Set-Mailbox $upn -ProhibitSendQuota 95GB -ProhibitSendReceiveQuota 95GB -IssueWarningQuota 90GB 
 }
 
 
+ExchangeConnect
+
+Epiq-ADSync
