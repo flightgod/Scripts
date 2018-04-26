@@ -18,8 +18,6 @@
     Future Features     	: Better Error Checking
                             : Variables
                             : Check for existing
-
-
              
 .FUNCTIONALITY
     xxxx
@@ -55,5 +53,6 @@ Function Disconnect-Session {
     Remove-PSSession $AzureSession
 }
 
-Connect-ADSync
-Invoke-Sync
+# Script main body
+    Connect-ADSync
+    Invoke-Sync

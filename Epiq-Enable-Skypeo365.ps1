@@ -6,9 +6,10 @@
     This script will enable a user to have an o365 Skype account and assign them a P1 license for o365 Skype
 
 .NOTES  
-    Current Version     	: 1.0
+    Current Version     	: 1.1
     
     History			        : 1.0 - Posted 3/19/2018 - First iteration - kbennett 
+                            : 1.1 - Posted 4/26/2018 - Updated Menu and UK Function - kbennett
 
         
     Rights Required		    : Permissions to Add/Edit Objects in Skype o365
@@ -28,6 +29,7 @@
 #Variables
 $target = "sipfed.online.lync.com"
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+$UKDomainController = "EURO.EPIQCORP.COM"
 
 # Connect to Skype
 Function Connect-Lync {
@@ -38,7 +40,7 @@ Function Connect-Lync {
     Else {
         Write-Host "Session not made to Lync, creating session now" -ForegroundColor Red
         $script:LyncCredentials = Get-Credential
-        $scripot:LyncSession = New-PSSession `
+        $script:LyncSession = New-PSSession `
         -ConnectionUri $LyncServer `
         -Credential $LyncCredentials 
         Import-PSSession -Session $LyncSession -AllowClobber
@@ -48,21 +50,29 @@ Function Connect-Lync {
 
 # Enable User if no Skype or Lync Already Exists
 Function Get-User {
-$Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
-$Script:upn = $account+"@epiqsystems.com"
-$Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
-$Script:sip = "SIP:"+$upn
+    $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
+    $Script:upn = $account+"@epiqsystems.com"
+    $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
+    $Script:sip = "SIP:"+$upn
 
-Enable-CsUser -Identity $upn -SipAddress $sip -HostingProviderProxyFqdn sipfed.online.lync.com -DomainController $DomainController
-Add-ADGroupMember -Identity "UG-o365-License-Skype-P1" -members $account -Server $DomainController
+    Enable-CsUser -Identity $upn -SipAddress $sip -HostingProviderProxyFqdn sipfed.online.lync.com -DomainController $DomainController
+    Add-ADGroupMember -Identity "UG-o365-License-Skype-P1" -members $account -Server $DomainController
+}
 
+# Enable User if no Skype or Lync Already Exists
+Function Get-User-UK {
+    $Script:account = Read-Host -Prompt 'What is the UK users username (bsmith)?'
+    $Script:upn = $account+"@epiqsystems.co.UK"
+    $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
+    $Script:sip = "SIP:"+$upn
+
+    Enable-CsUser -Identity $upn -SipAddress $sip -HostingProviderProxyFqdn sipfed.online.lync.com -DomainController $UKDomainController
+    Add-ADGroupMember -Identity "UG-o365-License-Skype-P1" -members $account -Server $UKDomainController
 }
 
 # This is the Migrate Function to move the user from OnPrem to o365
 Function Migrate-User {
     $Script:upn = $account+"@epiqsystems.com"
-    $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
-    $Script:sip = "SIP:"+$upn
     Move-CsUser `
         -Identity $upn `
         -domainController $DomainController `
@@ -76,10 +86,39 @@ Function Disconnect-Session {
     Remove-PSSession $LyncSession
 }
 
-<# Manual Runs
+Function Menu {
+do
+ {
+     Show-Menu
+     $selection = Read-Host "Please make a selection"
+     switch ($selection)
+     {
+         '1' {
+             Get-User
+         } '2' {
+             GEt-User-UK
+         } '3' {
+             Migrate-User
+         }
+     }
+     pause
+ }
+ until ($selection -eq 'q')
+}
+
+function Show-Menu
+{
+    param (
+        [string]$Title = 'Skype Script'
+    )
+    Clear-Host
+    Write-Host "================ $Title ================"
+    
+    Write-Host "1: Press '1' for Enable o365 Skype for AMER User."
+    Write-Host "2: Press '2' for Enable o365 Skype for UK User."
+    Write-Host "3: Press '3' for Moving an existing user to o365 from OnPrem."
+    Write-Host "Q: Press 'Q' to quit."
+}
 
 Connect-Lync
-Get-User
-Migrate-User
-
-#>
+Menu
