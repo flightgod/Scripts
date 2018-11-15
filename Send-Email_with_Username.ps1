@@ -26,7 +26,7 @@
 # Variables
 Param (
 $UserOU = "OU=Standard,OU=Employees,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM",
-$file = "C:\Temp\UsernameList_ks1.csv",
+$file = "C:\Temp\GCGUsers.csv",
 $DomainController = "P054ADSAMDC01.amer.EPIQCORP.COM"
 )
 
@@ -47,16 +47,19 @@ Function ImportFile {
 # Checks that AD User Exists
 Function CheckUser {
     foreach ($Name in $import){
-        $CheckUser = Get-ADUser $Name.EpiqUserName -Server $DomainController
+        $CheckUser = Get-ADUser $Name.SamAccountName -Server $DomainController
             If ($CheckUser -eq $Null){
                 Write-Host "Not there" -ForegroundColor Red
-                Add-Content c:\temp\DTIMigration_Missing_AD_Account.txt $Name.EpiqUserName
+                Add-Content c:\temp\GCGMigration_Missing_AD_Account.txt $Name.SamAccountName
             } 
             Else {
-                Write-Host $name.EpiqUsername "is in AD, Seneding Email" -ForegroundColor Green
-                $script:NewEmail = $Name.EpiqEmail
-                Start-Sleep -s 3
-                SendEmail
+                Write-Host $name.SamAccountName "is in AD, Seneding Email" -ForegroundColor Green
+                $script:NewEmail = $Name.GCGEmail
+                $NewEmail
+                $Script:NewPW = $Name.Password
+                $Script:EpiqUN = $name.UserPrincipalName
+                Start-Sleep -s 1
+                #SendEmail
                 $CheckUser = $Null
             }
     }
@@ -66,25 +69,28 @@ Function CheckUser {
 Function BodyText {
     $Script:Body = "
 
-Above you see your new Epiq Username. In preparation for the Migration of your DTIGlobal Email from InterMedia to Office 365 you will be using this new account name.
+Above you see your new Epiq Username and Password. In preparation for the Migration of your GCG Email to Office 365 you will be using this new account name.
 
-Again we want to remind you that your email address will still be either @DTIGlobal-ks.com or @DTIGlobal-ks.eu after the migration.
+To manage your password, Reset, or request if forgotten please go to https://epiqmanage.epiqglobal.com and click on the User Registration link on the right. Follow the instructions on registering to identify yourself if you forgot your password. After registration you will be able to reset your password, or request a new one if you have forgotten the password. You can also find instructions for these steps at: https://epiqsystems3.sharepoint.com/help
 
-You will soon receive an additional notice with your default Epiq password and a link so you can change it. Please complete the password change as soon as you can to ensure the account is setup and working properly.
+These credentials are used for all Epiq o365 applications (Email, Skype, SharePoint, OneDrive .. etc)
 
-If you have any questions at all please feel free to direct them to O365Questions@epiqsystems.com. Any issues you run into during this migration should be directed toward the Service Desk at ServiceDesk@epiqsystems.com / 913-621-9800
-"
+Again we want to remind you that your email address will still be either @choosegcg.com after the migration.
+
+If you have any questions at all please feel free to direct them to O365Questions@epiqsystems.com. 
+
+Any issues you run into during this migration should be directed toward the GCG Service Desk as a Ticket at http://gcghelpdesk.gcdomain.local"
 }
 
 # Sending Email Function
 Function SendEmail{
-$script:to = $Name.UserPrincipalName
-$script:messageBody = $NewEmail + $Body + "`r`n"
+$script:to = $NewEmail
+$script:messageBody = "Username: " + $EpiqUN + "`r`n" +  "Password: " + $NewPW + $Body + "`r`n"
 Send-MailMessage `
-    -From "o365 Questions <o365Questions@epiqsystems.com>" `
-    -To $name.UserPrincipalName `
+    -From "Epiq Corporate IT <corporateit@epiqglobal.com>" `
+    -To $NewEmail `
     -BCC "o365 Answers <o365Answers@epiqsystems.com>" `
-    -Subject "New Epiq Systems Username for DTI Email Migration" `
+    -Subject "Epiq o365 New Credentials" `
     -Body $messageBody `
     -SmtpServer "mailrelay.amer.epiqcorp.com"
 

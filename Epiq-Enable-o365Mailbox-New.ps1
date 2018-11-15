@@ -7,12 +7,9 @@
     Set thier quota Limits
 
 .NOTES  
-    Current Version     	: 1.3
+    Current Version     	: 1.0
     
     History			        : 1.0 - Posted 03/27/2018 - First iteration - kbennett 
-                            : 1.1 - Posted 08/21/2018 - Added License Funtion - kbennett
-                            : 1.2 - Posted 08/27/2018 - Added Push Function - kbennett
-                            : 1.3 - Posted/Published 08/31/2018 - Added Logging - kbennett
 
         
     Rights Required		    : Permissions to Add/Edit Objects in Exchange
@@ -32,8 +29,6 @@ $ExchangeServer = "http://et016-ex10hub1.amer.epiqcorp.com/PowerShell/"
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
 $UKDomainController = "P016ADSEUDC01.EURO.EPIQCORP.COM"
 $HKDomainController = "ET016-EQAPDC03.apac.epiqcorp.com"
-$date = Get-Date -Format “MM/dd/yyyy"
-
 
 #Connect to Exchange
 Function ExchangeConnect {
@@ -57,10 +52,9 @@ Function Add-User-Amer {
     $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
     $Script:upn = $account+"@epiqsystems.com"
     $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
-    $Script:DC = $DomainController
 
-    Enable-RemoteMailbox $account -RemoteRoutingAddress $email -DomainController $DC
-    
+    Enable-RemoteMailbox $account -RemoteRoutingAddress $email -DomainController $DomainController
+    #Add-ADGroupMember -Identity "UG-o365-License-Exchange-P2" -members $account -Server $DomainController
     Write-host "Adding user " $upn
 }
 
@@ -69,10 +63,9 @@ Function Add-User-UK {
     $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
     $Script:upn = $account+"@epiqsystems.co.uk"
     $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
-    $Script:DC = $UKDomainController 
 
-    Enable-RemoteMailbox $account -RemoteRoutingAddress $email -DomainController $DC
-    
+    Enable-RemoteMailbox $account -RemoteRoutingAddress $email -DomainController $UKDomainController
+    #Add-ADGroupMember -Identity "UG-o365-License-Exchange-P2" -members $account -Server $DomainController
     Write-host "Adding user " $upn
 }
 
@@ -81,28 +74,23 @@ Function Add-User-HK {
     $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
     $Script:upn = $account+"@epiqsystems.com.hk"
     $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
-    $Script:DC = $HKDomainController
 
-    Enable-RemoteMailbox $account -RemoteRoutingAddress $email -DomainController $DC
-
+    Enable-RemoteMailbox $account -RemoteRoutingAddress $email -DomainController $HKDomainController
+    #Add-ADGroupMember -Identity "UG-o365-License-Exchange-P2" -members $account -Server $DomainController
     Write-host "Adding user " $upn
 }
 
 # Assign License for FTE User
 Function Assign-License-FTE {
-    $script:GroupValue = Get-ADGroup "UG-o365-License-Exchange-P2" -server $DomainController
-    Add-ADPrincipalGroupMembership $account -MemberOf $GroupValue -Server $DC
+    Add-ADGroupMember -Identity "UG-o365-License-Exchange-P2" -Members $account -Server $DomainController
     Write-Host "Assigning P2 License to User"
-    Logging
     #SetLimits-FTE
 }
 
 # Assign License for LDE User
 Function Assign-License-LDE {
-    $script:GroupValue = Get-ADGroup "UG-o365-License-Exchange-P1" -server $DomainController
-    Add-ADPrincipalGroupMembership $account -MemberOf $GroupValue -Server $DC
+    Add-ADGroupMember -Identity "UG-o365-License-Exchange-P1" -members $account -Server $DomainController
     Write-Host "Assigning P1 License to User"
-    Logging
     #SetLimits-LDE
 }
 
@@ -121,25 +109,6 @@ Function SetLimits-LDE {
 # A good Coder would also disconnect
 Function Disconnect-Session {
     Remove-PSSession $Session
-}
-
-# function for logging who is creating Accounts, going to be used to also send emails to new users
-Function Logging {
-    $script:info = @()
-    $script:LogPath = '\\P054EXGRELY01\Logs\NewMailUserLog.csv'
-
-    $info += New-Object psobject `
-                -Property @{`
-                    Date=$date; `
-                    Name=$account; `
-                    UPN=$upn; `
-                    Ward=$UserCredential.UserName; `
-                    RoutingAddress=$email; `
-                    ExchangeLicense=$GroupValue.Name; `
-                    DomainController=$DC}
-
-    $info | Export-Csv $LogPath -Append -NoTypeInformation
-
 }
 
 Function Menu {
@@ -182,6 +151,8 @@ function Show-Menu
     Write-Host "Q: Press 'Q' to quit."
 }
 
+
+
 # Script Main Body
     ExchangeConnect
     Menu
@@ -190,24 +161,22 @@ function Show-Menu
 # Function to deploy to Jump Boxes
 # This is for kbennett to easily deploy script changes, do not run because it probably wont work for you
 Function Deploy-Script {
-   
-    $LocalPath = 'c:\Scripts\Epiq-Enable-o365Mailbox.ps1'
 
-    New-PSDrive -Name "Scripts0" -PSProvider "FileSystem" -root '\\TS016-EXTOOLS\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts0:'
+$Creds = Get-Credential
+    New-PSDrive -Name "Scripts0" -PSProvider "FileSystem" -root '\\TS016-EXTOOLS\C$\Scripts' -Credential $Creds
+        Copy-Item -Path 'c:\Scripts\Epiq-Enable-o365Mailbox-New.ps1' -Destination 'Scripts0:'
     Remove-PSDrive -Name "Scripts0"
 
-    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL01\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts1:'
+    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL01\C$\Scripts' -Credential $Creds
+        Copy-Item -Path 'c:\Scripts\Epiq-Enable-o365Mailbox-New.ps1' -Destination 'Scripts1:'
     Remove-PSDrive -Name "Scripts1"
 
-    New-PSDrive -Name "Scripts2" -PSProvider "FileSystem" -root '\\P054EXGRELY01\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts2:'
+    New-PSDrive -Name "Scripts2" -PSProvider "FileSystem" -root '\\P054EXGRELY01\C$\Scripts' -Credential $Creds
+        Copy-Item -Path 'c:\Scripts\Epiq-Enable-o365Mailbox-New.ps1' -Destination 'Scripts2:'
     Remove-PSDrive -Name "Scripts2"
 
-    New-PSDrive -Name "Scripts3" -PSProvider "FileSystem" -root '\\P054EXGRELY02\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts3:'
+    New-PSDrive -Name "Scripts3" -PSProvider "FileSystem" -root '\\P054EXGRELY02\C$\Scripts' -Credential $Creds
+        Copy-Item -Path 'c:\Scripts\Epiq-Enable-o365Mailbox-New.ps1' -Destination 'Scripts3:'
     Remove-PSDrive -Name "Scripts3"
 
 }
-

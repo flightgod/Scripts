@@ -31,19 +31,22 @@
 # Variables
 $ExchangeServer = "http://et016-ex10hub1.amer.epiqcorp.com/PowerShell/"
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+$UKDC = "p016ADSEUDC01.euro.epiqcorp.com"
 $Managed = "o365Questions@epiqglobal.com"
 
 #Function to get the new user and update the Distribution Groups
 Function UpdateDlLimitedUser {
 $Script:account = Read-Host -Prompt 'What is the users username to add permissions (bsmith)?'
 $groups = Get-DistributionGroup DTIEpiqAllEmployees| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-$kcgroups = $groups + $account
-Get-DistributionGroup Epiq-All-Contractors| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-Get-DistributionGroup Epiq-All| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-Get-DynamicDistributionGroup Epiq-All-Apac| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-Get-DistributionGroup EagleAllGroup| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-Get-DistributionGroup TeamAll| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-Get-DistributionGroup Engagement2| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+$kcgroups = $groups
+#Get-DistributionGroup Epiq-All-Contractors| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+#Get-DistributionGroup Epiq-All| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+#Get-DynamicDistributionGroup Epiq-All-Apac| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+#Get-DistributionGroup EagleAllGroup| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+#Get-DistributionGroup TeamAll| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+#Get-DistributionGroup Engagement2| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+#Get-DistributionGroup DL-UKAllAssociates -DOmainController $UKDC| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+$groups
 
 
 Set-DistributionGroup Epiq-All-Contractors -AcceptMessagesOnlyFromSendersOrMembers $kcgroups -ManagedBy $Managed
@@ -52,6 +55,7 @@ Set-DynamicDistributionGroup Epiq-All-APAC -AcceptMessagesOnlyFromSendersOrMembe
 Set-DistributionGroup EagleAllGroup -AcceptMessagesOnlyFromSendersOrMembers $Groups -ManagedBy $Managed
 Set-DistributionGroup TeamAll -AcceptMessagesOnlyFromSendersOrMembers $Groups -ManagedBy $Managed
 Set-DistributionGroup Engagement2 -AcceptMessagesOnlyFromSendersOrMembers $Groups -ManagedBy $Managed
+Set-DistributionGroup DL-UKAllAssociates -DomainController $UKDC -AcceptMessagesOnlyFromSendersOrMembers $groups -ManagedBy $Managed
 }
 
 
@@ -86,6 +90,5 @@ Function ADSync {
 
 ExchangeConnect
 UpdateDLLimitedUser
-ADSyncg
-
+ADSync
 
