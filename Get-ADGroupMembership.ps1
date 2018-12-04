@@ -29,3 +29,30 @@ Foreach($Group in $List)
 			 Get-ADGroupMember $Group -Recursive | Export-Csv $Path -Append
 		}
 #EOF
+
+
+Function GetGroupOfGroups {
+
+$list =@(Get-ADGroup -Filter * |? {$_.Name -like "DL-DB0*"} | Select Name)
+
+Foreach($Group in $List)
+        {
+			$Members = @(Get-ADGroupMember $Group.Name -Recursive | Select Name)
+            $Group.Name = $RealName
+            $Members + $RealName | Export-Csv c:\TEmp\GroupMemberExport.csv -Append
+
+		}
+
+}
+#EOF
+
+
+Foreach($Group in $list)
+        {
+        $FullList = @(
+			$Members = @(Get-ADGroupMember $Group.Name -Recursive | Select Name)
+            
+            $Members + $Group | Ft -HideTableHeaders
+            )
+		}
+
