@@ -1,4 +1,30 @@
-﻿#Variables
+﻿<#  
+.SYNOPSIS
+   	Create Contact
+
+.DESCRIPTION  
+    This script creates a new contact
+
+.NOTES  
+    Current Version     	: 1.0
+    
+    History			        : 1.0 - Posted 12/04/2018 - Kbennett
+
+        
+    Rights Required		    : Permissions to Add/Edit Objects in Exchange
+                        	: Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
+                            : MUST USE epiqsystem3.onmicrosoft.com account for Auth
+                        
+    Future Features     	: Better Error Checking
+                            : Variables
+                            : Check for existing
+             
+.FUNCTIONALITY
+    xxxx
+#>
+
+
+#Variables
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
 $OU = "OU=Contacts,OU=Exchange,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
 $date = Get-Date -Format “MM/dd/yyyy"
@@ -60,11 +86,16 @@ Function Deploy-Script {
     $LocalPath = 'c:\Scripts\Epiq-NewMailContact.ps1'
     $UserCredential = Get-Credential
 
+
     New-PSDrive -Name "Scripts0" -PSProvider "FileSystem" -root '\\TS016-EXTOOLS\C$\Scripts' -Credential $UserCredential
         Copy-Item -Path $LocalPath -Destination 'Scripts0:'
     Remove-PSDrive -Name "Scripts0"
 
     New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL01\C$\Scripts' -Credential $UserCredential
+        Copy-Item -Path $LocalPath -Destination 'Scripts1:'
+    Remove-PSDrive -Name "Scripts1"
+
+    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL02\C$\Scripts' -Credential $UserCredential
         Copy-Item -Path $LocalPath -Destination 'Scripts1:'
     Remove-PSDrive -Name "Scripts1"
 

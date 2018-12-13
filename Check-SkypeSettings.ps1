@@ -133,6 +133,10 @@ Function Deploy-Script {
         Copy-Item -Path $LocalPath -Destination 'Scripts1:'
     Remove-PSDrive -Name "Scripts1"
 
+    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL02\C$\Scripts' -Credential $UserCredential
+        Copy-Item -Path $LocalPath -Destination 'Scripts1:'
+    Remove-PSDrive -Name "Scripts1"
+
     New-PSDrive -Name "Scripts2" -PSProvider "FileSystem" -root '\\P054EXGRELY01\C$\Scripts' -Credential $UserCredential
         Copy-Item -Path $LocalPath -Destination 'Scripts2:'
     Remove-PSDrive -Name "Scripts2"
