@@ -28,16 +28,16 @@
 #>
 
 #Variables
-$ExchangeServer = "http://et016-ex10hub1.amer.epiqcorp.com/PowerShell/"
+$ExchangeServer = "http://P054EXCTRNS01.amer.epiqcorp.com/PowerShell/"
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
-$UKDomainController = "P016ADSEUDC01.EURO.EPIQCORP.COM"
-$HKDomainController = "ET016-EQAPDC03.apac.epiqcorp.com"
+$UKDomainController = "P054ADSEUDC01.EURO.EPIQCORP.COM"
+$HKDomainController = "P054ADSAPDC01.APAC.EPIQCORP.COM"
 $date = Get-Date -Format “MM/dd/yyyy"
 
 
 #Connect to Exchange
 Function ExchangeConnect {
-    If ($Session.ComputerName -like "et016-ex10hub1.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "P054EXCTRNS01.amer.epiqcorp.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -192,12 +192,18 @@ function Show-Menu
 Function Deploy-Script {
    
     $LocalPath = 'c:\Scripts\Epiq-Enable-o365Mailbox.ps1'
+    
+    $UserCredential = Get-Credential
 
     New-PSDrive -Name "Scripts0" -PSProvider "FileSystem" -root '\\TS016-EXTOOLS\C$\Scripts' -Credential $UserCredential
         Copy-Item -Path $LocalPath -Destination 'Scripts0:'
     Remove-PSDrive -Name "Scripts0"
 
     New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL01\C$\Scripts' -Credential $UserCredential
+        Copy-Item -Path $LocalPath -Destination 'Scripts1:'
+    Remove-PSDrive -Name "Scripts1"
+
+    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL02\C$\Scripts' -Credential $UserCredential
         Copy-Item -Path $LocalPath -Destination 'Scripts1:'
     Remove-PSDrive -Name "Scripts1"
 

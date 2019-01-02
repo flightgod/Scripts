@@ -20,14 +20,6 @@ Function ImportList {
     }
 }
 
-Function test {
-
-    ForEach ($User in $Import){
-        $ID=$user."Employee ID"
-        Get-ADuser -filter * -Properties EmployeeID -Server P016ADSAMDC02.amer.epiqcorp.com | Where {$_.EmployeeID -eq $ID} | Select UserPrincipalName, Enabled, EmployeeID
-
-    }
-}
 
 Function Find {
     ForEach ($User in $Import){

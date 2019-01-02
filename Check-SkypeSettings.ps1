@@ -44,8 +44,11 @@ Function CheckSkypeSettings {
 
     $Script:GetExchangeSIP = Get-ADuser $User -Properties proxyAddresses | Select {$_.ProxyAddresses -like "SIP*"}
     
-
-    $Script:members = Get-ADGroupMember -Identity $group -Recursive | Select -ExpandProperty Name
+    IF ($Members -eq $Null){
+        $Script:members = Get-ADGroupMember -Identity $group -Recursive | Select -ExpandProperty Name
+    } Else {
+        Write-Host "Members list already populated, I am skipping to save time"
+    }
 
     $Script:Locator = "sipfed.online.lync.com"
     $Script:FedEnabled = "True"
@@ -127,6 +130,10 @@ Function Deploy-Script {
     Remove-PSDrive -Name "Scripts0"
 
     New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL01\C$\Scripts' -Credential $UserCredential
+        Copy-Item -Path $LocalPath -Destination 'Scripts1:'
+    Remove-PSDrive -Name "Scripts1"
+
+    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL02\C$\Scripts' -Credential $UserCredential
         Copy-Item -Path $LocalPath -Destination 'Scripts1:'
     Remove-PSDrive -Name "Scripts1"
 
