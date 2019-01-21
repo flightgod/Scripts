@@ -6,7 +6,7 @@
     This script will enable a user to have an o365 Skype account and assign them a P1 license for o365 Skype
 
 .NOTES  
-    Current Version     	: 1.5
+    Current Version     	: 1.6
     
     History			        : 1.0 - Posted 3/19/2018 - First iteration - kbennett 
                             : 1.1 - Posted 4/26/2018 - Updated Menu and UK Function - kbennett
@@ -14,6 +14,7 @@
                             : 1.3 - Posted 7/10/2018 - Commented out the HK and UK License assign - kbennett
                             : 1.4 - Posted 8/21/2018 - Fixed UK and HK Move Function to work - kbennett
                             : 1.5 - Posted 9/5/2018 - Added Logging - kbennett
+                            : 1.6 - Posted 1/21/2019 - Added Domain Check, and Updated for Setting Attributes - kbennett
 
         
     Rights Required		    : Permissions to Add/Edit Objects in Skype o365
@@ -55,17 +56,43 @@ Function Connect-Lync {
     }
 }
 
+
+Function GetDomain {
+    $script:dc=""
+    $Script:Location=""
+    $Script:Check =""
+    $Script:Location = Read-Host -Prompt 'What domain is the user in (AMER, HK, UK)?'
+    $Script:Check = $Location
+    Switch ($Check) {
+     UK {
+        $Script:DC = $UKDomainController
+        }
+     HK {
+        $Script:DC = $HKDomainController
+        }
+     AMER {
+        $Script:DC = $DomainController
+        }
+    }
+    $Check
+    $DC
+    
+}
+
 # Enable User if no Skype or Lync Already Exists
 Function Get-User {
-    $Script:account = Read-Host -Prompt 'What is the AMER users username (bsmith)?'
-    $Script:upn = $account+"@epiqsystems.com"
-    $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
-    $Script:sip = "SIP:"+$upn
-    $Script:DC = $DomainController
+    $Script:User = Read-Host -Prompt 'What is the AMER users username (bsmith)?'
 
-    Enable-CsUser -Identity $upn -SipAddress $sip -HostingProviderProxyFqdn sipfed.online.lync.com -DomainController $DC
-    $script:GroupValue = Get-ADGroup "UG-o365-License-Skype-P2" -server $DomainController
-    Add-ADGroupMember -Identity $GroupValue -members $account -Server $DC -Credential $LyncCredentials 
+    Set-ADUser -Identity $User -Add @{'msRTCSIP-DeploymentLocator' = "sipfed.online.lync.com"} -Server $DC
+    Set-ADUser -Identity $User -Add @{'msRTCSIP-FederationEnabled' = "TRUE"} -Server $DC
+    Set-ADUser -Identity $User -Add @{'msRTCSIP-InternetAccessEnabled' = "TRUE"} -Server $DC
+    Set-ADUser -Identity $User -Add @{'msRTCSIP-OptionFlags' = "257"} -Server $DC
+    Set-ADUser -Identity $User -Add @{'msRTCSIP-PrimaryHomeServer' = "CN=Lc Services,CN=Microsoft,CN=1:1,CN=Pools,CN=RTC Service,CN=Services,CN=Configuration,DC=EPIQCORP,DC=COM"} -Server $DomainController
+    Set-ADUser -Identity $User -Add @{'msRTCSIP-PrimaryUserAddress' = "sip:$User@epiqsystems.com"} -Server $DC
+    Set-ADUser -Identity $User -Add @{'msRTCSIP-UserEnabled' = "TRUE"} -Server $DC
+
+    Write-Host "Changes made to AD account.  Wait for at least 45 minutes before testing."  -foregroundcolor green
+    Read-Host -Prompt "Press Enter to exit"
     Logging
 
 }
@@ -130,9 +157,9 @@ do
          '1' {
              Get-User
          } '2' {
-             GEt-User-UK
+             .\Epiq-Check-SkypeSettings.ps1
          } '3' {
-             Get-User-HK
+             Show-Menu
          } '4' {
             Migrate-User
          } '5' {
@@ -152,9 +179,9 @@ Function Show-Menu
     Clear-Host
     Write-Host "================ $Title ================"
     
-    Write-Host "1: Press '1' for Enable o365 Skype for AMER User."
-    Write-Host "2: Press '2' for Enable o365 Skype for UK User."
-    Write-Host "3: Press '3' for Enable o365 Skype for HK User."
+    Write-Host "1: Press '1' for Enable o365 Skype for User."
+    Write-Host "2: Press '2' for Check Skype Settings for a user."
+    Write-Host "3: Press '3' for xxxxx."
     Write-Host "4: Press '4' for Moving an existing user to o365 from OnPrem."
     Write-Host "5: Press '5' for Adding Skype Audio Conference to user."
     Write-Host "Q: Press 'Q' to quit."
@@ -180,7 +207,7 @@ Function Logging
 
 }
 
-Connect-Lync
+#Connect-Lync
 Menu
 Disconnect-Session
 

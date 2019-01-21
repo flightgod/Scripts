@@ -29,38 +29,50 @@
 
 #>
 # Variables
-$ExchangeServer = "http://et016-ex10hub1.amer.epiqcorp.com/PowerShell/"
+$ExchangeServer = "http://P054EXCTRNS02.amer.epiqcorp.com/PowerShell/"
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
-$UKDC = "p016ADSEUDC01.euro.epiqcorp.com"
+$Script:UKDomainController = "P054ADSEUDC01.EURO.EPIQCORP.COM"
 $Managed = "o365Questions@epiqglobal.com"
 
-#Function to get the new user and update the Distribution Groups
-Function UpdateDlLimitedUser {
-$Script:account = Read-Host -Prompt 'What is the users username to add permissions (bsmith)?'
-$groups = Get-DistributionGroup DTIEpiqAllEmployees| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-$kcgroups = $groups
-#Get-DistributionGroup Epiq-All-Contractors| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-#Get-DistributionGroup Epiq-All| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-#Get-DynamicDistributionGroup Epiq-All-Apac| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-#Get-DistributionGroup EagleAllGroup| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-#Get-DistributionGroup TeamAll| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-#Get-DistributionGroup Engagement2| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-#Get-DistributionGroup DL-UKAllAssociates -DOmainController $UKDC| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-$groups
+#Function to List out current users with permission and count
+Function CheckDLLimitedUser {
+    $Groups = Get-DistributionGroup DTIEpiqAllEmployees | select AcceptmessagesOnlyFromSendersOrMembers
+    $groups.AcceptMessagesOnlyFromSendersOrMembers
+    $groups.AcceptMessagesOnlyFromSendersOrMembers.Count
+}
 
+#Function to get the new user and update the Distribution Groups
+Function AddDlLimitedUser {
+    $Script:account = Read-Host -Prompt 'What is the users username to add permissions (bsmith)?'
+    $Script:GettingDN = Get-ADUser $account
+    Set-DistributionGroup DTIEpiqAllEmployees -AcceptMessagesOnlyFrom  @{Add=$GettingDN.DistinguishedName}
+    #UpdateDLLimitedUserAll
+}
+
+Function RemoveDlLimtedUser {
+    $Script:account = Read-Host -Prompt 'What is the users username to add permissions (bsmith)?'
+    $Script:GettingDN = Get-ADUser $account
+    Set-DistributionGroup DTIEpiqAllEmployees -AcceptMessagesOnlyFrom   @{Remove=$GettingDN.DistinguishedName}
+}
+
+#Function to Update All Limited User DL to same permissions
+Function UpdateDLLimitedUserAll {
+$Groups = Get-DistributionGroup DTIEpiqAllEmployees | select AcceptmessagesOnlyFromSendersOrMembers
+$kcgroups = $groups.AcceptMessagesOnlyFromSendersOrMembers
 
 Set-DistributionGroup Epiq-All-Contractors -AcceptMessagesOnlyFromSendersOrMembers $kcgroups -ManagedBy $Managed
 Set-DistributionGroup Epiq-All -AcceptMessagesOnlyFromSendersOrMembers $kcgroups -ManagedBy $Managed
-Set-DynamicDistributionGroup Epiq-All-APAC -AcceptMessagesOnlyFromSendersOrMembers $Groups -ManagedBy $Managed
-Set-DistributionGroup EagleAllGroup -AcceptMessagesOnlyFromSendersOrMembers $Groups -ManagedBy $Managed
-Set-DistributionGroup TeamAll -AcceptMessagesOnlyFromSendersOrMembers $Groups -ManagedBy $Managed
-Set-DistributionGroup Engagement2 -AcceptMessagesOnlyFromSendersOrMembers $Groups -ManagedBy $Managed
-Set-DistributionGroup DL-UKAllAssociates -DomainController $UKDC -AcceptMessagesOnlyFromSendersOrMembers $groups -ManagedBy $Managed
+Set-DynamicDistributionGroup Epiq-All-APAC -AcceptMessagesOnlyFromSendersOrMembers $kcGroups -ManagedBy $Managed
+Set-DistributionGroup EagleAllGroup -AcceptMessagesOnlyFromSendersOrMembers $kcGroups -ManagedBy $Managed
+Set-DistributionGroup TeamAll -AcceptMessagesOnlyFromSendersOrMembers $kcGroups -ManagedBy $Managed
+Set-DistributionGroup Engagement2 -AcceptMessagesOnlyFromSendersOrMembers $kcGroups -ManagedBy $Managed
+Set-DistributionGroup DL-UKAllAssociates -DomainController $UKDomainController -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
+
 }
 
-
+#Function to Connect to Exchange
 Function ExchangeConnect {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "P054EXCTRNS02.amer.epiqcorp.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -88,7 +100,77 @@ Function ADSync {
     Start-Sleep -s 16
 }
 
-ExchangeConnect
-UpdateDLLimitedUser
-ADSync
 
+Function Menu {
+do
+ {
+     Show-Menu
+     $selection = Read-Host "Please make a selection"
+     switch ($selection)
+        {
+          '1' {
+            CheckDLLimitedUser
+        } '2' {
+            AddDlLimitedUser
+        } '3' {
+            RemoveDlLimtedUser
+        } '4' {
+            UpdateDLLimitedUserAll
+        } '5' {
+            ADSync
+        }
+     }
+     pause
+ }
+ until ($selection -eq 'q')
+}
+
+function Show-Menu
+{
+    param (
+        [string]$Title = 'All Distro Menu'
+    )
+    Clear-Host
+    Write-Host "================ $Title ================"
+    
+    Write-Host "1: Press '1' to Check List of User Access to Send"
+    Write-Host "2: Press '2' to Add User Access to Send"
+    Write-Host "3: Press '3' to Remove User Access to Send"
+    Write-Host "4: Press '4' to Update All Limited DL to Same Permissions"
+    Write-Host "5: Press '5' to Run AD Azure Sync"
+    Write-Host "Q: Press 'Q' to quit."
+}
+
+ExchangeConnect
+Menu
+
+
+
+# Function to deploy to Jump Boxes
+# This is for kbennett to easily deploy script changes, do not run because it probably wont work for you
+Function Deploy-Script {
+   
+    $LocalPath = 'c:\Scripts\Update-DLAllowSendPermissions.ps1'
+    $UserCredential = Get-Credential
+
+    New-PSDrive -Name "Scripts0" -PSProvider "FileSystem" -root '\\TS016-EXTOOLS\C$\Scripts' -Credential $UserCredential
+        Copy-Item -Path $LocalPath -Destination 'Scripts0:'
+    Remove-PSDrive -Name "Scripts0"
+
+    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL01\C$\Scripts' -Credential $UserCredential
+        Copy-Item -Path $LocalPath -Destination 'Scripts1:'
+    Remove-PSDrive -Name "Scripts1"
+
+    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL02\C$\Scripts' -Credential $UserCredential
+        Copy-Item -Path $LocalPath -Destination 'Scripts1:'
+    Remove-PSDrive -Name "Scripts1"
+
+    New-PSDrive -Name "Scripts2" -PSProvider "FileSystem" -root '\\P054EXGRELY01\C$\Scripts' -Credential $UserCredential
+        Copy-Item -Path $LocalPath -Destination 'Scripts2:'
+    Remove-PSDrive -Name "Scripts2"
+
+    New-PSDrive -Name "Scripts3" -PSProvider "FileSystem" -root '\\P054EXGRELY02\C$\Scripts' -Credential $UserCredential
+        Copy-Item -Path $LocalPath -Destination 'Scripts3:'
+    Remove-PSDrive -Name "Scripts3"
+
+}
