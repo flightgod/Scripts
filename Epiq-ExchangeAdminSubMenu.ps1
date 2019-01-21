@@ -1,6 +1,6 @@
 ﻿<#  
 .SYNOPSIS
-   	Main Menu
+   	Exchange Admin Sub Menu
 
 .DESCRIPTION  
     This is the main menu
@@ -36,23 +36,23 @@ do
      switch ($selection)
      {
         '1' {
-            .\Epiq-NewMailContact.ps1
+            .\Update-DLAllowSendPermissions.ps1
         } '2' {
-            .\Epiq-Enable-o365Mailbox.ps1
-        } '3' {
-            .\Epiq-Check-SkypeSettings.ps1
-        } '4' {
-            .\Epiq-Enable-Skypeo365.ps1
-        } '5' {
-            .\Epiq-Enable-o365MultiGeo.ps1
-        } '6' {
-            .\Epiq-MainMenu.ps1
-        } '7' {
-            .\Epiq-MainMenu.ps1
-        } '8' {
-            .\Epiq-MainMenu.ps1
-        } '9' {
             .\Epiq-ExchangeAdminSubMenu.ps1
+        } '3' {
+            .\Epiq-ExchangeAdminSubMenu.ps1
+        } '4' {
+            .\Epiq-ExchangeAdminSubMenu.ps1
+        } '5' {
+            .\Epiq-ExchangeAdminSubMenu.ps1
+        } '6' {
+            .\Epiq-ExchangeAdminSubMenu.ps1
+        } '7' {
+            .\Epiq-ExchangeAdminSubMenu.ps1
+        } '8' {
+            .\Epiq-ExchangeAdminSubMenu.ps1
+        } '9' {
+            .\Function-ADSync.ps1
         }
      }
      pause
@@ -63,34 +63,37 @@ do
 function Show-Menu
 {
     param (
-        [string]$Title = 'Epiq Main Script'
+        [string]$Title = 'Epiq Exchange Admin Sub Menu'
     )
     Clear-Host
     Write-Host "================ $Title ================"
     Write-Host ""
+    Write-Host "******* ONLY USED BY EXCHANGE ADMINS - PLEASE DONT USE *******" -ForegroundColor Red
+    Write-Host "************* You can seriously Break something **************" -ForegroundColor Red
+    Write-Host ""
     
-    Write-Host "1: Press '1' for Create New Mail Contact."
-    Write-Host "2: Press '2' for Add User Email."
-    Write-Host "3: Press '3' for Check Skype Settings."
-    Write-Host "4: Press '4' for Add User to Skype."
-    Write-Host "5: Press '5' for Add MultiGeo Support."
-    Write-Host "----------------------------------------------------"
-    Write-Host "6: Press '6' for Add/Remove From DL (Coming Soon)."
-    Write-Host "7: Press '7' for Mailbox Permissions (Coming Soon)."
-    Write-Host "8: Press '8' for Mailbox OOO/Fwd (Coming Soon)."
-    Write-Host "----------------------------------------------------"
-    Write-Host "9: Press '9' Exchange Admin Only."
+    Write-Host "1: Press '1' for Updating Epiq-All Send Permissions."
+    Write-Host "2: Press '2' for xxxxxx."
+    Write-Host "3: Press '3' for xxxxxx."
+    Write-Host "4: Press '4' for xxxxxx."
+    Write-Host "5: Press '5' for xxxxxx."
+    Write-Host "6: Press '6' for xxxxxx."
+    Write-Host "7: Press '7' for xxxxxx."
+    Write-Host "8: Press '8' for xxxxxx."
+    Write-Host "9: Press '9' for Azure AD Sync."
     Write-Host "Q: Press 'Q' to quit."
 }
 
 # Script Body
 Menu
 
+
+
 # Function to deploy to Jump Boxes
 # This is for kbennett to easily deploy script changes, do not run because it probably wont work for you
 Function Deploy-Script {
    
-    $LocalPath = 'c:\Scripts\Epiq-MainMenu.ps1'
+    $LocalPath = 'c:\Scripts\Epiq-ExchangeAdminSubMenu.ps1'
     $script:UserCredential = Get-Credential
 
     New-PSDrive -Name "Scripts0" -PSProvider "FileSystem" -root '\\TS016-EXTOOLS\C$\Scripts' -Credential $UserCredential

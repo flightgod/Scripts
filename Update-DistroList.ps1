@@ -25,7 +25,7 @@
 
 # Script Variables
 param (
-$ImportFile = "C:\Temp\FTEList.csv",
+$ImportFile = "c:\temp\Active_Employees_-_Non_LDE.csv",
 $DomainController = "P016ADSAMDC01.amer.EPIQCORP.COM",
 $GroupName = "Epiq-All@Epiqsystems.com"
 )

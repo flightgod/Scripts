@@ -106,7 +106,7 @@ Function Assign-License-LDE {
     #SetLimits-LDE
 }
 
-# Runs the Set Limits on the New Mailbox Created for FTE
+# This and below need to be re-designed as it is only available in the o365 Powershell Now
 Function SetLimits-FTE {
     Set-Mailbox $upn -ProhibitSendQuota 95GB -ProhibitSendReceiveQuota 95GB -IssueWarningQuota 90GB -DomainController $DomainController
     Write-Host "Setting P2 Epiq Standard Limits on Mailbox"

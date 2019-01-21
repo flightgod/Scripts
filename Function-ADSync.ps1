@@ -38,4 +38,4 @@ Function ADSync {
     Start-Sleep -s 16
 }
 
-#ADSync
+ADSync
