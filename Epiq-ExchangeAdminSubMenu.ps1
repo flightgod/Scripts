@@ -38,7 +38,7 @@ do
         '1' {
             .\Update-DLAllowSendPermissions.ps1
         } '2' {
-            .\Epiq-ExchangeAdminSubMenu.ps1
+            .\Epiq-Deploy-Scripts.ps1
         } '3' {
             .\Epiq-ExchangeAdminSubMenu.ps1
         } '4' {
@@ -73,7 +73,7 @@ function Show-Menu
     Write-Host ""
     
     Write-Host "1: Press '1' for Updating Epiq-All Send Permissions."
-    Write-Host "2: Press '2' for xxxxxx."
+    Write-Host "2: Press '2' for Deploy Scripts Menu."
     Write-Host "3: Press '3' for xxxxxx."
     Write-Host "4: Press '4' for xxxxxx."
     Write-Host "5: Press '5' for xxxxxx."
