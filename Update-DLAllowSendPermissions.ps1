@@ -33,10 +33,11 @@ $ExchangeServer = "http://P054EXCTRNS02.amer.epiqcorp.com/PowerShell/"
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
 $Script:UKDomainController = "P054ADSEUDC01.EURO.EPIQCORP.COM"
 $Managed = "o365Questions@epiqglobal.com"
+$MasterDL = "Epiq-All"
 
 #Function to List out current users with permission and count
 Function CheckDLLimitedUser {
-    $Groups = Get-DistributionGroup DTIEpiqAllEmployees | select AcceptmessagesOnlyFromSendersOrMembers
+    $Groups = Get-DistributionGroup $MasterDL | select AcceptmessagesOnlyFromSendersOrMembers
     $groups.AcceptMessagesOnlyFromSendersOrMembers
     $groups.AcceptMessagesOnlyFromSendersOrMembers.Count
 }
@@ -45,28 +46,28 @@ Function CheckDLLimitedUser {
 Function AddDlLimitedUser {
     $Script:account = Read-Host -Prompt 'What is the users username to add permissions (bsmith)?'
     $Script:GettingDN = Get-ADUser $account
-    Set-DistributionGroup DTIEpiqAllEmployees -AcceptMessagesOnlyFrom  @{Add=$GettingDN.DistinguishedName}
+    Set-DistributionGroup $MasterDL -AcceptMessagesOnlyFrom  @{Add=$GettingDN.DistinguishedName}
     #UpdateDLLimitedUserAll
 }
 
 Function RemoveDlLimtedUser {
     $Script:account = Read-Host -Prompt 'What is the users username to add permissions (bsmith)?'
     $Script:GettingDN = Get-ADUser $account
-    Set-DistributionGroup DTIEpiqAllEmployees -AcceptMessagesOnlyFrom   @{Remove=$GettingDN.DistinguishedName}
+    Set-DistributionGroup $MasterDL -AcceptMessagesOnlyFrom   @{Remove=$GettingDN.DistinguishedName}
 }
 
 #Function to Update All Limited User DL to same permissions
 Function UpdateDLLimitedUserAll {
-$Groups = Get-DistributionGroup DTIEpiqAllEmployees | select AcceptmessagesOnlyFromSendersOrMembers
+$Groups = Get-DistributionGroup $MasterDL | select AcceptmessagesOnlyFromSendersOrMembers
 $kcgroups = $groups.AcceptMessagesOnlyFromSendersOrMembers
 
 Set-DistributionGroup Epiq-All-Contractors -AcceptMessagesOnlyFromSendersOrMembers $kcgroups -ManagedBy $Managed
-Set-DistributionGroup Epiq-All -AcceptMessagesOnlyFromSendersOrMembers $kcgroups -ManagedBy $Managed
 Set-DynamicDistributionGroup Epiq-All-APAC -AcceptMessagesOnlyFromSendersOrMembers $kcGroups -ManagedBy $Managed
 Set-DistributionGroup EagleAllGroup -AcceptMessagesOnlyFromSendersOrMembers $kcGroups -ManagedBy $Managed
 Set-DistributionGroup TeamAll -AcceptMessagesOnlyFromSendersOrMembers $kcGroups -ManagedBy $Managed
 Set-DistributionGroup Engagement2 -AcceptMessagesOnlyFromSendersOrMembers $kcGroups -ManagedBy $Managed
 Set-DistributionGroup DL-UKAllAssociates -DomainController $UKDomainController -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
+Set-DynamicDistributionGroup ALL_UK_Mailboxes -DomainController $UKDomainController -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
 
 }
 
@@ -145,12 +146,12 @@ ExchangeConnect
 Menu
 
 
-
 # Function to deploy to Jump Boxes
 # This is for kbennett to easily deploy script changes, do not run because it probably wont work for you
 Function Deploy-Script {
    
     $LocalPath = 'c:\Scripts\Update-DLAllowSendPermissions.ps1'
+    
     $UserCredential = Get-Credential
 
     New-PSDrive -Name "Scripts0" -PSProvider "FileSystem" -root '\\TS016-EXTOOLS\C$\Scripts' -Credential $UserCredential
