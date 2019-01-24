@@ -26,8 +26,16 @@
 #>
 
 
+#Playing around with a Help Style - Maybe I put instructions or something here, Bug reporting, Feature requests?
+Function Help {
 
+$IE=new-object -com internetexplorer.application
+$IE.navigate2("https://epiqsystems3.sharepoint.com/help/SitePages/Home.aspx")
+$IE.visible=$true
 
+}
+
+# This is the main menu Case which waits for input and then acts
 Function Menu {
 do
  {
@@ -50,16 +58,20 @@ do
         } '7' {
             .\Epiq-ExchangeAdminSubMenu.ps1
         } '8' {
-            .\Epiq-ExchangeAdminSubMenu.ps1
+            Start-Process "chrome.exe" "portal.office.com"
         } '9' {
             .\Function-ADSync.ps1
+        } 'H' {
+            Help
         }
+
      }
      pause
  }
  until ($selection -eq 'q')
 }
 
+# This is the Show Menu on the screen function
 function Show-Menu
 {
     param (
@@ -79,41 +91,11 @@ function Show-Menu
     Write-Host "5: Press '5' for xxxxxx."
     Write-Host "6: Press '6' for xxxxxx."
     Write-Host "7: Press '7' for xxxxxx."
-    Write-Host "8: Press '8' for xxxxxx."
+    Write-Host "8: Press '8' Launch o365 Portal"
     Write-Host "9: Press '9' for Azure AD Sync."
+    Write-Host "H: Press 'H' for Help."
     Write-Host "Q: Press 'Q' to quit."
 }
 
 # Script Body
 Menu
-
-
-
-# Function to deploy to Jump Boxes
-# This is for kbennett to easily deploy script changes, do not run because it probably wont work for you
-Function Deploy-Script {
-   
-    $LocalPath = 'c:\Scripts\Epiq-ExchangeAdminSubMenu.ps1'
-    $script:UserCredential = Get-Credential
-
-    New-PSDrive -Name "Scripts0" -PSProvider "FileSystem" -root '\\TS016-EXTOOLS\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts0:'
-    Remove-PSDrive -Name "Scripts0"
-
-    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL01\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts1:'
-    Remove-PSDrive -Name "Scripts1"
-
-    New-PSDrive -Name "Scripts4" -PSProvider "FileSystem" -root '\\P054CORUTIL02\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts4:'
-    Remove-PSDrive -Name "Scripts4"
-
-    New-PSDrive -Name "Scripts2" -PSProvider "FileSystem" -root '\\P054EXGRELY01\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts2:'
-    Remove-PSDrive -Name "Scripts2"
-
-    New-PSDrive -Name "Scripts3" -PSProvider "FileSystem" -root '\\P054EXGRELY02\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts3:'
-    Remove-PSDrive -Name "Scripts3"
-
-}

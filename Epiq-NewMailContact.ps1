@@ -28,8 +28,25 @@
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
 $OU = "OU=Contacts,OU=Exchange,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
 $date = Get-Date -Format “MM/dd/yyyy"
+$ExchangeServer = "http://P054EXCTRNS01.amer.epiqcorp.com/PowerShell/"
 
 
+#Connect to Exchange
+Function ExchangeConnect {
+    If ($Session.ComputerName -like "P054EXCTRNS01.amer.epiqcorp.com"){
+        Write-Host "Session already established to exchange" -ForegroundColor Green
+    }
+    Else {
+        Write-Host "Session not made to exchange, creating session now" -ForegroundColor Red
+        $Script:UserCredential = Get-Credential
+        $Script:Session = New-PSSession `
+        -ConfigurationName Microsoft.Exchange `
+        -ConnectionUri $ExchangeServer `
+        -Authentication Kerberos `
+        -Credential $UserCredential
+        Import-PSSession $Session
+    }
+}
 
 Function GetInfo {
     $Script:ContactName = Read-Host -Prompt "Enter the Contact Display Name"
@@ -77,35 +94,5 @@ Function Logging {
 }
 
 #MainBody of Script
+ExchangeConnect
 GetInfo
-
-# Function to deploy to Jump Boxes
-# This is for kbennett to easily deploy script changes, do not run because it probably wont work for you
-Function Deploy-Script {
-   
-    $LocalPath = 'c:\Scripts\Epiq-NewMailContact.ps1'
-    $UserCredential = Get-Credential
-
-
-    New-PSDrive -Name "Scripts0" -PSProvider "FileSystem" -root '\\TS016-EXTOOLS\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts0:'
-    Remove-PSDrive -Name "Scripts0"
-
-    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL01\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts1:'
-    Remove-PSDrive -Name "Scripts1"
-
-    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL02\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts1:'
-    Remove-PSDrive -Name "Scripts1"
-
-    New-PSDrive -Name "Scripts2" -PSProvider "FileSystem" -root '\\P054EXGRELY01\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts2:'
-    Remove-PSDrive -Name "Scripts2"
-
-    New-PSDrive -Name "Scripts3" -PSProvider "FileSystem" -root '\\P054EXGRELY02\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts3:'
-    Remove-PSDrive -Name "Scripts3"
-
-}
-
