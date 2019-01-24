@@ -57,7 +57,7 @@ Function Connect-Lync {
 }
 
 
-Function GetDomain {
+Function Get-Domain {
     $script:dc=""
     $Script:Location=""
     $Script:Check =""
@@ -76,12 +76,12 @@ Function GetDomain {
     }
     $Check
     $DC
-    
+    Get-User
 }
 
 # Enable User if no Skype or Lync Already Exists
 Function Get-User {
-    $Script:User = Read-Host -Prompt 'What is the AMER users username (bsmith)?'
+    $Script:User = Read-Host -Prompt 'What is the users username (bsmith)?'
 
     Set-ADUser -Identity $User -Add @{'msRTCSIP-DeploymentLocator' = "sipfed.online.lync.com"} -Server $DC
     Set-ADUser -Identity $User -Add @{'msRTCSIP-FederationEnabled' = "TRUE"} -Server $DC
@@ -94,6 +94,21 @@ Function Get-User {
     Write-Host "Changes made to AD account.  Wait for at least 45 minutes before testing."  -foregroundcolor green
     Read-Host -Prompt "Press Enter to exit"
     Logging
+
+}
+
+# Function to do another user on same domain
+Function Do-Again {
+    $Script:Again=$NULL
+    $Again = Read-Host -Promp 'Do you wnat to add another user on same domain? (Y/N)'
+    Switch ($Again) {
+        Y {
+            Get-User
+           }
+        N {
+            
+            }
+     } 
 
 }
 
@@ -155,7 +170,7 @@ do
      switch ($selection)
      {
          '1' {
-             Get-User
+             Get-Domain
          } '2' {
              .\Epiq-Check-SkypeSettings.ps1
          } '3' {
@@ -210,34 +225,3 @@ Function Logging
 #Connect-Lync
 Menu
 Disconnect-Session
-
-# Function to deploy to Jump Boxes
-# This is for kbennett to easily deploy script changes, do not run because it probably wont work for you
-Function Deploy-Script {
-
-    $UserCredential = Get-Credential
-    $LocalPath = 'c:\Scripts\Epiq-Enable-Skypeo365.ps1'
-
-
-    New-PSDrive -Name "Scripts0" -PSProvider "FileSystem" -root '\\TS016-EXTOOLS\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts0:'
-    Remove-PSDrive -Name "Scripts0"
-
-    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL01\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts1:'
-    Remove-PSDrive -Name "Scripts1"
-
-    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL02\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts1:'
-    Remove-PSDrive -Name "Scripts1"
-
-    New-PSDrive -Name "Scripts2" -PSProvider "FileSystem" -root '\\P054EXGRELY01\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts2:'
-    Remove-PSDrive -Name "Scripts2"
-
-    New-PSDrive -Name "Scripts3" -PSProvider "FileSystem" -root '\\P054EXGRELY02\C$\Scripts' -Credential $UserCredential
-        Copy-Item -Path $LocalPath -Destination 'Scripts3:'
-    Remove-PSDrive -Name "Scripts3"
-
-}
-

@@ -46,7 +46,7 @@ do
         } '5' {
             .\Epiq-Enable-o365MultiGeo.ps1
         } '6' {
-            .\Epiq-MainMenu.ps1
+            .\Epiq-SharedMailboxPermissions.ps1
         } '7' {
             .\Epiq-MainMenu.ps1
         } '8' {
@@ -74,9 +74,9 @@ function Show-Menu
     Write-Host "3: Press '3' for Check Skype Settings."
     Write-Host "4: Press '4' for Add User to Skype."
     Write-Host "5: Press '5' for Add MultiGeo Support."
+    Write-Host "6: Press '6' for Mailbox Permissions (Testing)."
     Write-Host "----------------------------------------------------"
-    Write-Host "6: Press '6' for Add/Remove From DL (Coming Soon)."
-    Write-Host "7: Press '7' for Mailbox Permissions (Coming Soon)."
+    Write-Host "7: Press '7' for Add/Remove From DL (Coming Soon)."
     Write-Host "8: Press '8' for Mailbox OOO/Fwd (Coming Soon)."
     Write-Host "----------------------------------------------------"
     Write-Host "9: Press '9' Exchange Admin Only."

@@ -91,6 +91,9 @@ do
         } '9' {
             $PSScript = "Epiq-Deploy-Scripts.ps1"
             Deploy-Script
+        } '10' {
+            $PSScript = "Epiq-SharedMailboxPermissions.ps1"
+            Deploy-Script
         }
      }
      pause
@@ -116,6 +119,7 @@ function Show-Menu
     Write-Host "7: Press '7' Deploy Epiq-NewMailContact."
     Write-Host "8: Press '8' Deploy Function-ADSync."
     Write-Host "9: Press '9' Deploy Epiq-Deploy-Scripts (this script)."
+    Write-Host "10: Press '10' Deploy Epiq-SharedMailboxPermissions."
     Write-Host "Q: Press 'Q' to quit."
 }
 
