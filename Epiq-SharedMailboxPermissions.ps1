@@ -106,13 +106,12 @@ function Show-Menu
     )
     Clear-Host
     Write-Host "================ $Title ================"
+    Write-Host ""
     
     Write-Host "1: Press '1' to Check Mailbox Permissions."
     Write-Host "2: Press '2' to Check Users Permissions to Mailboxes (Lengthy)."
-    Write-Host ""
     Write-Host "3: Press '3' to Add Permissiosn to a Mailbox."
     Write-Host "4: Press '4' to Add Permissions to a Mailbox wo AutoMap."
-    Write-Host ""
     Write-Host "5: Press '5' to Remove Permissions to a Mailbox."
     Write-Host ""
     Write-Host "Q: Press 'Q' to quit."

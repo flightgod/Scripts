@@ -81,6 +81,7 @@ function Show-Menu
     Write-Host "----------------------------------------------------"
     Write-Host "9: Press '9' Exchange Admin Only."
     Write-Host "Q: Press 'Q' to quit."
+    Write-Host ""
 }
 
 # Script Body
