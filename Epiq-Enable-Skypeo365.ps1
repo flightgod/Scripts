@@ -34,8 +34,8 @@
 #Variables
 $target = "sipfed.online.lync.com"
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
-$UKDomainController = "P016ADSEUDC01.EURO.EPIQCORP.COM"
-$HKDomainController = "ET016-EQAPDC03.apac.epiqcorp.com"
+$UKDomainController = "P054ADSEUDC01.EURO.EPIQCORP.COM"
+$HKDomainController = "P054ADSAPDC01.APAC.EPIQCORP.COM"
 $date = Get-Date -Format “MM/dd/yyyy"
 
 # Connect to Skype

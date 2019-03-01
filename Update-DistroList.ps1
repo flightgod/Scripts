@@ -122,3 +122,18 @@ Function AddUser {
 ExchangeConnect
 ImportList ($ImportFile)
 CheckUser
+
+
+
+Function Testing {
+
+forEach ($user in $import) {
+
+Try {
+    $server = $user.domain + ".epiqcorp.com"
+    Get-ADUser -filter * -Server $server -properties EmployeeID,Mail | ? {$_.EmployeeID -eq $user.EmployeeID} | Select EmployeeID, Enabled, UserPrincipalName
+    } Catch {
+        Write-Host "Unable to find user " + $user.Account -ForegroundColor Red
+        }
+}
+}

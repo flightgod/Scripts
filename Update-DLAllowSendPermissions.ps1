@@ -66,8 +66,8 @@ Set-DynamicDistributionGroup Epiq-All-APAC -AcceptMessagesOnlyFromSendersOrMembe
 Set-DistributionGroup EagleAllGroup -AcceptMessagesOnlyFromSendersOrMembers $kcGroups -ManagedBy $Managed
 Set-DistributionGroup TeamAll -AcceptMessagesOnlyFromSendersOrMembers $kcGroups -ManagedBy $Managed
 Set-DistributionGroup Engagement2 -AcceptMessagesOnlyFromSendersOrMembers $kcGroups -ManagedBy $Managed
-Set-DistributionGroup DL-UKAllAssociates -DomainController $UKDomainController -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
-Set-DynamicDistributionGroup ALL_UK_Mailboxes -DomainController $UKDomainController -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
+Set-DistributionGroup Epiq-All-UK-Associates -DomainController $UKDomainController -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
+Set-DynamicDistributionGroup Epiq-All-UK -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
 
 }
 
