@@ -33,8 +33,8 @@ $GroupName = "Epiq-All@Epiqsystems.com"
 # Connects to Exchange
 Function ExchangeConnect {
     # Function Variables
-    $ExchangeSession = "et016-eqexmbx01.amer.epiqcorp.com"
-    $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+    $ExchangeSession = "P054EXCTRNS01.amer.epiqcorp.com"
+    $ExchangeServer = "http://P054EXCTRNS01.amer.epiqcorp.com/PowerShell/"
 
     If ($Session.ComputerName -like $ExchangeSession){
         Write-Host "Session already established to exchange" -ForegroundColor Green

@@ -28,7 +28,7 @@
 #>
 
 # Variables
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+$ExchangeServer = "http://P054EXCTRNS01.amer.epiqcorp.com/PowerShell/"
 $Domain = "amer.epiqcorp.com"
 $NewPath = "OU=GroupsDelete,OU=Exchange-Team,DC=amer,DC=EPIQCORP,DC=COM"
 $File = "c:\Temp\ZeroDLtoDelete.txt"
@@ -36,12 +36,12 @@ $Date = Get-Date
 $Today = $Date | Get-date -Format MM/dd/yyyy
 $LastMonth = $Date.AddMonths(-1) | Get-date -Format MM/dd/yyyy
 $BlankDL = @()
-$DomainController = "P016ADSAMDC01.amer.EPIQCORP.COM"
+$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
 
 # Connects to Exchange
 Function ExchangeConnect 
 {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "P054EXCTRNS01.amer.epiqcorp.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
