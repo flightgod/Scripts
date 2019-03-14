@@ -71,5 +71,13 @@ Function Cleanup {
     }
 }
 
-
+<#
 Get-MSolUser -ALL | Select UserPrincipalName, Licenses | Where {$_.BlockedCredentials -eq $True -and $_.IsLicenses -eq $True}
+
+$AllP1 = Get-MsolUser -MaxResults 6000 | Where-Object {($_.licenses).AccountSkuId -match "epiqsystems3:EXCHANGESTANDARD"}
+
+ForEach ($user in $AllP1) {
+Set-MSolUserLicense -UserPrincipalName $user.UserPrincipalName -RemoveLicenses "epiqsystems3:EXCHANGESTANDARD"
+}
+
+#>

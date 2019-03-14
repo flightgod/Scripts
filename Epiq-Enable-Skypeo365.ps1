@@ -46,7 +46,7 @@ Function Connect-Lync {
     }
     Else {
         Write-Host "Session not made to Lync, creating session now" -ForegroundColor Red
-        $script:LyncCredentials = Get-Credential
+        $Global:LyncCredentials = Get-Credential
         $script:sessionOption = New-PSSessionOption -SkipRevocationCheck
         $script:LyncSession = New-PSSession `
         -ConnectionUri $LyncServer `
@@ -81,7 +81,7 @@ Function Get-Domain {
 
 # Enable User if no Skype or Lync Already Exists
 Function Get-User {
-    $Script:User = Read-Host -Prompt 'What is the users username (bsmith)?'
+    $Global:User = Read-Host -Prompt 'What is the users username (bsmith)?'
 
     Set-ADUser -Identity $User -Add @{'msRTCSIP-DeploymentLocator' = "sipfed.online.lync.com"} -Server $DC
     Set-ADUser -Identity $User -Add @{'msRTCSIP-FederationEnabled' = "TRUE"} -Server $DC
@@ -90,6 +90,10 @@ Function Get-User {
     Set-ADUser -Identity $User -Add @{'msRTCSIP-PrimaryHomeServer' = "CN=Lc Services,CN=Microsoft,CN=1:1,CN=Pools,CN=RTC Service,CN=Services,CN=Configuration,DC=EPIQCORP,DC=COM"} -Server $DomainController
     Set-ADUser -Identity $User -Add @{'msRTCSIP-PrimaryUserAddress' = "sip:$User@epiqsystems.com"} -Server $DC
     Set-ADUser -Identity $User -Add @{'msRTCSIP-UserEnabled' = "TRUE"} -Server $DC
+
+    $Global:email = $user.Mail
+    $Global:sip = "$user@epiqsystems.com"
+
 
     Write-Host "Changes made to AD account.  Wait for at least 45 minutes before testing."  -foregroundcolor green
     Read-Host -Prompt "Press Enter to exit"
@@ -211,7 +215,7 @@ Function Logging
     $info += New-Object psobject `
                 -Property @{`
                     Date=$date; `
-                    Name=$account; `
+                    Name=$user; `
                     UPN=$upn; `
                     Ward=$LyncCredentials.UserName; `
                     RoutingAddress=$email; `
