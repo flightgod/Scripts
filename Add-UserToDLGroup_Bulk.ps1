@@ -19,7 +19,7 @@
  #>
 # Script Variables
 param (
-$ImportFile = "C:\Temp\DLGroupMembers.csv",
+$ImportFile = "C:\Temp\book1.csv",
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM",
 $OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
 )
@@ -62,10 +62,10 @@ Function ImportList {
 
 
 Function AddUser {
+$Script:UserCredential = Get-Credential
     ForEach ($Script:User in $Import){
-        $User.Group
-        $User.UserName 
-        Add-ADGroupMember -Identity $User.Group -Members $User.UserName -Server $DomainController -Credential $UserCredential
+        Write-Host "Adding user" $user.AD_SamAcct
+        Add-ADGroupMember -Identity Epiq-All -Members $User.AD_SamAcct -Server $DomainController -Credential $UserCredential
     }
 }
 

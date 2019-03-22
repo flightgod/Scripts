@@ -1,11 +1,35 @@
-﻿<#
-This is going to turn into my daily Audit Script
-1. Check if there are disabled users in the Epiq-All, and Epiq-All-US DL
-2. Check How many users are in each DL to report
-3. Check how many users are in the Standard OU but disabled
-4. Check the total number of disabled users in AMER
-5. Maybe not daily but I should also check for Groups with NO Members .\Get-DLWithZeroMembers.ps1
-6. Check how many Mailboxes and Skype created from Logs \\P054EXGRELY01\Logs
+﻿
+<#  
+.SYNOPSIS
+   	Daily run of tasks
+
+.DESCRIPTION  
+    Daily run of tasks to check that others are doing their jobs
+
+.NOTES  
+    Current Version     	: 1.0
+    
+    History			        : 1.0 - Posted 3/07/2019 - First iteration - kbennett 
+        
+    Rights Required		    : Permissions to Add/Edit Objects in AD
+                        	: Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
+                        
+    Future Features     	: Better Error Checking
+                            : Reporting
+                            : More Automation
+
+
+             
+.FUNCTIONALITY
+    This is going to turn into my daily Audit Script
+    1. Check if there are disabled users in the Epiq-All, and Epiq-All-US DL
+    2. Check How many users are in each DL to report
+    3. Check how many users are in the Standard OU but disabled
+    4. Check the total number of disabled users in AMER
+    5. Check which DL's have no members
+    6. Check if mailbox Exists
+    7. Removes users from the Epiq-All and Epiq-All-US Groups
+    8. Manually Check how many Mailboxes and Skype created from Logs \\P054EXGRELY01\Logs
 
 #>
 
@@ -54,36 +78,41 @@ Function Connect-o365 {
 
 # Gets users that are disabled that are members of the Group listed and addes them to the $array
 Function GetInfo {
+$NewGroup = Get-ADGroup "Epiq-All" -Properties Member -Server $DomainController | 
+Select-Object -ExpandProperty Member
+$NewGroup.Count
 
-Get-ADGroupMember $SingleGroup -Server $DomainController | foreach {
+foreach($user in $NewGroup) {
     try {
-        $u = $_.SamAccountName
-        $s1 = get-ADUser $_.SamAccountName -Server $DomainController
+        $s1 = get-ADUser $user -Server $DomainController
         If($s1.Enabled -eq $False) {
-            $Global:array += $u
-            Write-Host $u " - Disabled, should remove from " $SingleGroup -ForegroundColor Red 
+            $Global:array += $s1.SamAccountName
+            Write-Host $s1.SamAccountName " - Disabled, should remove from" $SingleGroup -ForegroundColor Red 
+            #Remove-ADGroupMember -Identity $SingleGroup -Members $S1.SamAccountName -Server $DomainController -Confirm:$False
             write-host $array.count
         }
     } catch {
-        Write-host $u "- Not found in Amer, checking Euro" -ForegroundColor Yellow
+        Write-host $user "- Not found in Amer, checking Euro" -ForegroundColor Yellow
         try {
-            $s2 = get-ADUser $u -Server euro.epiqcorp.com
+            $s2 = get-ADUser $user -Server euro.epiqcorp.com
             If($s2.Enabled -eq $false) {
-                Write-Host $u " -Disabled, should remove from " $SingleGroup -ForegroundColor Red
-                $Global:array += $u
+                Write-Host $user.SamAccountName " -Disabled, should remove from" $SingleGroup -ForegroundColor Red
+                $Global:array += $s2.SamAccountName
+                #Remove-ADGroupMember -Identity $SingleGroup -Members $S1.SamAccountName -Server euro.epiqcorp.com -Confirm:$False
                 write-host $array.count
             }
         } catch {
-            write-host $u " - Not found in Euro, checking APAC" -ForegroundColor DarkYellow
+            write-host $user " - Not found in Euro, checking APAC" -ForegroundColor DarkYellow
             try {
-                $s3 = get-ADUser $u -Server apac.epiqcorp.com
+                $s3 = get-ADUser $user -Server apac.epiqcorp.com
                 If($s3.Enabled -eq $false) {
-                    Write-Host $u " - Disabled, should remove from " $SingleGroup -ForegroundColor Red
-                    $Global:array += $u
+                    Write-Host $user.SamAccountName " - Disabled, should remove from" $SingleGroup -ForegroundColor Red
+                    $Global:array += $s3.SamAccountName
+                    #Remove-ADGroupMember -Identity $SingleGroup -Members $S1.SamAccountName -Server apac.epiqcorp.com -Confirm:$False
                     write-host $array.count
                 } 
              } catch {
-                write-host $u " - Not able to find"   
+                write-host $user " - Not able to find"   
              }
         }
     }
@@ -98,11 +127,12 @@ Function GetUSInfo {
         $b1 = get-ADUser $_.SamAccountName -Server $DomainController
         If($b1.Enabled -eq $False) {
             $Global:USarray += $a
-            Write-Host $a " - Disabled, should remove from " $USGroup "-" $USarray.count -ForegroundColor Red 
+            Write-Host $a " - Disabled, should remove from" $USGroup "-" $USarray.count -ForegroundColor Red 
         }
     }
 }
 
+# ###### Need to fix this one and Re-Run with Report ##############
 # This will check if the mailbox Exists
 Function CheckMBExists {
     Set-AdServerSettings -ViewEntireForest $true
@@ -124,12 +154,19 @@ Function CheckMBExists {
 }
 
 # Will remove users from the group that are in the $array value
-Function Remove {
-    #$Script:UserCredential = Get-Credential #May want to put this in a function and test for its existance
-    Foreach ($user in $array) {
-    
-        Write-Host "Removing: " $user
-        Remove-ADGroupMember -Identity $SingleGroup -Members $user -Confirm:$False -credential $UserCredential
+Function RemoveFromEpiqAll {
+
+If ($array.count > 0){
+    Write-Host "Going to delete" $array.count "users from Group" $SingleGroup
+        $array.count = $Count
+        foreach ($BadUser in $array){
+            $count
+            Write-Host "Removing user " $BadUser "from" $SingleGroup -ForeGroundColor Green
+            Remove-ADGroupMember -Identity $SingleGroup -Members $BadUser -Server $DomainController -credential $UserCredential -Confirm:$False
+            $count=$count-1
+        } 
+    } Else {
+        Write-Host "No users to delete - wooho"
     }
 }
 
@@ -158,6 +195,7 @@ Function SaveFiles {
 
 # Function to get list of DL's with no members
 Function GetDLWZeroMem {
+    Write-Host "Getting List of DL's with no members, This could take awhile" -ForeGroundColor Green
     $Global:dls = get-distributiongroup -resultsize unlimited
     $Global:BlankDL = $dls.name |? {!(get-distributiongroupmember $_)}
     Write-Host "Searched a total of "$dls.count " Distros for Zero Members and found " $BlankDL.count " With no members" -ForegroundColor Yellow
@@ -178,9 +216,14 @@ $stopwatch = [Diagnostics.Stopwatch]::StartNew()
 $array = @()
 $USArray = @()
 GetInfo #Function to get the Info
-GetUSInfo
 
-$AllCount = Get-ADGroupMember "Epiq-All" -Server $DomainController
+Write-Host "Script has taken" $stopwatch.Elapsed.Hours "hour(s)," $stopwatch.Elapsed.Minutes "Minutes and"$stopwatch.Elapsed.Seconds "Seconds to Run so far"
+Write-host "Checking Epiq-All-US....."
+
+GetUSInfo # Function to get info for Epiq-All-US
+
+Write-Host "Script has taken" $stopwatch.Elapsed.Hours "hour(s)," $stopwatch.Elapsed.Minutes "Minutes and"$stopwatch.Elapsed.Seconds "Seconds to Run so far"
+
 $USCount = Get-ADGroupMember "Epiq-All-US" -Server $DomainController
 
 write-host "Users in Epiq-All:" $AllCount.count
@@ -191,14 +234,25 @@ Write-host "Users in Epiq-All-US Currently:" $USCount.count
 write-Host "Number of Users to remove from " $USArray.count
 $USArray
 
-#Connect-o365
+RemoveFromEpiqAll # Will remove users from Epiq-All
+
 CheckforDisabledAccounts
 CheckforALLDisabledAccounts
-GetDLWZeroMem
-#.\Get-DLWithZeroMEmbers.ps1
+Write-Host "Script has taken" $stopwatch.Elapsed.Hours "hour(s)," $stopwatch.Elapsed.Minutes "Minutes and"$stopwatch.Elapsed.Seconds "Seconds to Run so far"
+Write-Host "Getting list of DL's with Zero Members ....."
+
+GetDLWZeroMem # Will check if there are Distribution Lists that have no Members
+
+<# We should enable this and test to make sure that users in the Groups actually have mailboxes
+# Connect-o365
+# CheckMBExists
+#>
+
 
 # Stops the stopwatch on Time it took the script to run
 $stopwatch.stop()
-Write-Host "Script took" $stopwatch.Elapsed.Minutes "Minutes and"$stopwatch.Elapsed.Seconds "Seconds to Run"
+Write-Host "Script took" $stopwatch.Elapsed.Hours "hour(s)," $stopwatch.Elapsed.Minutes "Minutes and"$stopwatch.Elapsed.Seconds "Seconds to Run"
 
 Session-Disconnect
+
+
