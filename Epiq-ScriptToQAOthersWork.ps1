@@ -43,7 +43,8 @@ $OUFull = "DC=amer,DC=epiqcorp,DC=com",
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM",
 $ExchangeServer = "http://P054EXCTRNS01.amer.epiqcorp.com/PowerShell/",
 $File = "c:\Temp\ZeroDLtoDelete.txt",
-$BlankDL = @()
+$BlankDL = @(),
+$count = ""
 )
 
 Function ExchangeConnect {
@@ -156,14 +157,31 @@ Function CheckMBExists {
 # Will remove users from the group that are in the $array value
 Function RemoveFromEpiqAll {
 
-If ($array.count > 0){
+If ($array.count -gt 0){
     Write-Host "Going to delete" $array.count "users from Group" $SingleGroup
-        $array.count = $Count
+        $count = $array.count
         foreach ($BadUser in $array){
             $count
             Write-Host "Removing user " $BadUser "from" $SingleGroup -ForeGroundColor Green
             Remove-ADGroupMember -Identity $SingleGroup -Members $BadUser -Server $DomainController -credential $UserCredential -Confirm:$False
             $count=$count-1
+        } 
+    } Else {
+        Write-Host "No users to delete - wooho"
+    }
+}
+
+# Will remove users from the group that are in the $array value
+Function RemoveFromUS {
+
+If ($USarray.count -gt 0){
+    Write-Host "Going to delete" $USarray.count "users from Group Epiq-All-US"
+        $UScount = $USarray.count
+        foreach ($USBadUser in $USarray){
+            $UScount
+            Write-Host "Removing user " $USBadUser "from Epiq-ALL-US" -ForeGroundColor Green
+            Remove-ADGroupMember -Identity "Epiq-All-US"p -Members $USBadUser -Server $DomainController -credential $UserCredential -Confirm:$False
+            $UScount=$UScount-1
         } 
     } Else {
         Write-Host "No users to delete - wooho"
@@ -235,6 +253,7 @@ write-Host "Number of Users to remove from " $USArray.count
 $USArray
 
 RemoveFromEpiqAll # Will remove users from Epiq-All
+RemoveFromUS # Will remove users from Epiq-ALL-US
 
 CheckforDisabledAccounts
 CheckforALLDisabledAccounts
