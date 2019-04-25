@@ -29,21 +29,25 @@
     5. Check which DL's have no members
     6. Check if mailbox Exists
     7. Removes users from the Epiq-All and Epiq-All-US Groups
-    8. Manually Check how many Mailboxes and Skype created from Logs \\P054EXGRELY01\Logs
+    8. Manually Check how many Mailboxes and Skype created from Logs \\P054EXGRELY01\Logs (This is currently part of the Seperate Part2 Script)
 
 #>
 
 # Variables
 param (
-$SingleGroup = "Epiq-All",
-$USGroup = "Epiq-All-US",
+$Global:SingleGroup = "Epiq-All",
+$Global:USGroup = "Epiq-All-US",
 $OU = "OU=Standard,OU=Employees,OU=Corp IT,DC=amer,DC=epiqcorp,DC=com",
 $OUFull = "DC=amer,DC=epiqcorp,DC=com",
 $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM",
 $ExchangeServer = "http://P054EXCTRNS01.amer.epiqcorp.com/PowerShell/",
-$File = "c:\Temp\ZeroDLtoDelete.txt",
+$today = (Get-Date -Format MM/dd/yyyy),
+$FileDate = (Get-Date -Format MM_dd_yyyy),
+$ExportFile = "c:\temp\NewAccountAudit_" + $FileDate + ".txt",
+$File = "c:\Temp\ZeroDLtoDelete_" + $FileDate + ".txt",
 $count = "",
-$Script:NoMailbox = @()
+$Global:NoMailbox = @(),
+$Global:USArray = @()
 )
 
 Function ExchangeConnect {
@@ -118,6 +122,7 @@ Function GetUSInfo {
 }
 
 # This will check if the mailbox Exists
+# YOU SHOULD PROBABLY RUN THIS MANUALLY AND TWEAK
 Function CheckMBExists {
     Set-AdServerSettings -ViewEntireForest $true
     $Global:GroupMembers = Get-ADGroup "Epiq-All" -Properties Member -Server $DomainController | Select-Object -ExpandProperty Member
@@ -136,8 +141,8 @@ Function CheckMBExists {
         }
 
     }
-    Write-Host "Number of Users that didnt have Mailboxes: " $NoMailbox.count
-    $NoMailbox
+    $Global:NoMBResults = "Number of Users that didnt have Mailboxes: " + $NoMailbox.count
+    
 }
 
 # Will remove users from the group that are in the $array value
@@ -166,7 +171,7 @@ If ($USarray.count -gt 0){
         foreach ($USBadUser in $USarray){
             $UScount
             Write-Host "Removing user " $USBadUser "from Epiq-ALL-US" -ForeGroundColor Green
-            Remove-ADGroupMember -Identity "Epiq-All-US"p -Members $USBadUser -Server $DomainController -Confirm:$False
+            Remove-ADGroupMember -Identity "Epiq-All-US" -Members $USBadUser -Server $DomainController -Confirm:$False
             $UScount=$UScount-1
         } 
     } Else {
@@ -219,9 +224,8 @@ Function BodyText {
     $Variable4 = "Users disabled in Standard OU:" + $GetList.Count
     $Variable5 = "Users disabled in AMER:" + $FullList.Count
     $Variable6 = "Searched a total of " + $dls.count + " Distros for Zero Members and found " + $BlankDL.count + " With no members"
-    $Variable7 =  "Number of Users that didnt have Mailboxes: " + $NoMailbox.count
 
-$Script:Body = "
+$Global:Body = "
     $USUsers
     $array
     $Variable1
@@ -231,7 +235,7 @@ $Script:Body = "
     $Variable4
     $Variable5
     $Variable6
-    $Variable7
+    $NoMBResults
     $NoMailbox
 "
 }
@@ -244,7 +248,7 @@ Send-MailMessage `
     -From "PowerShell Foo <PowershellFoo@epiqglobal.com>" `
     -To "kbennett@epiqglobal.com" `
     -BCC "o365 Questions <o365Questions@epiqglobal.com>" `
-    -Subject "Audit Script" `
+    -Subject "Audit Script - $today" `
     -Body $messageBody `
     -Attachment $File `
     -SmtpServer "mailrelay.amer.epiqcorp.com"
@@ -270,7 +274,7 @@ Write-Host "Number of users to remove from" $SingleGroup ": " $array.Count
 $array
 
 Write-host "Users in Epiq-All-US Currently:" $USCount.count
-write-Host "Number of Users to remove from " $USArray.count
+write-Host "Number of Users to remove from Epiq-All-US: " $USArray.count
 $USArray
 
 RemoveFromEpiqAll # Will remove users from Epiq-All
@@ -283,6 +287,7 @@ Write-Host "Getting list of DL's with Zero Members ....."
 
 GetDLWZeroMem # Will check if there are Distribution Lists that have no Members
 CheckMBExists # Checks that we can find mailboxes for all users in Epiq-All
+$NoMBResults
 BodyText
 SendEmail
 
@@ -291,9 +296,6 @@ SendEmail
 $stopwatch.stop()
 Write-Host "Script took" $stopwatch.Elapsed.Hours "hour(s)," $stopwatch.Elapsed.Minutes "Minutes and"$stopwatch.Elapsed.Seconds "Seconds to Run"
 
-.\Epiq-DailyAudit_Part2.ps1
-
 Session-Disconnect
-
 
 Remove-Item $File -Force

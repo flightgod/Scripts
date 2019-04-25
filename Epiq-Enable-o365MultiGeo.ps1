@@ -79,7 +79,7 @@ Function Add-User-Amer {
 Function Add-User-UK {
     $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
     $Script:DC = $UKDomainController
-    $Script:ADValues = Get-ADUser $account -Prop extensionAttribute9 -Server $DC
+    $Script:ADValues = Get-ADUser $account -Prop extensionAttribute9 -Server $UKDomainController
    
     If ($ADValues.extensionAttribute9 -eq $NULL){
         Get-Location
@@ -104,7 +104,7 @@ Function Add-User-HK {
 # Assign License for FTE User
 Function Assign-License {
     $script:GroupValue = Get-ADGroup "UG-o365-License-MultiGeo" -server $DomainController
-    Add-ADPrincipalGroupMembership $account -MemberOf $GroupValue -Server $DomainController -Credential $UserCredential
+    Add-ADPrincipalGroupMembership $account -MemberOf $GroupValue -Server $DC -Credential $UserCredential
     Write-Host "Assigning MultiGeo License"
     #Logging
 
