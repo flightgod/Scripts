@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Enable o365 License for Migration
 
@@ -24,7 +24,7 @@
 # Variables
 $ExchangeOnlineSku = New-MsolLicenseOptions `
     -AccountSkuId `
-    epiqsystems3:ENTERPRISEPACK `
+    EvilCorpsystems3:ENTERPRISEPACK `
     -DisabledPlans `
     Deskless, `
     FLOW_O365_P2, `
@@ -59,7 +59,7 @@ Function EnableLicense {
     # applying license
     Else {
         Write-Host "Adding License for:" $user.User
-        Set-MsolUserLicense -UserPrincipalName $Userinfo.UserPrincipalName -AddLicenses epiqsystems3:ENTERPRISEPACK -LicenseOptions $ExchangeOnlineSku
+        Set-MsolUserLicense -UserPrincipalName $Userinfo.UserPrincipalName -AddLicenses EvilCorpsystems3:ENTERPRISEPACK -LicenseOptions $ExchangeOnlineSku
     }
     
 }

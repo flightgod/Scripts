@@ -1,9 +1,9 @@
-﻿
+
 
 param (
 $ImportFile = "C:\Temp\Term.csv",
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM",
-$OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
+$DomainController = "P054ADSAMDC02.amer.EvilCorpCORP.COM",
+$OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=EvilCorpCORP,DC=COM"
 )
 
 #$Ward_Creds=Get-Credential

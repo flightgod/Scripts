@@ -1,4 +1,4 @@
-﻿<#
+<#
 
 #Need Menu for 2016 vs 2013
 #If 2016 Update GPO and or manually upgrade

@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     For Changing COntact Name
 .DESCRIPTION
@@ -31,8 +31,8 @@ $WardCred = Get-Credential
 
 Get-ADObject -Filter {(objectClass -eq "contact") -and (Name -like "DTI-*")} `
 -Properties * `
--SearchBase "OU=Contacts,OU=DTI,DC=amer,DC=epiqcorp,dc=com" `
--Server amer.epiqcorp.com | `
+-SearchBase "OU=Contacts,OU=DTI,DC=amer,DC=EvilCorpcorp,dc=com" `
+-Server amer.EvilCorpcorp.com | `
 Select DistinguishedName, DisplayName, GivenName, SN | `
 FT * -Auto -Wrap `
  > .\DTI_Contact_Test.txt
@@ -44,7 +44,7 @@ FT * -Auto -Wrap `
 $import = Import-csv .\DTI_Contact.csv
 foreach ($name in $import) {
  Set-ADObject -Identity $name.DistinguishedName `
- -Server amer.epiqcorp.com `
+ -Server amer.EvilCorpcorp.com `
  -Replace @{DisplayName=$name.DisplayName} `
  -Credential $WardCred
  Rename-ADObject -Identity $name.DistinguishedName -NewName $name.DisplayName -Credential $WardCred

@@ -18,7 +18,7 @@
 # Last Modified Date: 	16/08/2012
 # Last Modified By: 	Alan Byrne
 
-#.\Get-LastLogonStats.ps1 -Office365Username ward_kbennett@epiqsystems3.onmicrosoft.com -Office365Password 'd3lib3R160'
+#.\Get-LastLogonStats.ps1 -Office365Username ward_kbennett@EvilCorpsystems3.onmicrosoft.com -Office365Password 'd3lib3R160'
 
 ################################################################################################################################################################
 

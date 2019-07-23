@@ -1,4 +1,4 @@
-﻿do
+do
  {
      Show-Menu
      $selection = Read-Host "Please make a selection"

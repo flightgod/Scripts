@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    Function to be called to Run and Send Reports
 
@@ -24,8 +24,8 @@
 # Function to send Emails
 Function SendReport ($Subject, $path, $Info)
 {
-$MailServer = "relay.amer.epiqcorp.com" #New Relay in LV "10.35.16.15"
-$mailServer2 = "MailRelay.amer.epiqcorp.com" # Current Live Relay
+$MailServer = "relay.amer.EvilCorpcorp.com" #New Relay in LV "10.35.16.15"
+$mailServer2 = "MailRelay.amer.EvilCorpcorp.com" # Current Live Relay
 $style = "<style>
 		BODY{font-family: Arial; font-size: 8pt;}
 		H1{font-size: 22px; font-family: 'Segoe UI Light','Segoe UI','Lucida Grande',Verdana,Arial,Helvetica,sans-serif;}
@@ -42,9 +42,9 @@ $style = "<style>
 $report = (get-content $path | out-String)
 $body = $info += $style += $report
 Send-MailMessage `
--From powershellfoo@epiqsystems.com `
+-From powershellfoo@EvilCorpsystems.com `
 -Subject $Subject `
--To kbennett@epiqsystems.com `
+-To kbennett@EvilCorpsystems.com `
 -smtpserver $MailServer2 `
 -Body $body `
 -BodyAsHtml `

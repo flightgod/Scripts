@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Cleanup o365 License
 
@@ -25,8 +25,8 @@
 
 param (
 $ImportFile = "C:\Temp\P1_Dec_3.csv",
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM",
-$OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
+$DomainController = "P054ADSAMDC02.amer.EvilCorpCORP.COM",
+$OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=EvilCorpCORP,DC=COM"
 )
 
 Function Connect-o365 {
@@ -67,17 +67,17 @@ Function ImportList {
 Function Cleanup {
     ForEach ($user in $import){
         #Get-MSolUser -UserPrincipalName $user.UserPrincipalName
-        Set-MSolUserLicense -UserPrincipalName $user.UserPrincipalName -RemoveLicenses "epiqsystems3:EXCHANGESTANDARD"
+        Set-MSolUserLicense -UserPrincipalName $user.UserPrincipalName -RemoveLicenses "EvilCorpsystems3:EXCHANGESTANDARD"
     }
 }
 
 <#
 Get-MSolUser -ALL | Select UserPrincipalName, Licenses | Where {$_.BlockedCredentials -eq $True -and $_.IsLicenses -eq $True}
 
-$AllP1 = Get-MsolUser -MaxResults 6000 | Where-Object {($_.licenses).AccountSkuId -match "epiqsystems3:EXCHANGESTANDARD"}
+$AllP1 = Get-MsolUser -MaxResults 6000 | Where-Object {($_.licenses).AccountSkuId -match "EvilCorpsystems3:EXCHANGESTANDARD"}
 
 ForEach ($user in $AllP1) {
-Set-MSolUserLicense -UserPrincipalName $user.UserPrincipalName -RemoveLicenses "epiqsystems3:EXCHANGESTANDARD"
+Set-MSolUserLicense -UserPrincipalName $user.UserPrincipalName -RemoveLicenses "EvilCorpsystems3:EXCHANGESTANDARD"
 }
 
 #>

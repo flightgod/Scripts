@@ -1,9 +1,9 @@
-﻿# Variables 
+# Variables 
 $FirstName = @()
 $LastName = @()
 $Contact = @()
 $string = @()
-$ContactOU = "OU=Contacts,OU=DTI,DC=amer,DC=EPIQCORP,DC=COM"
+$ContactOU = "OU=Contacts,OU=DTI,DC=amer,DC=EvilCorpCORP,DC=COM"
 
 $NewList = @()
 

@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Update Licenses
 .DESCRIPTION
@@ -25,11 +25,11 @@
 param (
  $file = "C:\Temp\LicenseList2.csv",
  $URIString = "https://outlook.office365.com/powershell-liveid/",
- $skypLic = "epiqsystems3:MCOIMP",
- $SharePointLic = "epiqsystems3:SHAREPOINTSTANDARD",
- $E3Lic = "epiqsystems3:ENTERPRISEPACK",
- $E2LicAssign = "epiqsystems3:EXCHANGEENTERPRISE",
- $E1LicAssign = "epiqsystems3:EXCHANGESTANDARD"
+ $skypLic = "EvilCorpsystems3:MCOIMP",
+ $SharePointLic = "EvilCorpsystems3:SHAREPOINTSTANDARD",
+ $E3Lic = "EvilCorpsystems3:ENTERPRISEPACK",
+ $E2LicAssign = "EvilCorpsystems3:EXCHANGEENTERPRISE",
+ $E1LicAssign = "EvilCorpsystems3:EXCHANGESTANDARD"
 )
 
 # To Connect to o365
@@ -87,7 +87,7 @@ Function CheckLicense {
 # Removes License
 Function RemoveLicense {
     foreach ($script:Name in $import){
-        $script:username = $Name.EpiqEmail
+        $script:username = $Name.EvilCorpEmail
         Write-Host "Removing $E2LicAssign from $username" -ForegroundColor DarkGreen
         Set-MsolUserLicense `
             -UserPrincipalName $username `
@@ -106,7 +106,7 @@ Function AddLicense {
 
 # Can Run this if you want to do it by individual
 Function GetIndividualUser {
-   $IndvName = Read-Host "What user do you want to check (username@epiqsystems.com)?"
+   $IndvName = Read-Host "What user do you want to check (username@EvilCorpsystems.com)?"
    $user = Get-MSoluser -UserPrincipalName $IndvName
    $user.Licenses
    $Name = $user.UserPrincipalName

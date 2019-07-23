@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Add User to AD Functions
 

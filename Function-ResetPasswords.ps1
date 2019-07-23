@@ -1,4 +1,4 @@
-﻿$Server = 'P054ADSAMDC02.amer.Epiqcorp.com'
+$Server = 'P054ADSAMDC02.amer.EvilCorpcorp.com'
 $Password = 'Password'
 $name = 'User'
     Set-ADAccountPassword $name -Server $server -Reset -NewPassword (ConvertTo-SecureString -AsPlainText $Password -Force)
@@ -7,7 +7,7 @@ $name = 'User'
 
 
 
-$Server = 'P054ADSAMDC02.amer.Epiqcorp.com'
+$Server = 'P054ADSAMDC02.amer.EvilCorpcorp.com'
 $import = Import-csv .\IrisPasswords.csv
 foreach ($User in $import) 
 {

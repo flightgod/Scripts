@@ -1,6 +1,6 @@
-﻿$smtpCred = (Get-Credential)
+$smtpCred = (Get-Credential)
 $ToAddress = 'flightgod@gmail.com'
-$FromAddress = 'Test_TLS@EpiqGlobal.DE'
+$FromAddress = 'Test_TLS@EvilCorpGlobal.DE'
 $SmtpServer = 'smtp.office365.com'
 $SmtpPort = '587'
 
@@ -19,5 +19,5 @@ Send-MailMessage @mailparm -UseSsl
 
 
 
-Test_TLS@EpiqGlobal.DE
-test_TLS@@EpiqGlobal.CH
+Test_TLS@EvilCorpGlobal.DE
+test_TLS@@EvilCorpGlobal.CH

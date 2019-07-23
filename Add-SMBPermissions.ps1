@@ -1,7 +1,7 @@
-﻿$import = "C:\temp\SharedMailboxes.csv"
+$import = "C:\temp\SharedMailboxes.csv"
 $data = Import-Csv $import
 
-$ServiceAccount = svc_CRMExchange@epiqsystems.com
+$ServiceAccount = svc_CRMExchange@EvilCorpsystems.com
 
 
 ForEach ($entry in $data){

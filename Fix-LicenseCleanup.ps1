@@ -21,8 +21,8 @@ TODO - Run Cleanup1 again and look for users not in amer.
 #Variables
 $Pass1 = "Zero Read, Sent, Received Email - 10/11 - kbennett"
 $Pass2 = "Zero Read, Sent, Have received Email - 10/15 - kbennett - Enable if needed and remove this Note"
-$Domain = "P054adsamdc02.amer.epiqcorp.com"
-$DisabledOU = "OU=Disabled,OU=Employees,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
+$Domain = "P054adsamdc02.amer.EvilCorpcorp.com"
+$DisabledOU = "OU=Disabled,OU=Employees,OU=Corp IT,DC=amer,DC=EvilCorpCORP,DC=COM"
 $DataFile = "c:\temp\LicenseCleanup3.csv"
 $SucessLog = "c:\temp\LicenseSuccesssLog.csv"
 $FailLog = "c:\temp\LicenseFailLog.csv"

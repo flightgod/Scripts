@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Add User to AD Functions
 
@@ -45,13 +45,13 @@
     $Script:ShortFirstname = $name.'first name'.Trim(' ') -Replace '\s',''
     $Script:ShortLastName = $name.'last name'.Trim(' ') -Replace '\s',''
     $Script:NewName = $NewFirstname + " " + $NewLastName
-    $Script:password = "WelcomeEpiq!123"
+    $Script:password = "WelcomeEvilCorp!123"
     $Script:NewUsername = $ShortFirstname + "." + $ShortLastName
-    $Script:upn = $NewUsername +"@epiqsystems.com" #Creates UPN
+    $Script:upn = $NewUsername +"@EvilCorpsystems.com" #Creates UPN
     $Script:DisplayName = $name.'Last Name' +"," + $name.'First Name' #Creates Display Name
 # System Variables
-    $OU = "OU=LS, OU=Employees, OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
-    $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+    $OU = "OU=LS, OU=Employees, OU=Corp IT,DC=amer,DC=EvilCorpCORP,DC=COM"
+    $DomainController = "P054ADSAMDC02.amer.EvilCorpCORP.COM"
 
 
 # create an AD Account if not found

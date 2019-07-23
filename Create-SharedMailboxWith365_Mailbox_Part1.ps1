@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Part 1 For adding users to o365
 .DESCRIPTION
@@ -40,16 +40,16 @@
 #>
 
 # Variables
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+$ExchangeServer = "http://ET016-EQEXMBX01.amer.EvilCorpcorp.com/PowerShell/"
+$DomainController = "P054ADSAMDC02.amer.EvilCorpCORP.COM"
 $file = "c:\temp\SharedMBX.csv"
-$password = "Welcome1234Epiq!"
-$OU = "OU=Shared Mailboxes,OU=Excahnge,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
-$DomainList = "epiqcorp.com","amer.epiqcorp.com","apac.epiqcorp.com","euro.epiqcorp.com"
+$password = "Welcome1234EvilCorp!"
+$OU = "OU=Shared Mailboxes,OU=Excahnge,OU=Corp IT,DC=amer,DC=EvilCorpCORP,DC=COM"
+$DomainList = "EvilCorpcorp.com","amer.EvilCorpcorp.com","apac.EvilCorpcorp.com","euro.EvilCorpcorp.com"
 
 # connect to Exchange
 Function ExchangeConnect {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "et016-eqexmbx01.amer.EvilCorpcorp.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -80,8 +80,8 @@ Function importUsers {
 # Gets a single user to create an o365 Mailbox
 Function GetIndivUser {
     $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
-    $Script:upn = $account+"@epiqsystems.com"
-    $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
+    $Script:upn = $account+"@EvilCorpsystems.com"
+    $Script:email = $account+"@EvilCorpsystems3.mail.onmicrosoft.com"
     checkUser
 }
 
@@ -111,7 +111,7 @@ Function checkUser {
 
 # create an AD Account if not found
 Function CreateADAccount {
-        $Script:upn = $name.Username +"@epiqsystems.com"
+        $Script:upn = $name.Username +"@EvilCorpsystems.com"
         $Script:DisplayName = $name.LastName +", " + $name.FirstName
         New-ADUser -SamAccountName $name.Username `
             -Name $DisplayName `
@@ -140,7 +140,7 @@ Function CreateADAccount {
 # Enables the remote Mailbox
 Function CreateRemoteMailbox {
     "Mailbox will be created as :", $upn
-    $Script:email = $name.Username +"@epiqsystems3.mail.onmicrosoft.com"
+    $Script:email = $name.Username +"@EvilCorpsystems3.mail.onmicrosoft.com"
     # Enables the o365 Mailbox and Turns on Archive for the user
     Enable-RemoteMailbox $name.Username -RemoteRoutingAddress $email -DomainController $DomainController
     # Enable-RemoteMailbox $upn -Archive

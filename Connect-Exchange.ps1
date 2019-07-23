@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Connect Functions
 
@@ -26,9 +26,9 @@
 
 # Connects to Exchange
 Function Connect-Exchange {
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+$ExchangeServer = "http://ET016-EQEXMBX01.amer.EvilCorpcorp.com/PowerShell/"
     # If already connected skip - makes it cleaner to look at     
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com") {
+    If ($Session.ComputerName -like "et016-eqexmbx01.amer.EvilCorpcorp.com") {
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {

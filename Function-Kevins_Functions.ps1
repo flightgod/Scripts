@@ -1,8 +1,8 @@
-﻿# Function to send Emails
+# Function to send Emails
 Function SendReport ($Subject, $path, $Info)
 {
-$MailServer = "relay.amer.epiqcorp.com" #New Relay in LV "10.35.16.15"
-$mailServer2 = "MailRelay.amer.epiqcorp.com"
+$MailServer = "relay.amer.EvilCorpcorp.com" #New Relay in LV "10.35.16.15"
+$mailServer2 = "MailRelay.amer.EvilCorpcorp.com"
 $style = "<style>
 		BODY{font-family: Arial; font-size: 8pt;}
 		H1{font-size: 22px; font-family: 'Segoe UI Light','Segoe UI','Lucida Grande',Verdana,Arial,Helvetica,sans-serif;}
@@ -18,7 +18,7 @@ $style = "<style>
     </style>"
 $report = (get-content $path | out-String)
 $body = $info += $style += $report
-Send-MailMessage -From powershellfoo@epiqsystems.com -Subject $Subject -To kbennett@epiqsystems.com -smtpserver $MailServer2 -Body $body -BodyAsHtml -Attachments $path -ErrorAction STOP
+Send-MailMessage -From powershellfoo@EvilCorpsystems.com -Subject $Subject -To kbennett@EvilCorpsystems.com -smtpserver $MailServer2 -Body $body -BodyAsHtml -Attachments $path -ErrorAction STOP
 }
 
 #Function to Run Search on AD Account Status

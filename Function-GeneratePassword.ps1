@@ -1,4 +1,4 @@
-﻿Function New-Password { 
+Function New-Password { 
 <#
 .SYNOPSIS
     This is a simple Powershell Script to Randomely Generate a Password

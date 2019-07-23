@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     For adding users to o365
 .DESCRIPTION
@@ -26,15 +26,15 @@
 #>
 
 # Variables
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
-$ExchangeOnlineSku = "epiqsystems3:EXCHANGEENTERPRISE"
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
-$DomainController_AP = "ET016-EQAPDC03.APAC.EPIQCORP.COM"
-$DomainController_UK = "ET016-EQEUDC01.EURO.EPIQCORP.COM"
+$ExchangeServer = "http://ET016-EQEXMBX01.amer.EvilCorpcorp.com/PowerShell/"
+$ExchangeOnlineSku = "EvilCorpsystems3:EXCHANGEENTERPRISE"
+$DomainController = "P054ADSAMDC02.amer.EvilCorpCORP.COM"
+$DomainController_AP = "ET016-EQAPDC03.APAC.EvilCorpCORP.COM"
+$DomainController_UK = "ET016-EQEUDC01.EURO.EvilCorpCORP.COM"
 
 # connect to Exchange
 Function ExchangeConnect {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "et016-eqexmbx01.amer.EvilCorpcorp.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -57,8 +57,8 @@ Function GetUsersList {
 # Gets a single user to create an o365 Mailbox
 Function GetIndivUser {
     $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
-    $Script:upn = $account+"@epiqsystems.com"
-    $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
+    $Script:upn = $account+"@EvilCorpsystems.com"
+    $Script:email = $account+"@EvilCorpsystems3.mail.onmicrosoft.com"
     checkUser
 }
 
@@ -111,7 +111,7 @@ Function setDefaults {
     Set-Mailbox $account -IssueWarningQuota 45GB -RetainDeletedItemsFor 30.00:00:00
 
     # Turn off Clutter
-    Get-Mailbox –identity $upn | Set-Clutter -enable $false
+    Get-Mailbox �identity $upn | Set-Clutter -enable $false
 }
 
 #Script Main body

@@ -1,16 +1,16 @@
-﻿# Script Variables
+# Script Variables
 param (
 $ImportFile = "C:\Temp\GCGEmail.csv",
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM",
-$OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
+$DomainController = "P054ADSAMDC02.amer.EvilCorpCORP.COM",
+$OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=EvilCorpCORP,DC=COM"
 )
 
 
 # Connects to Exchange
 Function ExchangeConnect {
     # Function Variables
-    $ExchangeSession = "et016-eqexmbx01.amer.epiqcorp.com"
-    $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+    $ExchangeSession = "et016-eqexmbx01.amer.EvilCorpcorp.com"
+    $ExchangeServer = "http://ET016-EQEXMBX01.amer.EvilCorpcorp.com/PowerShell/"
 
     If ($Session.ComputerName -like $ExchangeSession){
         Write-Host "Session already established to exchange" -ForegroundColor Green
@@ -45,11 +45,11 @@ Function ImportList {
 Function AddUser {
     ForEach ($Script:User in $Import){
 
-        $alias1 = $user.EpiqSam + "@gardencitygroup.com"
-        $alias2 = $user.epiqSam + "@gcginc.com"
-        Get-RemoteMailbox -Identity $User.EpiqSam -DomainController $DomainController
+        $alias1 = $user.EvilCorpSam + "@gardencitygroup.com"
+        $alias2 = $user.EvilCorpSam + "@gcginc.com"
+        Get-RemoteMailbox -Identity $User.EvilCorpSam -DomainController $DomainController
         Set-ADUser `
-        -Identity $User.EpiqSam `
+        -Identity $User.EvilCorpSam `
         -add @{"extensionattribute13" = $user.GCGEmail} -Credential $UserCredential
     }
 }
@@ -58,7 +58,7 @@ Function AddUser {
 
 Function SetLimits {
     ForEach ($Script:User in $Import){
-        Set-RemoteMailbox $User.EpiqSam -ProhibitSendQuota 95GB -ProhibitSendReceiveQuota 95GB -IssueWarningQuota 90GB 
+        Set-RemoteMailbox $User.EvilCorpSam -ProhibitSendQuota 95GB -ProhibitSendReceiveQuota 95GB -IssueWarningQuota 90GB 
     }
 }
 
@@ -68,4 +68,4 @@ ImportList
 setLimits
 
 
-# Set-ADUser –Identity $ThisUser -add @{"extensionattribute1"="MyString"}
+# Set-ADUser �Identity $ThisUser -add @{"extensionattribute1"="MyString"}

@@ -1,4 +1,4 @@
-﻿/**
+/**
      * This functions generates a token as done in office 365
      * @return mixed|string
      */

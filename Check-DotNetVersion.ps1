@@ -1,4 +1,4 @@
-ÔªøWrite-Host ""
+Write-Host ""
 Write-Host "Version Table on MSDN: https://msdn.microsoft.com/en-us/library/hh925568(v=vs.110).aspx"
 Write-Host "Release 379893 is .NET Framework 4.5.2" -ForegroundColor "Yellow"
 Write-Host ""
@@ -17,41 +17,41 @@ Select PSChildName, Version, Release
 #
 #
 
-$Netver = (Get-ItemProperty ‚ÄòHKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full‚Äô -Name Release).Release
+$Netver = (Get-ItemProperty ëHKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Fullí -Name Release).Release
 
 If ($Netver -lt 378389)
 {
-Write-Host ‚Äú.NET Framework version OLDER than 4.5‚Äù -foregroundcolor yellow
+Write-Host ì.NET Framework version OLDER than 4.5î -foregroundcolor yellow
 }
 ElseIf ($Netver -eq 378389)
 {
-Write-Host ‚Äú.NET Framework 4.5‚Äù -foregroundcolor red
+Write-Host ì.NET Framework 4.5î -foregroundcolor red
 }
 ElseIf ($Netver -le 378675)
 {
-Write-Host ‚Äú.NET Framework 4.5.1 installed with Windows 8.1‚Äù -foregroundcolor red
+Write-Host ì.NET Framework 4.5.1 installed with Windows 8.1î -foregroundcolor red
 }
 ElseIf ($Netver -le 378758)
 {
-Write-Host ‚Äú.NET Framework 4.5.1 installed on Windows 8, Windows 7 SP1, or Windows Vista SP2‚Äù -foregroundcolor red
+Write-Host ì.NET Framework 4.5.1 installed on Windows 8, Windows 7 SP1, or Windows Vista SP2î -foregroundcolor red
 }
 ElseIf ($Netver -le 379893)
 {
-Write-Host ‚Äú.NET Framework 4.5.2‚Äù -foregroundcolor red
+Write-Host ì.NET Framework 4.5.2î -foregroundcolor red
 }
 ElseIf ($Netver -le 393295)
 {
-Write-Host ‚Äú.NET Framework 4.6 installed with Windows 10‚Äù -foregroundcolor red 
+Write-Host ì.NET Framework 4.6 installed with Windows 10î -foregroundcolor red 
 }
 ElseIf ($Netver -le 393297)
 {
-Write-Host ‚Äú.NET Framework 4.6 installed on all other Windows OS versions‚Äù -foregroundcolor red
+Write-Host ì.NET Framework 4.6 installed on all other Windows OS versionsî -foregroundcolor red
 }
 ElseIf ($Netver -le 394254)
 {
-Write-Host ‚Äú.NET Framework 4.6.1 installed on Windows 10‚Äù -foregroundcolor red
+Write-Host ì.NET Framework 4.6.1 installed on Windows 10î -foregroundcolor red
 }
 ElseIf ($Netver -le 394271)
 {
-Write-Host ‚Äú.NET Framework 4.6.1 installed on all other Windows OS versions‚Äù -foregroundcolor red
+Write-Host ì.NET Framework 4.6.1 installed on all other Windows OS versionsî -foregroundcolor red
 }

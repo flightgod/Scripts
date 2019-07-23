@@ -1,8 +1,8 @@
-﻿# https://docs.microsoft.com/en-us/office365/enterprise/powershell/manage-sharepoint-online-with-office-365-powershell
+# https://docs.microsoft.com/en-us/office365/enterprise/powershell/manage-sharepoint-online-with-office-365-powershell
 
 #Specify tenant admin and site URL
-$User = "ward_kbennett@Epiqsystems3.onmicrosoft.com"
-$URL = "https://epiqsystems3-admin.sharepoint.com"
+$User = "ward_kbennett@EvilCorpsystems3.onmicrosoft.com"
+$URL = "https://EvilCorpsystems3-admin.sharepoint.com"
 $ListTitle = "TestList"
 
 Import-Module Microsoft.Online.SharePoint.PowerShell

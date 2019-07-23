@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Connects to Azure Sync
 
@@ -13,7 +13,7 @@
         
     Rights Required		    : Permissions to Add/Edit Objects in Exchange
                         	: Requires PowerShell (or ISE) to 'Run as Administrator' to install the applications or modules
-                            : MUST USE epiqsystem3.onmicrosoft.com account for Auth
+                            : MUST USE EvilCorpsystem3.onmicrosoft.com account for Auth
                         
     Future Features     	: Better Error Checking
                             : Variables

@@ -1,4 +1,4 @@
-﻿Function Cleanup {
+Function Cleanup {
 <#
 .CREATED BY:
     Matthew A. Kerfoot

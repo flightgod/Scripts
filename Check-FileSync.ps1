@@ -1,4 +1,4 @@
-﻿$Folder1Path = 'c:\Scripts1'
+$Folder1Path = 'c:\Scripts1'
 $Folder2Path = 'c:\Scripts2'
 
 $Folder1Files = Get-ChildItem -Path $Folder1Path

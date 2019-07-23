@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Add User to Distribution List
 
@@ -21,13 +21,13 @@
 #>
 
 # Variables
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+$ExchangeServer = "http://ET016-EQEXMBX01.amer.EvilCorpcorp.com/PowerShell/"
 $DL = "NameOfDL"
 
 # Connects to Exchange
 Function ExchangeConnect 
 {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "et016-eqexmbx01.amer.EvilCorpcorp.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {

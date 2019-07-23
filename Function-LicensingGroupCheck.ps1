@@ -1,4 +1,4 @@
-﻿
+
 # https://docs.microsoft.com/en-us/azure/active-directory/active-directory-licensing-ps-examples#remove-direct-licenses-for-users-with-group-licenses)
 
 #a sample group with errors

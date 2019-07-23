@@ -1,4 +1,4 @@
-ï»¿<#
+<#
 .SYNOPSIS
     for creating AD Accounts and Enable-RemoteMailbox
 .DESCRIPTION
@@ -28,14 +28,14 @@
 #>
 
 # Variables
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+$DomainController = "P054ADSAMDC02.amer.EvilCorpCORP.COM"
 $file = "c:\temp\LSList.csv" # First File of all users
 $file2 = "c:\temp\LSUsersCreated.csv" # Second file for all that were Created
-$password = "Welcome1234Epiq!"
-$OU = "OU=MS,OU=Employees,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
-$DomainList = "epiqcorp.com","amer.epiqcorp.com","apac.epiqcorp.com","euro.epiqcorp.com"
-$ExchangeOnlineSkuE2 = "epiqsystems3:EXCHANGEENTERPRISE" # E2 License - outlook/owa
-$ExchangeOnlineSkuE1 = "epiqsystems3:EXCHANGESTANDARD" # E1 License - OWA Only
+$password = "Welcome1234EvilCorp!"
+$OU = "OU=MS,OU=Employees,OU=Corp IT,DC=amer,DC=EvilCorpCORP,DC=COM"
+$DomainList = "EvilCorpcorp.com","amer.EvilCorpcorp.com","apac.EvilCorpcorp.com","euro.EvilCorpcorp.com"
+$ExchangeOnlineSkuE2 = "EvilCorpsystems3:EXCHANGEENTERPRISE" # E2 License - outlook/owa
+$ExchangeOnlineSkuE1 = "EvilCorpsystems3:EXCHANGESTANDARD" # E1 License - OWA Only
 
 
 # Calls my connect function with all the current connection strings in it
@@ -83,7 +83,7 @@ Function checkUser {
 
 # create an AD Account if not found
 Function CreateADAccount {
-        $Script:upn = $username +"@epiqsystems.com" #Creates UPN
+        $Script:upn = $username +"@EvilCorpsystems.com" #Creates UPN
         $Script:DisplayName = $name.'Last Name' +"," + $name.'First Name' #Creates Display Name
         New-ADUser -SamAccountName $username `
             -Name $name.name `
@@ -108,7 +108,7 @@ Function CreateADAccount {
 # Enables the remote Mailbox
 Function CreateRemoteMailbox {
     "Mailbox will be created as :", $upn
-    $Script:email = $username +"@epiqsystems3.mail.onmicrosoft.com"
+    $Script:email = $username +"@EvilCorpsystems3.mail.onmicrosoft.com"
     # Enables the o365 Mailbox
     Enable-RemoteMailbox $username -RemoteRoutingAddress $email -DomainController $DomainController
     ### Here I put a log to add the user created and Info so I can use it below to enable License
@@ -162,7 +162,7 @@ Function setDefaults {
         Set-Mailbox $upn -IssueWarningQuota 45GB -RetainDeletedItemsFor 30.00:00:00
         Write-host "Turning off Clutter" + $upn
         # Turn off Clutter
-        Get-Mailbox â€“identity $upn | Set-Clutter -enable $false
+        Get-Mailbox –identity $upn | Set-Clutter -enable $false
     
 }
 
@@ -192,8 +192,8 @@ Function setDefaults {
 }
 
 Function ResetPassword {
-    $newpwd = ConvertTo-SecureString -String $genpwd -AsPlainText â€“Force
-    Set-ADAccountPassword $Name.EpiqUsername -NewPassword $newpwd â€“Reset
+    $newpwd = ConvertTo-SecureString -String $genpwd -AsPlainText –Force
+    Set-ADAccountPassword $Name.EvilCorpUsername -NewPassword $newpwd –Reset
     $Log = $Name.DisplayName + $genpwd
     Add-Content c:\temp\DTI-PasswordResetStats.txt $Log
 }
@@ -202,15 +202,15 @@ Function ResetPassword {
 Function BodyText {
     $Script:Body = "
 
-Above you see see your new Epiq Password. As previously communicated in preparation for the Migration of your DTIGlobal Email from InterMedia to Office 365 you will be using a new account name. 
+Above you see see your new EvilCorp Password. As previously communicated in preparation for the Migration of your DTIGlobal Email from InterMedia to Office 365 you will be using a new account name. 
 
 From a DTI location or via VPN please visit the following site to change your password:
 
-https://password.epiqsystems.com
+https://password.EvilCorpsystems.com
 
-Your new password should follow the current Legacy Epiq Password policy and contain at least 15 characters to include at least 1 uppercase, 1 Number and or special character
+Your new password should follow the current Legacy EvilCorp Password policy and contain at least 15 characters to include at least 1 uppercase, 1 Number and or special character
 
-Please complete this as soon as possible to ensure your account is setup correctly. If you have any issues accessing this site or changing your password please contact the Service Desk at ServiceDesk@epiqsystems.com / 913-621-9800
+Please complete this as soon as possible to ensure your account is setup correctly. If you have any issues accessing this site or changing your password please contact the Service Desk at ServiceDesk@EvilCorpsystems.com / 913-621-9800
 
 You will soon receive instructions on connecting to the New Web Access or OWA URL. This URL will be used starting Monday 12/4/17 for all email.
 
@@ -222,10 +222,10 @@ Function SendEmail{
     $script:to = $Name.UserPrincipalName
     $script:messageBody = $genpwd + $Body + "`r`n"
 Send-MailMessage `
-    -From "o365 Questions <o365Questions@epiqsystems.com>" `
+    -From "o365 Questions <o365Questions@EvilCorpsystems.com>" `
     -To $name.UserPrincipalName `
-    -BCC "o365 Answers <o365Answers@epiqsystems.com>" `
-    -Subject "New Epiq Password for DTI Migration" `
+    -BCC "o365 Answers <o365Answers@EvilCorpsystems.com>" `
+    -Subject "New EvilCorp Password for DTI Migration" `
     -Body $messageBody `
     -SmtpServer "P054EXGSVCS03"
 

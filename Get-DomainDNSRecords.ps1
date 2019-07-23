@@ -1,4 +1,4 @@
-﻿<# 
+<# 
 
 Get MX Record
 Get SPF record

@@ -1,6 +1,6 @@
-﻿$import = Import-csv .\CleanupUsers.csv
-$Domain = "amer.epiqcorp.com"
-$NewPath = "OU=Delete,OU=Exchange-Team,DC=amer,DC=EPIQCORP,DC=COM"
+$import = Import-csv .\CleanupUsers.csv
+$Domain = "amer.EvilCorpcorp.com"
+$NewPath = "OU=Delete,OU=Exchange-Team,DC=amer,DC=EvilCorpCORP,DC=COM"
 
 foreach ($DistinguishedName in $Import){
 

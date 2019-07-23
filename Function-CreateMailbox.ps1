@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Add User to AD Functions
 
@@ -29,8 +29,8 @@ Connect-Exchange # calls from the .function-connect.ps1
 
 Function Add-User {
     $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
-    $Script:upn = $account+"@epiqsystems.com"
-    $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
+    $Script:upn = $account+"@EvilCorpsystems.com"
+    $Script:email = $account+"@EvilCorpsystems3.mail.onmicrosoft.com"
 
     Enable-RemoteMailbox $account -RemoteRoutingAddress $email -DomainController $DomainController
 }

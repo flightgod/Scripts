@@ -1,4 +1,4 @@
-﻿Function ChangingCountries {
+Function ChangingCountries {
 # Fancy Case switch to fix country to ISO 3166-1 Standard
     $Script:NewCountry = $name.'Work Address Country Name'  # Remove after testing
     Write-Host "Old Country Code "$NewCountry #Remove after Testing

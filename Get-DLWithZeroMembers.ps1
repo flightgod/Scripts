@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Get DistroLists with no members
 
@@ -28,20 +28,20 @@
 #>
 
 # Variables
-$ExchangeServer = "http://P054EXCTRNS01.amer.epiqcorp.com/PowerShell/"
-$Domain = "amer.epiqcorp.com"
-$NewPath = "OU=GroupsDelete,OU=Exchange-Team,DC=amer,DC=EPIQCORP,DC=COM"
+$ExchangeServer = "http://P054EXCTRNS01.amer.EvilCorpcorp.com/PowerShell/"
+$Domain = "amer.EvilCorpcorp.com"
+$NewPath = "OU=GroupsDelete,OU=Exchange-Team,DC=amer,DC=EvilCorpCORP,DC=COM"
 $File = "c:\Temp\ZeroDLtoDelete.txt"
 $Date = Get-Date
 $Today = $Date | Get-date -Format MM/dd/yyyy
 $LastMonth = $Date.AddMonths(-1) | Get-date -Format MM/dd/yyyy
 $BlankDL = @()
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+$DomainController = "P054ADSAMDC02.amer.EvilCorpCORP.COM"
 
 # Connects to Exchange
 Function ExchangeConnect 
 {
-    If ($Session.ComputerName -like "P054EXCTRNS01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "P054EXCTRNS01.amer.EvilCorpcorp.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {

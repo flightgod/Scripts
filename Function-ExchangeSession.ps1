@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    Function to be called to connect to Exchange
 
@@ -22,8 +22,8 @@
 #>
 
 param (
-$exchangeURI = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/",
-$exchangeSession = "et016-eqexmbx01.amer.epiqcorp.com"
+$exchangeURI = "http://ET016-EQEXMBX01.amer.EvilCorpcorp.com/PowerShell/",
+$exchangeSession = "et016-eqexmbx01.amer.EvilCorpcorp.com"
 )
 
 

@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Add User to AD and Create OnPrem Mailbox
 
@@ -23,10 +23,10 @@
 
 
 # Script Variables
-$DefaultPassword = "Welcomeepiq-24566"
-$UkServer = "P064ADSEUDC02.euro.epiqcorp.com"
+$DefaultPassword = "WelcomeEvilCorp-24566"
+$UkServer = "P064ADSEUDC02.euro.EvilCorpcorp.com"
 $State = "England"
-$DomainList = "epiqcorp.com","amer.epiqcorp.com","apac.epiqcorp.com","euro.epiqcorp.com"
+$DomainList = "EvilCorpcorp.com","amer.EvilCorpcorp.com","apac.EvilCorpcorp.com","euro.EvilCorpcorp.com"
 $FilePath = ".\NewUsers.csv"
 
 
@@ -61,7 +61,7 @@ Function addUser {
     If ($Continue -notlike "NO"){
         #Run through each user in the list and create accounts
         ForEach ($user in $NewUserImport) {
-            $Script:userPrincinpal = $user.samAccountName + "@epiqsystems.co.uk"
+            $Script:userPrincinpal = $user.samAccountName + "@EvilCorpsystems.co.uk"
             New-ADUser -Name $User.Name `
                 -Path $user.ParentOU `
                 -SamAccountName  $user.samAccountName `

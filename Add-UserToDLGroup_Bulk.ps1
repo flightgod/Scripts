@@ -1,4 +1,4 @@
-﻿<#
+<#
  Create Distribution List
 
  
@@ -20,16 +20,16 @@
 # Script Variables
 param (
 $ImportFile = "C:\Temp\book1.csv",
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM",
-$OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
+$DomainController = "P054ADSAMDC02.amer.EvilCorpCORP.COM",
+$OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=EvilCorpCORP,DC=COM"
 )
 
 
 # Connects to Exchange
 Function ExchangeConnect {
     # Function Variables
-    $ExchangeSession = "et016-eqexmbx01.amer.epiqcorp.com"
-    $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+    $ExchangeSession = "et016-eqexmbx01.amer.EvilCorpcorp.com"
+    $ExchangeServer = "http://ET016-EQEXMBX01.amer.EvilCorpcorp.com/PowerShell/"
 
     If ($Session.ComputerName -like $ExchangeSession){
         Write-Host "Session already established to exchange" -ForegroundColor Green
@@ -65,7 +65,7 @@ Function AddUser {
 $Script:UserCredential = Get-Credential
     ForEach ($Script:User in $Import){
         Write-Host "Adding user" $user.AD_SamAcct
-        Add-ADGroupMember -Identity Epiq-All -Members $User.AD_SamAcct -Server $DomainController -Credential $UserCredential
+        Add-ADGroupMember -Identity EvilCorp-All -Members $User.AD_SamAcct -Server $DomainController -Credential $UserCredential
     }
 }
 

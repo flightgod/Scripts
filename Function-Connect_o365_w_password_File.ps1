@@ -1,4 +1,4 @@
-﻿# Checks for the Password File then loads Exchange o365 Powershell off credentials
+# Checks for the Password File then loads Exchange o365 Powershell off credentials
 # Other stuff here
 # Variables that can be changed
 $myusername = read-host -prompt 'Enter o365 UserName'

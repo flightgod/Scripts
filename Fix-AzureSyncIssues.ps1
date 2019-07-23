@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Updates attribute extensionAttribute10
 
@@ -29,14 +29,14 @@
 # Variables
 $user = Read-Host "What is the user having issues?"
 $value = "nomsazuresync"
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
-$DomainController_AP = "ET016-EQAPDC03.APAC.EPIQCORP.COM"
-$DomainController_UK = "ET016-EQEUDC01.EURO.EPIQCORP.COM"
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+$DomainController = "P054ADSAMDC02.amer.EvilCorpCORP.COM"
+$DomainController_AP = "ET016-EQAPDC03.APAC.EvilCorpCORP.COM"
+$DomainController_UK = "ET016-EQEUDC01.EURO.EvilCorpCORP.COM"
+$ExchangeServer = "http://ET016-EQEXMBX01.amer.EvilCorpcorp.com/PowerShell/"
 
 # Connects to Exchange
 Function ExchangeConnect { 
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "et016-eqexmbx01.amer.EvilCorpcorp.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {

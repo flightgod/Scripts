@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Get DL Trace Log Info
 
@@ -23,7 +23,7 @@
 #>
 
 # Variables
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+$ExchangeServer = "http://ET016-EQEXMBX01.amer.EvilCorpcorp.com/PowerShell/"
 $Date = Get-Date
 $Today = $Date | Get-date -Format MM/dd/yyyy
 $Yesterday = $Date.AddDays(-1) | Get-Date -Format MM/dd/yyyy
@@ -31,11 +31,11 @@ $LastMonth = $Date.AddMonths(-1) | Get-date -Format MM/dd/yyyy
 $LastYear = $Date.AddYears(-1) | Get-Date -Format MM/dd/yyyy
 $ServerArray = @("ET016-EQEXCHUB1","ET016-EQEXCHUB2","ET008-EQEXCHUB1","ET019-EQMBX01","ET016-EX10HUB1","P054EXCTRNS01","ET016-EX10HUB2","P054EXCTRNS02","P061EXCHUBS01","P061EXCHUBS02")
 
-$DLSearch = "ITTeams@epiqsystems.com"
+$DLSearch = "ITTeams@EvilCorpsystems.com"
 
 Function ExchangeConnect # Connects to Exchange
 { 
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "et016-eqexmbx01.amer.EvilCorpcorp.com"){
     Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {

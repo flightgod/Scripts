@@ -1,9 +1,9 @@
-Ôªø$EncodedText = ‚ÄúLVx8RhEN/GlLr7Ov649fZTY=‚Äù
+$EncodedText = ìLVx8RhEN/GlLr7Ov649fZTY=î
 $DecodedText = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($EncodedText))
 $DecodedText
 
 
-$Text = ‚Äò11467c2dfc0d4b69afb3afeb8f5f6536‚Äô
+$Text = ë11467c2dfc0d4b69afb3afeb8f5f6536í
 $Bytes = [System.Text.Encoding]::Unicode.GetBytes($Text)
 $EncodedText =[Convert]::ToBase64String($Bytes)
 $EncodedText

@@ -1,8 +1,8 @@
-﻿$ExchangeServer = "http://et016-ex10hub1.amer.epiqcorp.com/PowerShell/"
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+$ExchangeServer = "http://et016-ex10hub1.amer.EvilCorpcorp.com/PowerShell/"
+$DomainController = "P054ADSAMDC02.amer.EvilCorpCORP.COM"
 
 Function ExchangeConnect {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "et016-eqexmbx01.amer.EvilCorpcorp.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -18,7 +18,7 @@ Function ExchangeConnect {
 }
 
 # runs the Sync
-Function Epiq-ADSync {
+Function EvilCorp-ADSync {
     # Kicks off the AD Azure Sync on the Sync server
     Get-Date
     $session = New-PSSession -ComputerName "P054ADZAGTA01" -Credential $UserCredential
@@ -35,8 +35,8 @@ Function Epiq-ADSync {
 # Runs the Add User Function
 Function Add-User {
 $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
-$Script:upn = $account+"@epiqsystems.com"
-$Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
+$Script:upn = $account+"@EvilCorpsystems.com"
+$Script:email = $account+"@EvilCorpsystems3.mail.onmicrosoft.com"
 
 Enable-RemoteMailbox $account -RemoteRoutingAddress $email -DomainController $DomainController
 
@@ -50,4 +50,4 @@ Function SetLimits {
 
 ExchangeConnect
 
-Epiq-ADSync
+EvilCorp-ADSync

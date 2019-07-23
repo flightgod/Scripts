@@ -1,4 +1,4 @@
-﻿$OU = "DC=amer,DC=epiqcorp,DC=com"
+$OU = "DC=amer,DC=EvilCorpcorp,DC=com"
 
 <#$Count = Get-ADUser -Filter * -SearchBase $OU -Properties EmployeeID | `
 Where-Object {$_.Enabled -eq $false} | `

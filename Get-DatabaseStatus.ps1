@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
    	Gets any Quarantine messages from internal addresses
 

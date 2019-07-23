@@ -1,4 +1,4 @@
-﻿$alph=@()
+$alph=@()
 65..90|foreach-object{$alph+=[char]$_}
 $alph
 

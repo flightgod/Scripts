@@ -1,4 +1,4 @@
-﻿Function Load-List
+Function Load-List
 
 {
 

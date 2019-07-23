@@ -1,4 +1,4 @@
-﻿$import = Import-csv c:\temp\OfficeVersions.csv
+$import = Import-csv c:\temp\OfficeVersions.csv
 
 foreach ($System in $Import){
 

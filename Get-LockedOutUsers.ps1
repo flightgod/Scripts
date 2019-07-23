@@ -1,4 +1,4 @@
-﻿# PSFindLockedOutUsers.ps1
+# PSFindLockedOutUsers.ps1
 # PowerShell script to find locked out users.
 #
 # ----------------------------------------------------------------------

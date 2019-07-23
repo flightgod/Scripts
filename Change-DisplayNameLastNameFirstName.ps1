@@ -1,5 +1,5 @@
-﻿$OU = "OU=Employees, OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+$OU = "OU=Employees, OU=Corp IT,DC=amer,DC=EvilCorpCORP,DC=COM"
+$DomainController = "P054ADSAMDC02.amer.EvilCorpCORP.COM"
 
 $search = get-aduser -filter * -SearchBase $OU -properties Name, DisplayName, Surname, GivenName, SamAccountName, DistinguishedName -Server $DomainController
 

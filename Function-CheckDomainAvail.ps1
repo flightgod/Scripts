@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	
 
@@ -60,7 +60,7 @@ Function GetDomainInfo {
     $DomainInfo = Invoke-WebRequest `
     -Headers $headers `
     -Method Get `
-    -Uri "https://api.godaddy.com/v1/domains/epiqsystems.com" | `
+    -Uri "https://api.godaddy.com/v1/domains/EvilCorpsystems.com" | `
     ConvertFrom-Json | `
     Select Domain, ContactAdmin
     $DomainInfo.contactAdmin.organization

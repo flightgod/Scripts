@@ -1,4 +1,4 @@
-﻿Function Connect-o365 {
+Function Connect-o365 {
     $O365URI = "https://outlook.office365.com/powershell-liveid/"
     If ($Session.ComputerName -like "outlook.office365.com") {
         Write-Host "Session already established to exchange" -ForegroundColor Green
@@ -68,25 +68,25 @@ Get-MsolAccountSku
 
 AccountSkuId                           ActiveUnits WarningUnits ConsumedUnits
 ------------                           ----------- ------------ -------------
-epiqsystems3:VISIOCLIENT               1           0            0            
-epiqsystems3:STREAM                    1000000     0            4            
-epiqsystems3:ENTERPRISEPREMIUM         75          0            10           
-epiqsystems3:SPZA_IW                   10000       0            0            
-epiqsystems3:ENTERPRISEPACK            0           2100         1            
-epiqsystems3:FLOW_FREE                 10000       0            38           
-epiqsystems3:MICROSOFT_BUSINESS_CENTER 10000       0            3            
-epiqsystems3:POWERAPPS_VIRAL           10000       0            3            
-epiqsystems3:EXCHANGESTANDARD          3420        0            3381         
-epiqsystems3:DYN365_ENTERPRISE_P1_IW   10000       0            2            
-epiqsystems3:POWER_BI_STANDARD         1000000     0            35           
-epiqsystems3:EMS                       0           2100         0            
-epiqsystems3:MCOIMP                    3850        0            1594         
-epiqsystems3:AX7_USER_TRIAL            10000       0            0            
-epiqsystems3:SHAREPOINTSTANDARD        3850        0            188          
-epiqsystems3:PROJECTPROFESSIONAL       1           0            0            
-epiqsystems3:EXCHANGEENTERPRISE        3850        0            3662         
-epiqsystems3:MCOSTANDARD               50          0            9            
-epiqsystems3:STANDARDPACK              0           800          0 
+EvilCorpsystems3:VISIOCLIENT               1           0            0            
+EvilCorpsystems3:STREAM                    1000000     0            4            
+EvilCorpsystems3:ENTERPRISEPREMIUM         75          0            10           
+EvilCorpsystems3:SPZA_IW                   10000       0            0            
+EvilCorpsystems3:ENTERPRISEPACK            0           2100         1            
+EvilCorpsystems3:FLOW_FREE                 10000       0            38           
+EvilCorpsystems3:MICROSOFT_BUSINESS_CENTER 10000       0            3            
+EvilCorpsystems3:POWERAPPS_VIRAL           10000       0            3            
+EvilCorpsystems3:EXCHANGESTANDARD          3420        0            3381         
+EvilCorpsystems3:DYN365_ENTERPRISE_P1_IW   10000       0            2            
+EvilCorpsystems3:POWER_BI_STANDARD         1000000     0            35           
+EvilCorpsystems3:EMS                       0           2100         0            
+EvilCorpsystems3:MCOIMP                    3850        0            1594         
+EvilCorpsystems3:AX7_USER_TRIAL            10000       0            0            
+EvilCorpsystems3:SHAREPOINTSTANDARD        3850        0            188          
+EvilCorpsystems3:PROJECTPROFESSIONAL       1           0            0            
+EvilCorpsystems3:EXCHANGEENTERPRISE        3850        0            3662         
+EvilCorpsystems3:MCOSTANDARD               50          0            9            
+EvilCorpsystems3:STANDARDPACK              0           800          0 
 
 
 

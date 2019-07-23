@@ -1,4 +1,4 @@
-﻿$computers = Get-Content -Path 'ComputerList.txt'
+$computers = Get-Content -Path 'ComputerList.txt'
 foreach ($computer in $computers) {
     $ols = gwmi -Class win32_process -ComputerName $computer | ? { $_.name -eq 'Outlook.exe' }
     foreach ($ol in $ols) { $ol.terminate() | Out-Null }

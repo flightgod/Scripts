@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Connect Functions
 
@@ -48,9 +48,9 @@ Function Connect-o365 {
 # Connects to Exchange
 ## Add check to this so if you are already ward it uses that account ##
 Function Connect-Exchange {
-    $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+    $ExchangeServer = "http://ET016-EQEXMBX01.amer.EvilCorpcorp.com/PowerShell/"
     # If already connected skip - makes it cleaner to look at     
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com") {
+    If ($Session.ComputerName -like "et016-eqexmbx01.amer.EvilCorpcorp.com") {
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -68,7 +68,7 @@ Function Connect-Exchange {
 # Connect to Skype
 Function Connect-SkypeOnline {
     Write-Host "Session not made to Skype Online, creating session now" -ForegroundColor Red
-    $tenant = "epiqsystems3.onmicrosoft.com"
+    $tenant = "EvilCorpsystems3.onmicrosoft.com"
     Import-Module LyncOnlineConnector
     $script:SkypeOnlinecreds = get-credential
     $CSSession = New-CsOnlineSession `
@@ -100,8 +100,8 @@ Function WhoAmI {
 }
 
 Function Connect-Lync {
-    $LyncServer = "https://lyncws.epiqsystems.com/OcsPowershell"
-    If ($Session.ComputerName -like "lyncws.epiqsystems.com") {
+    $LyncServer = "https://lyncws.EvilCorpsystems.com/OcsPowershell"
+    If ($Session.ComputerName -like "lyncws.EvilCorpsystems.com") {
         Write-Host "Session already established to Lync" -ForegroundColor Green
     }
     Else {

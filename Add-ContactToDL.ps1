@@ -1,4 +1,4 @@
-﻿<#  
+<#  
 .SYNOPSIS
    	Add Contact to Distribution List
 
@@ -21,8 +21,8 @@
 #>
 
 # Variables
-$ContactOU = "OU=Contacts,OU=DTI,DC=amer,DC=EPIQCORP,DC=COM"
-$DomainController = "P016ADSAMDC01.amer.EPIQCORP.COM"
+$ContactOU = "OU=Contacts,OU=DTI,DC=amer,DC=EvilCorpCORP,DC=COM"
+$DomainController = "P016ADSAMDC01.amer.EvilCorpCORP.COM"
 
 Function GetDL {
     $script:DL = ReadHost "What DL do you want to add a contact to?"
