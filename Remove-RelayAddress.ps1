@@ -21,15 +21,15 @@
 #>
 
 # Variables
-$Relay1 = "ET016-EQEXCHUB1\Internal Relay - Hub1"
-$Relay2 =  "ET016-EQEXCHUB2\Internal Relay - Hub2"
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
-$ServerArray = @("ET016-EQEXCHUB1\Internal Relay - Hub1", "ET016-EQEXCHUB2\Internal Relay - Hub2")
+$Relay1 = "HUB1\Internal Relay - Hub1"
+$Relay2 =  "HUB2\Internal Relay - Hub2"
+$ExchangeServer = "http://MBX01.amer.domain.com/PowerShell/"
+$ServerArray = @("HUB1\Internal Relay - Hub1", "HUB2\Internal Relay - Hub2")
 
 # Connects to Exchange
 Function ExchangeConnect 
 {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "mbx01.amer.domain.com"){
     Write-Host "Session already established to exchange" -ForegroundColor Green
 }
     Else {
