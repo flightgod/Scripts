@@ -21,10 +21,10 @@
 .FUNCTIONALITY
     This script moves the databases between servers.
 #>
-$ExchangeServer = "http://et016-ex10hub1.amer.epiqcorp.com/PowerShell/"
+$ExchangeServer = "http://hub1.amer.domain.com/PowerShell/"
 
 Function ExchangeConnect {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "mbx01.amer.domain.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -41,7 +41,7 @@ Function ExchangeConnect {
 
 
 # Move Databases to Primary/Seconday
-$server = Read-Host -Prompt 'Which Server ET016-EQEXMBX01/P054EXCMBXS01?'
+$server = Read-Host -Prompt 'Which Server server2/server1?'
 
 # Variables
 $dbs = Get-MailboxDatabase | where {$_.AdminDisplayName -like "Datab*" -or $_.AdminDisplayName -like "Archi*" -and $_.Server -notlike $server}
