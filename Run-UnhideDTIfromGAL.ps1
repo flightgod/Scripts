@@ -1,8 +1,8 @@
 ﻿# Connects to Exchange
 Function Connect-Exchange {
-    $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+    $ExchangeServer = "http://server.amer.domain.com/PowerShell/"
     # If already connected skip - makes it cleaner to look at     
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com") {
+    If ($Session.ComputerName -like "server.amer.domain.com") {
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -18,15 +18,15 @@ Function Connect-Exchange {
 }
 
 Connect-Exchange
-$OU = "OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
+$OU = "OU=Corp IT,DC=amer,DC=domain,DC=COM"
 Get-RemoteMailbox -ResultSize Unlimited -OnPremisesOrganizationalUnit $OU | Set-RemoteMailbox -HiddenFromAddressListsEnabled $False
 
 
 
 
-Get-ADUser -SearchBase $ou -filter * -Properties * | where {$_.extensionAttribute13 -notlike "dtiglobal*"} | ft CN, extensionAttribute13 -AutoSize 
+Get-ADUser -SearchBase $ou -filter * -Properties * | where {$_.extensionAttribute13 -notlike "domain*"} | ft CN, extensionAttribute13 -AutoSize 
 
 
-$count = Get-RemoteMailbox -ResultSize Unlimited | Where {$_.primarysmtpaddress -like "*2@dtiglobal*"} | select Name, PrimarySmtpAddress >> C:\temp\2s.txt
+$count = Get-RemoteMailbox -ResultSize Unlimited | Where {$_.primarysmtpaddress -like "*2@domain*"} | select Name, PrimarySmtpAddress >> C:\temp\2s.txt
 
 
