@@ -28,7 +28,7 @@
 
 
 # Variables
-$Server = "epiqcorp.com:3268" #So it will search the entire forest
+$Server = "domain.com:3268" #So it will search the entire forest
 $Global:input =""
 $Global:list = @() 
 
