@@ -23,8 +23,8 @@
 # variables
 param (
 $path = "C:\temp\output.csv",
-$exchangeURI = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/",
-$exchangeSession = "et016-eqexmbx01.amer.epiqcorp.com"
+$exchangeURI = "http://MBX01.amer.domain.com/PowerShell/",
+$exchangeSession = "mbx01.amer.domain.com"
 )
 
 
