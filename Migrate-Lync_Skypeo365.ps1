@@ -27,12 +27,12 @@
 
 #Variables
 $target = "sipfed.online.lync.com"
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+$DomainController = "server.amer.domain.COM"
 
 # Connect to Skype
 Function Connect-Lync {
-    $LyncServer = "https://lyncws.epiqsystems.com/OcsPowershell"
-    If ($Session.ComputerName -like "lyncws.epiqsystems.com") {
+    $LyncServer = "https://lyncws.domain.com/OcsPowershell"
+    If ($Session.ComputerName -like "lyncws.domain.com") {
         Write-Host "Session already established to Lync" -ForegroundColor Green
     }
     Else {
@@ -48,8 +48,8 @@ Function Connect-Lync {
 
 Function Get-User {
 $Script:account = Read-Host -Prompt 'What is the users username (bsmith)?'
-$Script:upn = $account+"@epiqsystems.com"
-$Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
+$Script:upn = $account+"@domain.com"
+$Script:email = $account+"@domain.mail.onmicrosoft.com"
 $Script:sip = "SIP:"+$upn
 
 }
@@ -58,7 +58,7 @@ $Script:sip = "SIP:"+$upn
 Function ADSync {
     # Kicks off the AD Azure Sync on the Sync server
     Get-Date
-    $session = New-PSSession -ComputerName "P054ADZAGTA01" -Credential $LyncCredential
+    $session = New-PSSession -ComputerName "server" -Credential $LyncCredential
     Invoke-Command -Session $session -ScriptBlock {Import-Module "C:\Program Files\Microsoft Azure AD Sync\Bin\ADSync\ADSync.psd1"}
     Invoke-Command -Session $session -ScriptBlock {Start-ADSyncSyncCycle -PolicyType Delta}
     Remove-PSSession $session
@@ -72,8 +72,8 @@ Function ADSync {
 
 # This is the Migrate Function to move the user from OnPrem to o365
 Function Migrate-User {
-    $Script:upn = $account+"@epiqsystems.com"
-    $Script:email = $account+"@epiqsystems3.mail.onmicrosoft.com"
+    $Script:upn = $account+"@domain.com"
+    $Script:email = $account+"@domain.mail.onmicrosoft.com"
     $Script:sip = "SIP:"+$upn
     Move-CsUser `
         -Identity $upn `
