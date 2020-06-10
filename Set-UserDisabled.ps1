@@ -1,5 +1,5 @@
 add-PSSnapin quest.activeroles.admanagement -ErrorAction SilentlyContinue
-$fulllist = "AMER.EPIQCORP.COM","APAC.EPIQCORP.COM","APCUST.LOCAL","CACUST.LOCAL","DENOVOLEGALED.LOCAL","DQSCUST.Local","EBSDMZ.DMZ","ECADMZ.DMZ","ECAFCC.LOCAL","EDFT.EPIQ","EDHS.AP","EDHS-EU.COM","EDSDMZ.DMZ","EPIQCORP.COM","EPIQSERVICES.NET","EPIQSYSTEMS.COM","ETSDMZ.EPIQ","EUCUST.LOCAL","EURO.EPIQCORP.COM","EWMANAGEMENT.NET","HKPR.EPIQ","HOSTED.LOCAL","HQ.NMATRIX.COM","LEX_PHOENIX","PDX-DMZ.NET","POORMAN-DOUGLAS.NET","RANGER.EPIQ","TESTDOM.LOCAL","UKPR.EPIQSYSTEMS.CO.UK","USCUST.LOCAL","VDI.EPIQ","WEB.COM"
+$fulllist = "AMER.domain.COM","APAC.domain.COM","domain.LOCAL","domain.LOCAL","domain.LOCAL","domain.Local","domain.DMZ","domain.DMZ"
 $Domains = $fulllist | Out-GridView -Passthru
 $Search = Read-Host "Enter account name to search for"
 $disabledaccounts = @()
