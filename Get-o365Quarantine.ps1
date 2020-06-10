@@ -35,10 +35,10 @@ Import-PSSession $Session
 # Search Quarnetine for domain
 Get-QuarantineMessage | `
 ? {`
-$_.Senderaddress -like “*@epiqsystems.com” -or `
-$_.Senderaddress -like "*@epiqsystems.co.uk" -or `
-$_.Senderaddress -like "*@epiqsystems.com.hk" -or `
-$_.Senderaddress -like "*@dtiglobal.com"
+$_.Senderaddress -like â€œ*@domain.comâ€ -or `
+$_.Senderaddress -like "*@domain.co.uk" -or `
+$_.Senderaddress -like "*@domain.com.hk" -or `
+$_.Senderaddress -like "*@domain2.com"
 }
 
 Remove-PSSession $Session
