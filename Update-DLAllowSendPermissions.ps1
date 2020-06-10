@@ -29,11 +29,11 @@
 
 #>
 # Variables
-$ExchangeServer = "http://P054EXCTRNS02.amer.epiqcorp.com/PowerShell/"
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
-$Script:UKDomainController = "P054ADSEUDC01.EURO.EPIQCORP.COM"
-$Managed = "o365Questions@epiqglobal.com"
-$MasterDL = "Epiq-All"
+$ExchangeServer = "http://server.amer.domain.com/PowerShell/"
+$DomainController = "server.amer.domain.COM"
+$Script:UKDomainController = "server.EURO.domain.COM"
+$Managed = "o365Questions@domain.com"
+$MasterDL = "domain-All"
 
 #Function to List out current users with permission and count
 Function CheckDLLimitedUser {
@@ -73,7 +73,7 @@ Set-DynamicDistributionGroup ALL_UK_Mailboxes -DomainController $UKDomainControl
 
 #Function to Connect to Exchange
 Function ExchangeConnect {
-    If ($Session.ComputerName -like "P054EXCTRNS02.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "server.amer.domain.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -91,7 +91,7 @@ Function ExchangeConnect {
 # runs the Sync
 Function ADSync {
     # Kicks off the AD Azure Sync on the Sync server
-    $session = New-PSSession -ComputerName "P054ADZAGTA01" -Credential $UserCredential
+    $session = New-PSSession -ComputerName "server" -Credential $UserCredential
     Invoke-Command -Session $session -ScriptBlock {Import-Module "C:\Program Files\Microsoft Azure AD Sync\Bin\ADSync\ADSync.psd1"}
     Invoke-Command -Session $session -ScriptBlock {Start-ADSyncSyncCycle -PolicyType Delta}
     Remove-PSSession $session
@@ -154,23 +154,23 @@ Function Deploy-Script {
     
     $UserCredential = Get-Credential
 
-    New-PSDrive -Name "Scripts0" -PSProvider "FileSystem" -root '\\TS016-EXTOOLS\C$\Scripts' -Credential $UserCredential
+    New-PSDrive -Name "Scripts0" -PSProvider "FileSystem" -root '\\Tserver\C$\Scripts' -Credential $UserCredential
         Copy-Item -Path $LocalPath -Destination 'Scripts0:'
     Remove-PSDrive -Name "Scripts0"
 
-    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL01\C$\Scripts' -Credential $UserCredential
+    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\server\C$\Scripts' -Credential $UserCredential
         Copy-Item -Path $LocalPath -Destination 'Scripts1:'
     Remove-PSDrive -Name "Scripts1"
 
-    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\P054CORUTIL02\C$\Scripts' -Credential $UserCredential
+    New-PSDrive -Name "Scripts1" -PSProvider "FileSystem" -root '\\server\C$\Scripts' -Credential $UserCredential
         Copy-Item -Path $LocalPath -Destination 'Scripts1:'
     Remove-PSDrive -Name "Scripts1"
 
-    New-PSDrive -Name "Scripts2" -PSProvider "FileSystem" -root '\\P054EXGRELY01\C$\Scripts' -Credential $UserCredential
+    New-PSDrive -Name "Scripts2" -PSProvider "FileSystem" -root '\\server\C$\Scripts' -Credential $UserCredential
         Copy-Item -Path $LocalPath -Destination 'Scripts2:'
     Remove-PSDrive -Name "Scripts2"
 
-    New-PSDrive -Name "Scripts3" -PSProvider "FileSystem" -root '\\P054EXGRELY02\C$\Scripts' -Credential $UserCredential
+    New-PSDrive -Name "Scripts3" -PSProvider "FileSystem" -root '\\server\C$\Scripts' -Credential $UserCredential
         Copy-Item -Path $LocalPath -Destination 'Scripts3:'
     Remove-PSDrive -Name "Scripts3"
 
