@@ -22,13 +22,13 @@
   
 #>
 # Variables
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+$ExchangeServer = "http://MBX01.amer.domain.com/PowerShell/"
 $file = "C:\temp\alllist.csv"
 
 
 Function ExchangeConnect 
 {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "mbx01.amer.domain.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -57,7 +57,7 @@ Function ImportFile {
 
 Function GetUser {
 $Script:AllObjectsUsers = Get-ADObject `
-   -Server "P016ADSAMDC02.amer.EPIQCORP.COM" `
+   -Server "server.amer.domain.COM" `
     -LDAPFilter "(objectClass=user)"
     $AllObjectsUsers.count | Export-csv .\AllUsers.csv
 }
