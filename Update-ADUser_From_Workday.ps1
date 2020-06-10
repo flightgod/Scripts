@@ -47,13 +47,13 @@
  $todayDay = get-Date -Format dd
  $todayFileDate = $todayYear + "-" + $todayMonth + "-" + $todayDay
 # Location Variables
- $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
- $Path = "\\ks-isnl-prod.sn2.amer.epiqcorp.com\eca\prod\mft\Internal-Use-Only\web-users-home\svc_WorkdayGOA"
+ $DomainController = "server.amer.domain.COM"
+ $Path = "\\server.domain.amer.domain.com\eca\prod\mft\Internal-Use-Only\web-users-home\svc_WorkdayGOA"
  $TempPath = "c:\Temp" #Remove When go Live
  $file = "\INT0016_AD_Employee_" + $todayFileDate + "_2.csv"
  $FullPath = $TempPath + $file #Change $TempPath with $Path when go live
 # Arrays I Created
- $DomainList = "epiqcorp.com","amer.epiqcorp.com","apac.epiqcorp.com","euro.epiqcorp.com"
+ $DomainList = "domain.com","amer.domain.com","apac.domain.com","euro.domain.com"
  $ADProperties = "EmployeeID","SamAccountName","Name","Givenname","SurName","Descriptions","telephoneNumber","MobileNumber","Title","StreetAddress","City","State","PostalCode","Country","Manager","Department","Company","Mail"
 
 
