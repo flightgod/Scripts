@@ -91,15 +91,15 @@ Function ResetPassword {
 Function BodyText {
     $Script:Body = "
 
-Above you see see your new Epiq Password. As previously communicated in preparation for the Migration of your DTIGlobal Email from InterMedia to Office 365 you will be using a new account name. 
+Above you see see your new Epiq Password. As previously communicated in preparation for the Migration of your  Email from InterMedia to Office 365 you will be using a new account name. 
 
-From a DTI location or via VPN please visit the following site to change your password:
+From a  location or via VPN please visit the following site to change your password:
 
-https://password.epiqsystems.com
+https://password.domain.com
 
-Your new password should follow the current Legacy Epiq Password policy and contain at least 15 characters to include at least 1 uppercase, 1 Number and or special character
+Your new password should follow the current Legacy  Password policy and contain at least 15 characters to include at least 1 uppercase, 1 Number and or special character
 
-Please complete this as soon as possible to ensure your account is setup correctly. If you have any issues accessing this site or changing your password please contact the Service Desk at ServiceDesk@epiqsystems.com / 913-621-9800
+Please complete this as soon as possible to ensure your account is setup correctly. If you have any issues accessing this site or changing your password please contact the Service Desk at ServiceDesk@domain.com / 913-867-5309
 
 You will soon receive instructions on connecting to the New Web Access or OWA URL. This URL will be used starting Monday 12/4/17 for all email.
 
@@ -111,12 +111,12 @@ Function SendEmail{
     $script:to = $Name.UserPrincipalName
     $script:messageBody = $genpwd + $Body + "`r`n"
 Send-MailMessage `
-    -From "o365 Questions <o365Questions@epiqsystems.com>" `
+    -From "o365 Questions <o365Questions@domain.com>" `
     -To $name.UserPrincipalName `
-    -BCC "o365 Answers <o365Answers@epiqsystems.com>" `
-    -Subject "New Epiq Password for DTI Migration" `
+    -BCC "o365 Answers <o365Answers@domain.com>" `
+    -Subject "New domain Password for domain Migration" `
     -Body $messageBody `
-    -SmtpServer "P054EXGSVCS03"
+    -SmtpServer "server"
 
 }
 
