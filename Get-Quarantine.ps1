@@ -3,7 +3,7 @@
    	Gets any Quarantine messages from internal addresses
 
 .DESCRIPTION  
-    This will search EOP and get any Quarantine Messages that appear to be from Internal or DTI users. This will help to identify
+    This will search EOP and get any Quarantine Messages that appear to be from Internal or asdf users. This will help to identify
     SendAs or SPF record issues. 
 
 .INSTRUCTIONS
@@ -27,14 +27,14 @@
 
 # Variables
 $List = `
-    "*@epiqsystems.co.uk",`
-    "*@epiqsystems.com",`
-    "*@epiqsystems.com.hk",`
-    "*@dtiglobal.com",`
-    "*@dtiglobal-ks.com",`
-    "*@irisds.com",`
-    "*@hilsoft.com",`
-    "*@epiqglobal.com"
+    "*@domain.co.uk",`
+    "*@domain.com",`
+    "*@domain.com.hk",`
+    "*@domain2.com",`
+    "*@domain-ks.com",`
+    "*@domain3.com",`
+    "*@domain4.com",`
+    "*@domain5.com"
 
 # Loads the o365 Connection Function
 . .\Connect-o365.ps1
