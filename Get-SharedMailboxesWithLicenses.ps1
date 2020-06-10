@@ -1,7 +1,7 @@
 ﻿#Establish a PowerShell session with Office 365. You'll be prompted for your Delegated Admin credentials
 $Cred = Get-Credential
 Connect-MsolService -Credential $Cred
-$customers = "epiqsystems3.onmicrosoft.com"
+$customers = "domain.onmicrosoft.com"
 Write-Host "Found $($customers.Count) customers for $((Get-MsolCompanyInformation).displayname)." -ForegroundColor DarkGreen
 $CSVpath = "C:\Temp\LicensedSharedMailboxes.csv"
 $LicenseReportpath = "C:\Temp\SharedMailboxLicenseReport.csv"
