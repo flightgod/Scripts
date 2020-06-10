@@ -30,8 +30,8 @@ do {
  if ($line -ne '') {$list += $line}
  }
  until ($line -eq '')
-$RecvConn = Get-ReceiveConnector "ET016-EQEXCHUB1\Internal Relay - Hub1"
-$RecvConn2 = Get-ReceiveConnector "ET016-EQEXCHUB2\Internal Relay - Hub2"
+$RecvConn = Get-ReceiveConnector "server1\Internal Relay - Hub1"
+$RecvConn2 = Get-ReceiveConnector "server2\Internal Relay - Hub2"
 
 $RecvConn.RemoteIPRanges | Select LowerBound,UpperBound,Netmask,CIDRLength,RangeFormat,Size | export-csv c:\scripts\exchange\logs\relay\$DateStamp$hub1 -notypeinformation
 $RecvConn2.RemoteIPRanges | Select LowerBound,UpperBound,Netmask,CIDRLength,RangeFormat,Size | export-csv c:\scripts\exchange\logs\relay\$DateStamp$hub2 -notypeinformation
@@ -42,15 +42,15 @@ Foreach ($ipAddress in $list) {
 		if (($ipAddress -as [ipaddress]) -and ($octetcount.length -eq 4) -and -not ($excludedips -match $ipAddress)) {
 			#Write-host $ipAddress is valid
 			 if ($RecvConn.RemoteIPRanges -contains $ipAddress) {
-				Write-host -foregroundcolor green "$ipAddress already exists in ET016-EQEXCHUB1\Internal Relay - Hub1 and will not be added"
+				Write-host -foregroundcolor green "$ipAddress already exists in server1\Internal Relay - Hub1 and will not be added"
 				} else {
-					Write-host -foregroundcolor yellow "$ipAddress is not allowed to relay on ET016-EQEXCHUB1\Internal Relay - Hub1"
+					Write-host -foregroundcolor yellow "$ipAddress is not allowed to relay on server1\Internal Relay - Hub1"
 					$ipstoadd1 +=$ipAddress
 					}
 			if ($RecvConn2.RemoteIPRanges -contains $ipAddress) {
-				Write-host -foregroundcolor green "$ipAddress already exists in ET016-EQEXCHUB2\Internal Relay - Hub2 and will not be added"
+				Write-host -foregroundcolor green "$ipAddress already exists in server2\Internal Relay - Hub2 and will not be added"
 				} else {
-					Write-host -foregroundcolor yellow "$ipAddress is not allowed to relay on ET016-EQEXCHUB2\Internal Relay - Hub2"
+					Write-host -foregroundcolor yellow "$ipAddress is not allowed to relay on server2\Internal Relay - Hub2"
 					$ipstoadd2 +=$ipAddress
 					}
 		} else {
@@ -59,11 +59,11 @@ Foreach ($ipAddress in $list) {
 }
 Write-host "------------------------------------------------------------------------"
 If ($ipstoadd1) {
-	Write-host The following IPs can be added to ET016-EQEXCHUB1\Internal Relay - Hub1
+	Write-host The following IPs can be added to server1\Internal Relay - Hub1
 	Write-host $ipstoadd1 | ft -a
 }
 If ($ipstoadd2) {
-	Write-host The following IPs can be added to ET016-EQEXCHUB2\Internal Relay - Hub2
+	Write-host The following IPs can be added to server2\Internal Relay - Hub2
 	Write-host $ipstoadd2 | ft -a
 }
 If (($ipstoadd1) -or ($ipstoadd2)) { 
@@ -73,15 +73,15 @@ If (Ask-YesOrNo)
 {
 $ipstoadd1  | foreach {$RecvConn.RemoteIPRanges += "$_"}
 $ipstoadd2  | foreach {$RecvConn2.RemoteIPRanges += "$_"}
-write-host Adding IPs to ET016-EQEXCHUB1\Internal Relay - Hub1
-Set-ReceiveConnector "ET016-EQEXCHUB1\Internal Relay - Hub1" -RemoteIPRanges $RecvConn.RemoteIPRanges
+write-host Adding IPs to server1\Internal Relay - Hub1
+Set-ReceiveConnector "server1\Internal Relay - Hub1" -RemoteIPRanges $RecvConn.RemoteIPRanges
 #$RecvConn.RemoteIPRanges | select LowerBound |sort-object Lowerbound
-write-host Adding IPs to ET016-EQEXCHUB2\Internal Relay - Hub2
-Set-ReceiveConnector "ET016-EQEXCHUB2\Internal Relay - Hub2" -RemoteIPRanges $RecvConn2.RemoteIPRanges
+write-host Adding IPs to server2\Internal Relay - Hub2
+Set-ReceiveConnector "server2\Internal Relay - Hub2" -RemoteIPRanges $RecvConn2.RemoteIPRanges
 #$RecvConn2.RemoteIPRanges | select LowerBound |sort-object Lowerbound
 
-$RecvConnModified = Get-ReceiveConnector "ET016-EQEXCHUB1\Internal Relay - Hub1"
-$RecvConn2Modified = Get-ReceiveConnector "ET016-EQEXCHUB2\Internal Relay - Hub2"
+$RecvConnModified = Get-ReceiveConnector "server1\Internal Relay - Hub1"
+$RecvConn2Modified = Get-ReceiveConnector "serverB2\Internal Relay - Hub2"
 
 $RecvConnModified.RemoteIPRanges | Select LowerBound,UpperBound,Netmask,CIDRLength,RangeFormat,Size | export-csv c:\scripts\exchange\logs\relay\$DateStamp"Modified"$hub1 -notypeinformation
 $RecvConn2Modified.RemoteIPRanges | Select LowerBound,UpperBound,Netmask,CIDRLength,RangeFormat,Size | export-csv c:\scripts\exchange\logs\relay\$DateStamp"Modified"$hub2 -notypeinformation
@@ -105,8 +105,8 @@ $x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 
 #$ipstoadd1  | foreach {$RecvConn.RemoteIPRanges += "$_"}
 #$ipstoadd2  | foreach {$RecvConn2.RemoteIPRanges += "$_"}
-#Set-ReceiveConnector "ET016-EQEXCHUB1\Internal Relay - Hub1" -RemoteIPRanges $RecvConn.RemoteIPRanges
-#Set-ReceiveConnector "ET016-EQEXCHUB2\Internal Relay - Hub2" -RemoteIPRanges $RecvConn2.RemoteIPRanges
+#Set-ReceiveConnector "server1\Internal Relay - Hub1" -RemoteIPRanges $RecvConn.RemoteIPRanges
+#Set-ReceiveConnector "server2\Internal Relay - Hub2" -RemoteIPRanges $RecvConn2.RemoteIPRanges
 
 
 
