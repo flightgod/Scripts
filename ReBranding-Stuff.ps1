@@ -14,11 +14,11 @@ $Crap = "C:\temp\DLMistakes.csv"
 $DLData = Import-Csv $Crap
 
 forEach ($dl in $DlData){
-    $NewAlieas = $dl.Alias -replace '.irisds.com',''
+    $NewAlieas = $dl.Alias -replace '.domain.com',''
     Set-DistributionGroup $dl.Alias -Alias $NewAlieas
 }
 
-$test = Get-DistributionGroup -ResultSize Unlimited| Where {$_.alias -like "*irisds.com*"} | Select Alias
+$test = Get-DistributionGroup -ResultSize Unlimited| Where {$_.alias -like "*domain.com*"} | Select Alias
 
 Add-Content c:\temp\DLMistakes.csv $test
 
