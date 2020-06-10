@@ -70,15 +70,15 @@ GetListMembers
 #Create Function that sets these above to Auth users only
 
 Function UpdateDlLimitedUser {
-$groups = Get-DistributionGroup DTIEpiqAllEmployees| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+$groups = Get-DistributionGroup domainAllEmployees| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
 $kcgroups = $groups + "HRAnnouncement"
-Get-DistributionGroup Epiq-All-Contractors| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
-Get-DistributionGroup Epiq-All| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+Get-DistributionGroup domain-All-Contractors| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
+Get-DistributionGroup domain-All| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
 Get-DistributionGroup EagleAllGroup| %{$_.AcceptMessagesOnlyFromSendersOrMembers}
 
 
-Set-DistributionGroup Epiq-All-Contractors -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
-Set-DistributionGroup Epiq-All -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
+Set-DistributionGroup domain-All-Contractors -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
+Set-DistributionGroup domain-All -AcceptMessagesOnlyFromSendersOrMembers $kcgroups
 Set-DistributionGroup EagleAllGroup -AcceptMessagesOnlyFromSendersOrMembers $Groups
 }
 
