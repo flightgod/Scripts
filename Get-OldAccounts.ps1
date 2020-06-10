@@ -26,7 +26,7 @@
 ."c:\Scripts\Kevins_Functions.ps1"
 
 #Variables
-$Domains = "amer.epiqcorp.com"
+$Domains = "amer.domain.com"
 $time = "90"
 $now = Get-Date
 
