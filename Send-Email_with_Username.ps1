@@ -25,9 +25,9 @@
 
 # Variables
 Param (
-$UserOU = "OU=Standard,OU=Employees,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM",
+$UserOU = "OU=domain,OU=domain,OU=domain IT,DC=domain,DC=domain,DC=COM",
 $file = "C:\Temp\GCGUsers.csv",
-$DomainController = "P054ADSAMDC01.amer.EPIQCORP.COM"
+$DomainController = "server.amer.domain.COM"
 )
 
 
@@ -71,15 +71,15 @@ Function BodyText {
 
 Above you see your new Epiq Username and Password. In preparation for the Migration of your GCG Email to Office 365 you will be using this new account name.
 
-To manage your password, Reset, or request if forgotten please go to https://epiqmanage.epiqglobal.com and click on the User Registration link on the right. Follow the instructions on registering to identify yourself if you forgot your password. After registration you will be able to reset your password, or request a new one if you have forgotten the password. You can also find instructions for these steps at: https://epiqsystems3.sharepoint.com/help
+To manage your password, Reset, or request if forgotten please go to https://domain.domain.com and click on the User Registration link on the right. Follow the instructions on registering to identify yourself if you forgot your password. After registration you will be able to reset your password, or request a new one if you have forgotten the password. You can also find instructions for these steps at: https://domain.sharepoint.com/help
 
 These credentials are used for all Epiq o365 applications (Email, Skype, SharePoint, OneDrive .. etc)
 
-Again we want to remind you that your email address will still be either @choosegcg.com after the migration.
+Again we want to remind you that your email address will still be either @domain.com after the migration.
 
-If you have any questions at all please feel free to direct them to O365Questions@epiqsystems.com. 
+If you have any questions at all please feel free to direct them to O365Questions@domain.com. 
 
-Any issues you run into during this migration should be directed toward the GCG Service Desk as a Ticket at http://gcghelpdesk.gcdomain.local"
+Any issues you run into during this migration should be directed toward the  Service Desk as a Ticket at http://domain.domain.local"
 }
 
 # Sending Email Function
@@ -87,12 +87,12 @@ Function SendEmail{
 $script:to = $NewEmail
 $script:messageBody = "Username: " + $EpiqUN + "`r`n" +  "Password: " + $NewPW + $Body + "`r`n"
 Send-MailMessage `
-    -From "Epiq Corporate IT <corporateit@epiqglobal.com>" `
+    -From "domain Corporate IT <corporateit@domain.com>" `
     -To $NewEmail `
-    -BCC "o365 Answers <o365Answers@epiqsystems.com>" `
-    -Subject "Epiq o365 New Credentials" `
+    -BCC "o365 Answers <o365Answers@domain.com>" `
+    -Subject "domain o365 New Credentials" `
     -Body $messageBody `
-    -SmtpServer "mailrelay.amer.epiqcorp.com"
+    -SmtpServer "mailrelay.amer.domain.com"
 
 }
 
