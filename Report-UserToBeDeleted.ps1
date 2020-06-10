@@ -1,6 +1,6 @@
 ﻿$import = Import-csv .\List.csv
-$Domain = "amer.epiqcorp.com"
-$NewPath = "OU=Delete,OU=Exchange-Team,DC=amer,DC=EPIQCORP,DC=COM"
+$Domain = "amer.domain.com"
+$NewPath = "OU=Delete,OU=Exchange-Team,DC=amer,DC=domain,DC=COM"
 
 foreach ($Name in $import){
 
