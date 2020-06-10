@@ -1,16 +1,16 @@
 ﻿# Script Variables
 param (
-$ImportFile = "C:\Temp\GCGEmail.csv",
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM",
-$OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
+$ImportFile = "C:\Temp\NewEmail.csv",
+$DomainController = "server.amer.domain.COM",
+$OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=domain,DC=COM"
 )
 
 
 # Connects to Exchange
 Function ExchangeConnect {
     # Function Variables
-    $ExchangeSession = "et016-eqexmbx01.amer.epiqcorp.com"
-    $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+    $ExchangeSession = "mbx01.amer.domain.com"
+    $ExchangeServer = "http://MBX01.amer.domain.com/PowerShell/"
 
     If ($Session.ComputerName -like $ExchangeSession){
         Write-Host "Session already established to exchange" -ForegroundColor Green
@@ -45,12 +45,12 @@ Function ImportList {
 Function AddUser {
     ForEach ($Script:User in $Import){
 
-        $alias1 = $user.EpiqSam + "@gardencitygroup.com"
-        $alias2 = $user.epiqSam + "@gcginc.com"
+        $alias1 = $user.domainSam + "@domain.com"
+        $alias2 = $user.domainSam + "@domain1.com"
         Get-RemoteMailbox -Identity $User.EpiqSam -DomainController $DomainController
         Set-ADUser `
-        -Identity $User.EpiqSam `
-        -add @{"extensionattribute13" = $user.GCGEmail} -Credential $UserCredential
+        -Identity $User.domainsam `
+        -add @{"extensionattribute13" = $user.newEmail} -Credential $UserCredential
     }
 }
 
@@ -58,7 +58,7 @@ Function AddUser {
 
 Function SetLimits {
     ForEach ($Script:User in $Import){
-        Set-RemoteMailbox $User.EpiqSam -ProhibitSendQuota 95GB -ProhibitSendReceiveQuota 95GB -IssueWarningQuota 90GB 
+        Set-RemoteMailbox $User.domainsam -ProhibitSendQuota 95GB -ProhibitSendReceiveQuota 95GB -IssueWarningQuota 90GB 
     }
 }
 
