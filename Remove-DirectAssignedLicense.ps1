@@ -104,7 +104,7 @@ function GetUnexpectedEnabledPlansForUser
 $groupId = "8093fc0d-865b-4cec-9f59-f28f57b6a97b"
 
 #license to be removed - Office 365 E3
-$skuId = "epiqsystems3:EXCHANGESTANDARD"
+$skuId = "domain:EXCHANGESTANDARD"
 
 #minimum set of service plans we know are inherited from groups - we want to make sure that there aren't any users who have more services enabled
 #which could mean that they may lose access after we remove direct licenses
