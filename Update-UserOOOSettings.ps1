@@ -26,8 +26,8 @@
 # Connects to Exchange
 Function ExchangeConnect {
     # Function Variables
-    $ExchangeSession = "et016-eqexmbx01.amer.epiqcorp.com"
-    $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+    $ExchangeSession = "servername.domain.com"
+    $ExchangeServer = "http://servername.domain.com/PowerShell/"
 
     If ($Session.ComputerName -like $ExchangeSession){
         Write-Host "Session already established to exchange" -ForegroundColor Green
@@ -46,7 +46,7 @@ Function ExchangeConnect {
 
 
 Function UpdateOutOfOffice {
-    Set-MailboxAutoReplyConfiguration testbennettamer@epiqsystems.com `
+    Set-MailboxAutoReplyConfiguration testbennettamer@domain.com `
     –AutoReplyState Enabled `
     –ExternalMessage “Hello,<br><br>
 
