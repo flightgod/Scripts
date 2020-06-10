@@ -8,7 +8,7 @@ foreach ($Domain in $Domains)
 {
     ForEach ($entry in $data){
         try {
-            Get-ADUser $entry.'User Name' -Properties Name,EmailAddress -Server apac.epiqcorp.com | `
+            Get-ADUser $entry.'User Name' -Properties Name,EmailAddress -Server apac.domain.com | `
             select `
             @{l="WorkdayID";e={$entry.'Employee ID'}}, `
             @{l="WorkdayEmail";e={$entry.'Email - Primary Work'}}, `
