@@ -9,10 +9,10 @@ $sfbSession = New-CsOnlineSession
 Import-PSSession $sfbSession
 
 
-Get-CsOnlineUser stephen.carter@epiqsystems.com
+Get-CsOnlineUser user@domain.com
 
 
-Grant-CSDialOutPolicy -Identity "kbennett@epiqsystems.com" -PolicyName "DialoutCPCandPSTNInternational"
+Grant-CSDialOutPolicy -Identity "kbennett@domain.com" -PolicyName "DialoutCPCandPSTNInternational"
 
 Get-CsOnlineUser | Where {$_.HostingProvider -like "*sipfed.online.lync.com"} | Select UserPrincipalName, HostingProvider,OnlineDialOutPolicy | Grant-CsDialoutPolicy -PolicyName "DialoutCPCandPSTNInternational" 
 
@@ -25,7 +25,7 @@ Get-CsOnlineUser | Where {$_.HostingProvider -like "*sipfed.online.lync.com"} | 
 Get-CsOnlineUser | Where {$_.TeamsMeetingPolicy -like "*AllOff"} | Select UserPrincipalName, HostingProvider,TeamsMeetingPolicy
 
 
-Grant-CsTeamsMeetingPolicy -Identity stephen.carter@epiqsystems.com -PolicyName $Null
+Grant-CsTeamsMeetingPolicy -Identity user@domain.com -PolicyName $Null
 
 
 Function ImportTheData {
@@ -39,7 +39,7 @@ ForEach ($user in $data){
     Get-CsOnlineUser -Identity $name | Where {$_.HostingProvider -notlike "*sipfed.online.lync.com"} | Select UserPrincipalName, HostingProvider
 }
 
-Set-CsOnlineDialinConferencingUser -Identity amos.marble@Contoso.com -TollFreeServiceNumber   80045551234
+Set-CsOnlineDialinConferencingUser -Identity user@domain.com -TollFreeServiceNumber   8008675309
 
 
 
