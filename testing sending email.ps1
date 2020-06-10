@@ -1,6 +1,6 @@
 ﻿#$smtpCred = (Get-Credential)
-$ToAddress = 'kbennett@epiqglobal.com'
-$FromAddress = 'svc_SMTPOut@epiqglobal.com'
+$ToAddress = 'kbennett@domain.com'
+$FromAddress = 'svc_SMTPOut@domain.com'
 $SmtpServer = 'smtp.office365.com'
 $SmtpPort = '25'
 
