@@ -25,16 +25,16 @@
 $AccountName = Read-Host "Enter UserName to change password"
 $NewPassword = Read-Host "Enter the new Password"
 $Servers = @(`
-    "P016ADSACDC01.apcust.local",`
-    "P016ADSCCDC01.cacust.local",`
-    "Q061ADSDQDC01.dqscust.local",`
-    "P016ADSECDC01.eucust.local",`
-    "P016ADSUCDC01.uscust.local",`
-    "p016adsamdc02.amer.epiqcorp.com",`
-    "epiqcorp.com",`
-    "apac.epiqcorp.com",`
-    "euro.epiqcorp.com",`
-    "amer.epiqcorp.com")
+    "server.domain.local",`
+    "server.domain.local",`
+    "server.domain.local",`
+    "server.domain.local",`
+    "server.domain.local",`
+    "server.domain.com",`
+    "domain.com",`
+    "apac.domain.com",`
+    "euro.domain.com",`
+    "amer.domain.com")
 
 Function GetCreds {
     If ($UserCredentials.UserName -eq $null){
