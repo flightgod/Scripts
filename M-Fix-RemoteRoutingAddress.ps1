@@ -1,16 +1,16 @@
 ﻿# Script Variables
 param (
 $ImportFile = "C:\Temp\GCGEmail.csv",
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM",
-$OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM"
+$DomainController = "server.amer.domain.COM",
+$OU = "OU=Distribution Groups,OU=Exchange,OU=Corp IT,DC=amer,DC=domain,DC=COM"
 )
 
 
 # Connects to Exchange
 Function ExchangeConnect {
     # Function Variables
-    $ExchangeSession = "et016-eqexmbx01.amer.epiqcorp.com"
-    $ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+    $ExchangeSession = "mbx01.amer.domain.com"
+    $ExchangeServer = "http://MBX01.amer.domain.com/PowerShell/"
 
     If ($Session.ComputerName -like $ExchangeSession){
         Write-Host "Session already established to exchange" -ForegroundColor Green
@@ -30,7 +30,7 @@ Function ExchangeConnect {
 
 ForEach ($entry in $pull){
 $user = $entry.SamAccountName
-$NewRemoteRoutingAddress = $user + "@epiqsystems3.mail.onmicrosoft.com"
+$NewRemoteRoutingAddress = $user + "@domain.mail.onmicrosoft.com"
 $NewRemoteRoutingAddress
 Set-RemoteMailbox $user -RemoteRoutingAddress $NewRemoteRoutingAddress
 Get-remotemailbox $user | select RemoteRoutingAddress
