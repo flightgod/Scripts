@@ -26,15 +26,15 @@
 # Script Variables
 param (
 $ImportFile = "c:\temp\Active_Employees_-_Non_LDE.csv",
-$DomainController = "P016ADSAMDC01.amer.EPIQCORP.COM",
-$GroupName = "Epiq-All@Epiqsystems.com"
+$DomainController = "server.amer.domain.COM",
+$GroupName = "employees-All@domain.com"
 )
 
 # Connects to Exchange
 Function ExchangeConnect {
     # Function Variables
-    $ExchangeSession = "P054EXCTRNS01.amer.epiqcorp.com"
-    $ExchangeServer = "http://P054EXCTRNS01.amer.epiqcorp.com/PowerShell/"
+    $ExchangeSession = "server.domain.com"
+    $ExchangeServer = "http://server.domain.com/PowerShell/"
 
     If ($Session.ComputerName -like $ExchangeSession){
         Write-Host "Session already established to exchange" -ForegroundColor Green
@@ -68,11 +68,11 @@ Function CheckUser {
     foreach ($Name in $import) {
         $script:UserInfo = $Name."Email Address"
         # Only checks if Email address is epiqsystems.com
-        If ($UserInfo -Like "*epiqsystems.com") {
+        If ($UserInfo -Like "*domain.com") {
         $script:CheckUser = Get-ADuser -Filter "EmailAddress -like '$UserInfo'" -Properties Name,EmailAddress -Server $DomainController
             If ($CheckUser -eq $Null) { 
                 Write-host $Name.Worker "Doesn't Exist in AMER AD - Skipping" -foregroundcolor Red
-                Add-Content c:\temp\Epiq-AllUserDoesntExist.txt $Name.Worker
+                Add-Content c:\temp\user-AllUserDoesntExist.txt $Name.Worker
             } 
             Else { 
                 CheckDL ($UserCredential) 
@@ -84,14 +84,14 @@ Function CheckUser {
         }
         # added a check for irisds.com address. And do a different check against that one. Removes the domain and checks against just the name
         # Limitation is still if the irisds.com username is different than the Epiq Sysetms Username
-        If ($UserInfo -Like "*irisds.com") {
+        If ($UserInfo -Like "*domain1.com") {
             $Seperator = "@"
             $IrisUsername = $UserInfo.Split($Seperator)
             $IrisUsername = $IrisUsername[0]
             $script:CheckUser = Get-ADUser -Filter "EmailAddress -like '$IrisUserName*'" -Properties Name,EmailAddress -Server $DomainController
              If ($CheckUser -eq $Null) { 
                 Write-host $Name.Worker "Doesn't Exist in AMER AD - Skipping" -foregroundcolor Red
-                Add-Content c:\temp\Epiq-AllUserDoesntExist.txt $Name.Worker
+                Add-Content c:\temp\users-AllUserDoesntExist.txt $Name.Worker
             } 
             Else { 
                 CheckDL ($UserCredential) 
@@ -108,7 +108,7 @@ Function CheckDL {
     } 
     Else {
         Write-Host $CheckUser.EmailAddress "Being Added to group" $GroupName -foregroundcolor Blue
-        Add-Content c:\temp\Epiq-AllUserAdded.txt $CheckUser.EmailAddress
+        Add-Content c:\temp\user-AllUserAdded.txt $CheckUser.EmailAddress
         AddUser
     } 
 }
