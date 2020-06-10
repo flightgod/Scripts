@@ -25,9 +25,9 @@
 
 # Variables
 Param (
-$UserOU = "OU=Standard,OU=Employees,OU=Corp IT,DC=amer,DC=EPIQCORP,DC=COM",
+$UserOU = "OU=domain,OU=Employees,OU=domain IT,DC=domain,DC=domain,DC=COM",
 $file = "C:\Temp\EmailList.csv",
-$DomainController = "P054ADSAMDC01.amer.EPIQCORP.COM"
+$DomainController = "server.amer.domain.COM"
 )
 
 
@@ -63,24 +63,22 @@ Function BodyText {
 
 Hello Everyone:
 
-On February 26, Perceptyx launched an Engagement Survey sent to active and recent termed Limited Duration Employees on behalf of Epiq.  The survey closed on March 13 and the response was excellent!  If you chose to participate, I want to personally thank you for taking the time and providing feedback.  The information and insights gained as a result of the survey will help the DRS leadership team in the United States understand areas on which to focus and what we can do to help make your experience working with Epiq the best in our industry.
+On February 26, company launched an Engagement Survey sent to active and recent termed Limited Duration Employees on behalf of domain.  The survey closed on March 13 and the response was excellent!  If you chose to participate, I want to personally thank you for taking the time and providing feedback.  The information and insights gained as a result of the survey will help the  leadership team in the United States understand areas on which to focus and what we can do to help make your experience working with domain the best in our industry.
 
-Over the next several weeks, the survey results will be reviewed and analyzed to help us formulate an action plan for 2019.  I will be in touch later in April to share information gained from the survey and our DRS action plan to move things forward.
+Over the next several weeks, the survey results will be reviewed and analyzed to help us formulate an action plan for 2019.  I will be in touch later in April to share information gained from the survey and our domain action plan to move things forward.
 
 We very much appreciate your time and thoughtfulness in completing the survey and anticipate that the survey will be an excellent resource to aid in addressing your suggestions and concerns.  
 
 Thank you!
 
-Tom Tromiczak
-Epiq | Vice President, Document Review Services
-Two Ravinia Drive, Suite 850
-Atlanta, GA  30346
-Phone:  +1 646 356 1769
-Mobile:  +1 646 823 0598
-Email:  ttromiczak@epiqglobal.com
+user name
+domain | Vice President, 
+street, Suite 850
+city, state  zip
+Phone:  +1 xxx xxx xxxxx
+Mobile:  +1 xxx xxx xxxx
+Email:  email@domain.com
 
-People. Partnership. Performance.
-www.epiqglobal.com
 
 This electronic mail (including any attachments) may contain information that is privileged, confidential, and/or otherwise protected from disclosure to anyone other than its intended recipient(s). If you have received this message in error, please notify the sender immediately by reply email of the inadvertent transmission and then immediately delete the original message (including any attachments) in its entirety.
 "
@@ -90,11 +88,11 @@ This electronic mail (including any attachments) may contain information that is
 Function SendEmail{
 $script:messageBody = $Body + "`r`n"
 Send-MailMessage `
-    -From "DRS Survey <CorporateIT@epiqglobal.com>" `
+    -From "DRS Survey <CorporateIT@domain.com>" `
     -To $Address `
-    -Subject "Perceptyx Engagement Survey" `
+    -Subject "company Engagement Survey" `
     -Body $messageBody `
-    -SmtpServer "mailrelay.amer.epiqcorp.com"
+    -SmtpServer "mailrelay.amer.domain.com"
 
 }
 
