@@ -3,9 +3,9 @@
    	Add DTI Contacts
 
 .DESCRIPTION  
-    This script Reads the DTI Contact list from Paul, checks that the account doesn't already exist and adds it to Epiq DTI Contacts. If it
+    This script Reads the company Contact list from admin, checks that the account doesn't already exist and adds it to Contacts. If it
     Does exist it adds a User Defined Field with this month in it so we can see when it was last updated. It will also give a list of users
-    that are no longer with DTI and flag for removal
+    that are no longer with company and flag for removal
 
 .INSTRUCTIONS
     Run this after getting the list from Paul, no need to do anything special to the Export except ensure it is named $file variable
@@ -31,19 +31,19 @@
 
 # Variables
 Param (
-$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/",
+$ExchangeServer = "http://server.domain.com/PowerShell/",
 $UDF = "AUG",
-$UserOU = "OU=DTI,DC=amer,DC=EPIQCORP,DC=COM",
-$ContactOU = "OU=Contacts,OU=DTI,DC=amer,DC=EPIQCORP,DC=COM",
+$UserOU = "OU=domain,DC=domain,DC=domain,DC=COM",
+$ContactOU = "OU=Contacts,OU=domain,DC=domain,DC=domain,DC=COM",
 $file = "C:\Temp\List.csv",
 $RemoveFile ="c:\Temp\RemoveList.csv",
-$DomainController = "P054ADSAMDC01.amer.EPIQCORP.COM",
-$NewPath = "OU=Delete,OU=Exchange-Team,DC=amer,DC=EPIQCORP,DC=COM"
+$DomainController = "server.amer.domain.COM",
+$NewPath = "OU=Delete,OU=Exchange-Team,DC=amer,DC=domain,DC=COM"
 )
 
 # Connects to Exchange
 Function ExchangeConnect {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "server.amer.domain.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -226,11 +226,8 @@ $UpdateUser = Get-ADObject -LDAPFilter "objectClass=Contact" -Server $DomainCont
 Function UpdateContactsNotListed {
  # These users need to have thier Month Checked and then updated if new
  # Users:
-    # Alex.Yee@dtiglobal-ks.com
-    # Brian.Lee@dtiglobal-ks.com
-    # Leslie.Gibson@dtiglobal-ks.com
     Write-Host "Now updating the users that were not on the list"
-    $updateArray = "Alex.Yee@dtiglobal-ks.com","Brian.Lee@dtiglobal-ks.com","Leslie.Gibson@dtiglobal-ks.com"
+    $updateArray = "user@domain-ks.com","user1@domain-ks.com","user2@domain-ks.com"
     foreach ($test in $updateArray){
         $SkippedUser = Get-ADObject `
             -LDAPFilter "objectClass=Contact" `
