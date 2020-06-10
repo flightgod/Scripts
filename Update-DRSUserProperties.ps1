@@ -12,8 +12,8 @@
 
  
  #Variables
- $OU = "OU=Users,OU=DRS,OU=Epiq-ED,DC=amer,DC=EPIQCORP,DC=COM"
- $DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+ $OU = "OU=Users,OU=domain,OU=domain,DC=amer,DC=domain,DC=COM"
+ $DomainController = "server.amer.domain.COM"
 
  # Do a forloop here to get OU in array
  
@@ -23,7 +23,7 @@
     #write-host $one.DistinguishedName
     # do an ADObject Get here to get Attribute13
     # do a IF here on Attribute 13 to only procced if there is no attribute
-    Set-ADObject -Identity $one.DistinguishedName -add @{extensionAttribute13="EpiqGlobal-DRS.com"} -Credential $UserCredential -server $DomainController
+    Set-ADObject -Identity $one.DistinguishedName -add @{extensionAttribute13="domain.com"} -Credential $UserCredential -server $DomainController
     Update-Recipient $one.SamAccountName -DomainController $DomainController
     #Set-Mailbox $one.SamAccountName -EmailAddressPolicyEnabled $False -DomainController $DomainController
     #Set-Mailbox $one.SamAccountName -EmailAddressPolicyEnabled $True -DomainController $DomainController
