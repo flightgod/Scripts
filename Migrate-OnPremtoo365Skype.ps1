@@ -1,5 +1,5 @@
 ﻿$target = "sipfed.online.lync.com"
-$DomainController = "P054ADSAMDC02.amer.EPIQCORP.COM"
+$DomainController = "server.amer.domain.COM"
 
 $import = "C:\temp\MigrateSkypeo365.csv"
 $data = Import-Csv $import
@@ -14,8 +14,8 @@ $SharePointP2 = "UG-o365-License-SharePoint-P2"
 $FailList = $NULL
 
 Function Connect-Lync {
-    $LyncServer = "https://lyncws.epiqsystems.com/OcsPowershell"
-    If ($LyncSession.ComputerName -like "lyncws.epiqsystems*") {
+    $LyncServer = "https://lyncws.domain.com/OcsPowershell"
+    If ($LyncSession.ComputerName -like "lyncws.domain*") {
         Write-Host "Session already established to Lync" -ForegroundColor Green
     }
     Else {
@@ -30,7 +30,7 @@ Function Connect-Lync {
 }
 
 Function Migrate-User {
-    $Script:upn = $user.SAMAccountName+"@epiqsystems.com"
+    $Script:upn = $user.SAMAccountName+"@domain.com"
     Move-CsUser `
         -Identity $upn `
         -domainController $DomainController `
