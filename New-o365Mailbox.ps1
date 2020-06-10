@@ -21,17 +21,17 @@
     No Additonal Parameters enabled
 .NOTE
     10/01/2016 - Added the AD Azure Sync
-    10/12/2016 - Adjusted for post IRIS Migration, Removed forward to IRISDS.COM & Permissions
+    10/12/2016 - Adjusted for post IRIS Migration, Removed forward to domain.COM & Permissions
 .TODO
     Create loop for adding more than one user
-    Might need to add a proxy address of IRISDS.com
+    Might need to add a proxy address of domain.com
     Maybe add Domain or Domain Controller for Enable-RemoteMailbox to easy find in APAC/EURO
 #>
 	# Variables
-    [String]$ExchangeServer = "http://ET016-EQEXMBX01.amer.epiqcorp.com/PowerShell/"
+    [String]$ExchangeServer = "http://MBX01.amer.domain.com/PowerShell/"
 	[String]$ExchangeOnlineSku = New-MsolLicenseOptions `
 		-AccountSkuId `
-		epiqsystems3:ENTERPRISEPACK `
+		domain:ENTERPRISEPACK `
 		-DisabledPlans `
 		RMS_S_ENTERPRISE,`
 		OFFICESUBSCRIPTION,`
@@ -43,15 +43,15 @@
 		SWAY,`
 		PROJECTWORKMANAGEMENT
 	[String]$Account = Read-Host -Prompt 'What is the users username (bsmith)?'
-	[String]$Upn = $account+"@epiqsystems.com"
-	[String]$Email = $account+"@epiqsystems3.mail.onmicrosoft.com"
-    [String]$DomainController = "P054ADSAMDC01.amer.EPIQCORP.COM"
+	[String]$Upn = $account+"@domain.com"
+	[String]$Email = $account+"@domain.mail.onmicrosoft.com"
+    [String]$DomainController = "server.amer.domain.COM"
 
 
 # Connects to Exchange
 Function ExchangeConnect 
 {
-    If ($Session.ComputerName -like "et016-eqexmbx01.amer.epiqcorp.com"){
+    If ($Session.ComputerName -like "mbx01.amer.domain.com"){
         Write-Host "Session already established to exchange" -ForegroundColor Green
     }
     Else {
@@ -99,7 +99,7 @@ Function azureSync
 Start-Sleep -s 15
 
 # Kicks off the AD Azure Sync on the Sync server
-$session = New-PSSession -ComputerName "P054ADZAGTA01" -Credential $UserCredential
+$session = New-PSSession -ComputerName "server" -Credential $UserCredential
 Invoke-Command -Session $session -ScriptBlock {Import-Module "C:\Program Files\Microsoft Azure AD Sync\Bin\ADSync\ADSync.psd1"}
 Invoke-Command -Session $session -ScriptBlock {Start-ADSyncSyncCycle -PolicyType Delta}
 Remove-PSSession $session
@@ -124,7 +124,7 @@ Function assignLicense
 Set-MsolUser -UserPrincipalName $upn -UsageLocation US
 
 # Setting Licensees
-Set-MsolUserLicense -UserPrincipalName $upn -AddLicenses epiqsystems3:ENTERPRISEPACK -LicenseOptions $ExchangeOnlineSku
+Set-MsolUserLicense -UserPrincipalName $upn -AddLicenses domain:ENTERPRISEPACK -LicenseOptions $ExchangeOnlineSku
  
 }
 
