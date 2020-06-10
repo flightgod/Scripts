@@ -1,9 +1,9 @@
 ﻿<#  
 .SYNOPSIS
-   	Sends Username for users migrating to new Epiq account
+   	Sends Username for users migrating to new domain account
 
 .DESCRIPTION  
-    Sends Username for users migrating to new Epiq account
+    Sends Username for users migrating to new domain account
 
 .INSTRUCTIONS
     Run full script 
